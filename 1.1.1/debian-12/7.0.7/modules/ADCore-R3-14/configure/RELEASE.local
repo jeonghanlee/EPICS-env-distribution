@@ -1,0 +1,2 @@
+EPICS_BASE:=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/base
+ASYN:=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/base/../modules/asyn

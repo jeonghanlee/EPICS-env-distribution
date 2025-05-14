@@ -1,0 +1,104 @@
+#
+#  Basic PVs for a Wiener/ISEG/MPOD power supply channel
+#
+#  Macros required:
+#     DEV   : base device name
+#     HOST  : SNMP host
+#     CHAN  : ISEG slot/channel ID, for example u300 = slot 4 channel 0
+#     GROUP : Group number channel belongs to
+#                0   : whole crate
+#                64  : all HV modules
+#                128 : all LV modules
+#             (older Wiener/ISEGs may instead have group numbers for each slot)
+
+record(longout, "$(DEV):OnCommand")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(OUT, "@$(HOST) guru %(W)outputSwitch.$(CHAN) ( 100 i")
+}
+
+record(longin, "$(DEV):OnStatus")
+{
+  field(DESC, "SNMP channel")
+  field(SCAN, ".2 second")
+  field(DTYP, "Snmp")
+  field(INP, "@$(HOST) guru %(W)outputSwitch.$(CHAN) ( 100 i")
+}
+
+record(ai, "$(DEV):VoltageRead")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, ".2 second")
+  field(PREC, "3")
+  field(INP, "@$(HOST) guru %(W)outputMeasurementSenseVoltage.$(CHAN) Float: 100")
+}
+
+record(ao, "$(DEV):VoltageSet")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(PREC, "3")
+  field(OUT, "@$(HOST) guru %(W)outputVoltage.$(CHAN) Float: 100 F")
+}
+
+record(ai, "$(DEV):CurrentRead")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, ".5 second")
+  field(PREC, "3")
+  field(INP, "@$(HOST) guru %(W)outputMeasurementCurrent.$(CHAN) Float: 100")
+}
+
+record(ao, "$(DEV):CurrentSet")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(PREC, "3")
+  field(OUT, "@$(HOST) guru %(W)outputCurrent.$(CHAN) Float: 100 F")
+}
+
+record(ao, "$(DEV):VoltageRiseRate")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(PREC, "3")
+  field(OUT, "@$(HOST) guru %(W)outputVoltageRiseRate.$(CHAN) Float: 100 F")
+}
+
+record(seq, "$(DEV):ResetCommand")
+{
+  field(DESC, "Reset sequence")
+  field(SCAN, "Passive")
+  field(PREC, "1")
+  field(SELM, "All")
+## clear events
+  field(DLY1, "2.0")
+  field(DOL1, "10")
+  field(LNK1, "$(DEV):Group  PP NMS")
+## disable "kill"
+  field(DLY2, "2.0")
+  field(DOL2, "4")
+  field(LNK2, "$(DEV):Group  PP NMS")
+## clear emergency stop
+  field(DLY3, "2.0")
+  field(DOL3, "2")
+  field(LNK3, "$(DEV):Group  PP NMS")
+}
+
+record(longout, "$(DEV):Group")
+{
+  field(DESC, "SNMP channel")
+  field(DTYP, "Snmp")
+  field(SCAN, "Passive")
+  field(EGU,  "")
+  field(OUT,  "@$(HOST) guru WIENER-CRATE-MIB::groupsSwitch.$(GROUP) INTEGER: 100 i")
+}
+
+

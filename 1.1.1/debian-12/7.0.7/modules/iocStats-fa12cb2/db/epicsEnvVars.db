@@ -1,0 +1,186 @@
+record(stringin, "$(IOCNAME):CA_ADDR_LIST") {
+  field(DESC, "EPICS_CA_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_CONN_TIME") {
+  field(DESC, "EPICS_CA_CONN_TMO")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_CONN_TMO")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_AUTO_ADDR") {
+  field(DESC, "EPICS_CA_AUTO_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_AUTO_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_RPTR_PORT") {
+  field(DESC, "EPICS_CA_REPEATER_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_REPEATER_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_SRVR_PORT") {
+  field(DESC, "EPICS_CA_SERVER_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_SERVER_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_MAX_ARRAY") {
+  field(DESC, "EPICS_CA_MAX_ARRAY_BYTES")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_MAX_ARRAY_BYTES")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_SRCH_TIME") {
+  field(DESC, "EPICS_CA_MAX_SEARCH_PERIOD")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_MAX_SEARCH_PERIOD")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CA_BEAC_TIME") {
+  field(DESC, "EPICS_CA_BEACON_PERIOD")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CA_BEACON_PERIOD")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_SRVR_PORT") {
+  field(DESC, "EPICS_CAS_SERVER_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_SERVER_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_AUTO_ADDR") {
+  field(DESC, "EPICS_CAS_AUTO_BEACON_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_AUTO_BEACON_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_ADDR_LIST") {
+  field(DESC, "EPICS_CAS_BEACON_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_BEACON_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_BEACON_PERIOD") {
+  field(DESC, "EPICS_CAS_BEACON_PERIOD")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_BEACON_PERIOD")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_BEACON_PORT") {
+  field(DESC, "EPICS_CAS_BEACON_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_BEACON_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_ADDR_INTF_LIST") {
+  field(DESC, "EPICS_CAS_INTF_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_INTF_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):CAS_ADDR_IGNORE_LIST") {
+  field(DESC, "EPICS_CAS_IGNORE_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_CAS_IGNORE_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):TIMEZONE") {
+  field(DESC, "EPICS_TIMEZONE")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_TIMEZONE")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):TS_NTP_INET") {
+  field(DESC, "EPICS_TS_NTP_INET")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_TS_NTP_INET")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_PORT") {
+  field(DESC, "EPICS_IOC_LOG_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_IOC_LOG_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_INET") {
+  field(DESC, "EPICS_IOC_LOG_INET")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_IOC_LOG_INET")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_ADDR_LIST") {
+  field(DESC, "EPICS_PVA_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_AUTO_ADDR") {
+  field(DESC, "EPICS_PVA_AUTO_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_AUTO_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_BEACON_PERIOD") {
+  field(DESC, "EPICS_PVA_BEACON_PERIOD")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_BEACON_PERIOD")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_BROADCAST_PORT") {
+  field(DESC, "EPICS_PVA_BROADCAST_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_BROADCAST_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_CONN_TMO") {
+  field(DESC, "EPICS_PVA_CONN_TMO")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_CONN_TMO")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_DEBUG") {
+  field(DESC, "EPICS_PVA_DEBUG")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_DEBUG")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_SERVER_PORT") {
+  field(DESC, "EPICS_PVA_SERVER_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVA_SERVER_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_AUTO_BEACON_ADDR_LIST") {
+  field(DESC, "EPICS_PVAS_AUTO_BEACON_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVAS_AUTO_BEACON_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BEACON_ADDR_LIST") {
+  field(DESC, "EPICS_PVAS_BEACON_ADDR_LIST")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVAS_BEACON_ADDR_LIST")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BEACON_PERIOD") {
+  field(DESC, "EPICS_PVAS_BEACON_PERIOD")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVAS_BEACON_PERIOD")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BROADCAST_PORT") {
+  field(DESC, "EPICS_PVAS_BROADCAST_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVAS_BROADCAST_PORT")
+  field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_SERVER_PORT") {
+  field(DESC, "EPICS_PVAS_SERVER_PORT")
+  field(DTYP, "IOC epics var")
+  field(INP, "@EPICS_PVAS_SERVER_PORT")
+  field(PINI, "YES")
+}

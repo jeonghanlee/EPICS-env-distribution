@@ -29,12 +29,16 @@ function popdd  { builtin popd  > /dev/null || exit; }
 pushdd ${HOME}
 mkdir temp_folder
 pushdd temp_folder
+rm -rf *
 
 git clone git@github.com:jeonghanlee/EPICS-env.git
 git clone git@github.com:jeonghanlee/EPICS-env-support.git
-git clone ssh://git@git-local.als.lbl.gov:8022/alsu/epics/alsu-site-modules.git
 git clone git@github.com:jeonghanlee/uldaq-env.git
 
+
+pushdd EPICS-env
+echo "INSTALL_LOCATION=${SC_TOP}" > configure/CONFIG_SITE.local
+popdd
 
 pushdd EPICS-env
 OS_NAME=`make print-OS_NAME`
@@ -58,12 +62,11 @@ make -C uldaq-env/ install || exit
 
 
 # git checkout 1.1.1
-echo "EPICS_TS_NTP_INET=tic.lbl.gov" > EPICS-env/configure/RELEASE.local
+echo "EPICS_TS_NTP_INET=time1.google.com" > EPICS-env/configure/RELEASE.local
 echo "VENDOR_ULDAQ_PATH=${VENDOR_LIB_PATH}/${OS_NAME}-${OS_VERSION}/vendor" >> EPICS-env/configure/RELEASE.local
 make -C EPICS-env/ init || exit
 make -C EPICS-env/ patch || exit
-make -C EPICS-env/ conf || exit
-make -C EPICS-env/ build || exit
+make -C EPICS-env/ build.gz || exit
 make -C EPICS-env/ install || exit
 make -C EPICS-env/ symlinks || exit
 
@@ -75,11 +78,10 @@ make -C EPICS-env-support/ build || exit
 make -C EPICS-env-support/ symlinks || exit
 
 
-echo "INSTALL_LOCATION=${EPICS_BASE_PATH}" > alsu-site-modules/configure/CONFIG_SITE.local
-make -C alsu-site-modules/ init || exit
-make -C alsu-site-modules/ build || exit
-
-
 popdd
 
 popdd
+
+mv ${SC_TOP}/epics/* .
+rm -f epics
+

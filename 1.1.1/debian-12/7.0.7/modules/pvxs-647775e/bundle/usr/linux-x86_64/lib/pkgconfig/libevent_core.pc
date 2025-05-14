@@ -1,0 +1,16 @@
+#libevent pkg-config source file
+
+prefix=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64
+exec_prefix=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64
+libdir=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64/lib
+includedir=/home/jeonglee/EPICS-env-distribution/epics/1.1.1/debian-12/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64/include
+
+Name: libevent_core
+Description: libevent_core
+Version: 2.2.0
+Requires:
+Conflicts:
+Libs: -L${libdir} -levent_core
+Libs.private: 
+Cflags: -I${includedir}
+
