@@ -82,6 +82,6 @@ popdd
 
 popdd
 
-mv ${SC_TOP}/epics/* .
-rm -f epics
+scp -r ${SC_TOP}/epics/* .
+rm -rf ${SC_TOP}/epics
 

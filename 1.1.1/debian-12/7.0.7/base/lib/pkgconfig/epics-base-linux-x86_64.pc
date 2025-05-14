@@ -37,6 +37,6 @@ LD=/usr/bin/ld -r
 Name: epics-base-linux-x86_64
 Version: 7.0.7.0
 Description: EPICS Base for linux-x86_64
-Cflags: -I${includedir_osi} -I${includedir_osd} -I${includedir_comp} -D_GNU_SOURCE -D_DEFAULT_SOURCE -D_X86_64_ -DUNIX -Dlinux -gz=zlib -mtune=generic -m64
-Libs: -L${libdir} -gz=zlib -rdynamic -m64
+Cflags: -I${includedir_osi} -I${includedir_osd} -I${includedir_comp} -D_GNU_SOURCE -D_DEFAULT_SOURCE -D_X86_64_ -DUNIX -Dlinux -g0 -gz=zlib -mtune=generic -m64
+Libs: -L${libdir} -g0 -gz=zlib -rdynamic -m64
 Libs.private: -lpthread -lreadline -lm -lrt -ldl -lgcc
