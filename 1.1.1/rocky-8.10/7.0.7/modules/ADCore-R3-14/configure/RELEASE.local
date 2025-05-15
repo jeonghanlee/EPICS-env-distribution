@@ -1,0 +1,2 @@
+EPICS_BASE:=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base
+ASYN:=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base/../modules/asyn

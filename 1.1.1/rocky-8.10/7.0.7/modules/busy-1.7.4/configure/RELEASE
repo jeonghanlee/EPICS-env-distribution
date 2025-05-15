@@ -1,0 +1,29 @@
+#RELEASE Location of external products
+# Run "gnumake clean uninstall install" in the application
+# top directory each time this file is changed.
+
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+
+SUPPORT=/corvette/home/epics/devel
+
+# ASYN is needed to compile asyn device support
+ASYN=$(SUPPORT)/asyn-4-33
+
+# AUTOSAVE is needed for the test application only
+AUTOSAVE=$(SUPPORT)/autosave-5-9
+
+# BUSY is this module
+BUSY=$(SUPPORT)/busy-1-7
+
+# EPICS_BASE usually appears last so other apps can override stuff:
+EPICS_BASE=/corvette/usr/local/epics-devel/base-7.0.2
+
+#Capfast users may need the following definitions
+#CAPFAST_TEMPLATES=
+#SCH2EDIF_PATH=
+
+# These lines allow developers to override these RELEASE settings
+# without having to modify this file directly.
+-include $(TOP)/../RELEASE.local
+-include $(TOP)/../RELEASE.$(EPICS_HOST_ARCH).local
+-include $(TOP)/configure/RELEASE.local

@@ -1,0 +1,28 @@
+#=================================================================#
+# Template file: NDTransform.template
+
+include "NDPluginBase.template"
+
+record(mbbo, "$(P)$(R)Type")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))TRANSFORM_TYPE")
+   field(ZRST, "None")
+   field(ZRVL, "0")
+   field(ONST, "Rot90")
+   field(ONVL, "1")
+   field(TWST, "Rot180")
+   field(TWVL, "2")
+   field(THST, "Rot270")
+   field(THVL, "3")
+   field(FRST, "Mirror")
+   field(FRVL, "4")
+   field(FVST, "Rot90Mirror")
+   field(FVVL, "5")
+   field(SXST, "Rot180Mirror")
+   field(SXVL, "6")
+   field(SVST, "Rot270Mirror")
+   field(SVVL, "7")
+   info(autosaveFields, "VAL")
+}

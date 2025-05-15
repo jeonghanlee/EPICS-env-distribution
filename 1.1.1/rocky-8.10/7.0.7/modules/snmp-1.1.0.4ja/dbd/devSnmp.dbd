@@ -1,0 +1,14 @@
+# Include external dbds if required
+##
+device(stringin,INST_IO,devSnmpSi,"Snmp")
+device(ai,INST_IO,devSnmpAi,"Snmp")
+device(longin,INST_IO,devSnmpLi,"Snmp")
+device(waveform,INST_IO,devSnmpWf,"Snmp")
+
+## NSCL - Feb 2009 - J.Priller
+## include output record types
+device(ao,INST_IO,devSnmpAo,"Snmp")
+device(longout,INST_IO,devSnmpLo,"Snmp")
+device(stringout,INST_IO,devSnmpSo,"Snmp")
+
+registrar(snmp_Register)

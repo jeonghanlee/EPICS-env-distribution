@@ -1,0 +1,12 @@
+# 1 "../toolchain.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "../toolchain.c"
+# 17 "../toolchain.c"
+GCC_MAJOR = 8
+GCC_MINOR = 5
+GCC_PATCH = 0
+# 43 "../toolchain.c"
+COMMANDLINE_LIBRARY ?= READLINE

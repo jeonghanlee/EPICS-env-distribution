@@ -1,0 +1,16 @@
+#libevent pkg-config source file
+
+prefix=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64
+exec_prefix=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64
+libdir=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64/lib
+includedir=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/modules/pvxs-647775e/bundle/usr/linux-x86_64/include
+
+Name: libevent_pthreads
+Description: libevent_pthreads adds pthreads-based threading support to libevent
+Version: 2.2.0
+Requires: libevent_core
+Conflicts:
+Libs: -L${libdir} -levent_pthreads
+Libs.private:  
+Cflags: -I${includedir} 
+
