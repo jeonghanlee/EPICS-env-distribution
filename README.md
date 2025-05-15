@@ -27,10 +27,10 @@ Clone the ALS-U EPICS repository using Git.
 
 ### Clone the ALS-U EPICS environment by using `git clone`
 
-Users may need to have SSH access to the ALS GitLab repository to clone the following repositories.
+Please use **`--depth 1`**, which you only need for this distribution.
 
 ```shell
-$ git clone https://github.com/jeonghanlee/EPICS-env-distribution.git ~/epics
+$ git clone --depth 1 https://github.com/jeonghanlee/EPICS-env-distribution.git ~/epics
 ```
 
 By cloning the repository, you have the environment at the `${HOME}/epics` folder. In most cases, you are ready to use it.
@@ -47,6 +47,8 @@ source ~/epics/1.1.1/debian-12/7.0.7/setEpicsEnv.bash
 # or
 # Example for EPICS 7.0.7 on Rocky 8.10 (x86_64)
 source ~/epics/1.1.1/rocky-8.10/7.0.7/setEpicsEnv.bash
+# or (x86_64)
+source ~/epics/select_compatiable_Linux_Distribution/7.0.7/setEpicsEnv.bash
 ```
 Sourcing the script sets up necessary environment variables like `EPICS_BASE`, `PATH`, and `LD_LIBRARY_PATH`. The output should resemble this (user and specific paths will vary):
 ```shell
