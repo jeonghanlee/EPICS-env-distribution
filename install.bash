@@ -74,7 +74,7 @@ make -C EPICS-env/ symlinks || exit
 echo "INSTALL_LOCATION=${EPICS_BASE_PATH}" > EPICS-env-support/configure/CONFIG_SITE.local
 make -C EPICS-env-support/ init || exit
 make -C EPICS-env-support/ conf || exit
-make -C EPICS-env-support/ build || exit
+make -C EPICS-env-support/ build.gz || exit
 make -C EPICS-env-support/ symlinks || exit
 
 
