@@ -1,0 +1,14 @@
+# RELEASE - Location of external products
+
+# You should do a "gnumake clean uninstall install" in the application
+# top directory each time changes are made to this file
+
+EPICS_BASE=/home/franksen/src/epics-base/3-14-12-5
+
+# legacy support for synapps
+-include $(TOP)/../configure/EPICS_BASE.$(EPICS_HOST_ARCH)
+
+# this is how it is done nowadays
+-include $(TOP)/../RELEASE.local
+-include $(TOP)/../RELEASE.$(EPICS_HOST_ARCH).local
+-include $(TOP)/configure/RELEASE.local

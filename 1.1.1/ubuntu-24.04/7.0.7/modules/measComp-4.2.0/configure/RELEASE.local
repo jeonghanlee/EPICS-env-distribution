@@ -1,0 +1,9 @@
+SNCSEQ=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/seq-2.2.9
+SSCAN=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/sscan-589eac4
+CALC=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/calc-3.7.5
+ASYN=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/asyn-4.44.2
+AUTOSAVE=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/autosave-10a8f11
+BUSY=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/busy-1.7.4
+SCALER=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/scaler-4.1
+STD=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/std-3.6.4
+MCA=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/modules/mca-7.10.0

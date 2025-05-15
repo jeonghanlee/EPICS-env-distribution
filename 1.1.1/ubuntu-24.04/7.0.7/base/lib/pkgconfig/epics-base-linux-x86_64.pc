@@ -1,0 +1,42 @@
+# standard variables
+prefix=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/base
+exec_prefix=${prefix}
+bindir=${prefix}/bin/linux-x86_64
+libdir=${prefix}/lib/linux-x86_64
+
+# non-standard variables
+
+# EPICS Base install location
+FINAL_LOCATION=${prefix}
+ARCH=linux-x86_64
+OS_CLASS=Linux
+CMPLR_CLASS=gcc
+
+EPICS_BASE_HOST_LIBS=ca Com
+EPICS_BASE_IOC_LIBS=dbRecStd dbCore ca Com
+
+# Directories
+
+includedir_osi=${prefix}/include
+includedir_osd=${prefix}/include/os/Linux
+includedir_comp=${prefix}/include/compiler/gcc
+
+includedirs=${includedir_osi} ${includedir_osd} ${includedir_comp}
+
+dbddir=${prefix}/dbd
+dbdir=${prefix}/db
+
+# Tool chain
+
+CC=/usr/bin/gcc
+CXX=/usr/bin/g++
+CPP=/usr/bin/gcc -x c -E
+AR=/usr/bin/ar -rc
+LD=/usr/bin/ld -r
+
+Name: epics-base-linux-x86_64
+Version: 7.0.7.0
+Description: EPICS Base for linux-x86_64
+Cflags: -I${includedir_osi} -I${includedir_osd} -I${includedir_comp} -D_GNU_SOURCE -D_DEFAULT_SOURCE -D_X86_64_ -DUNIX -Dlinux -g0 -gz=zlib -mtune=generic -m64
+Libs: -L${libdir} -g0 -gz=zlib -rdynamic -m64
+Libs.private: -lpthread -lreadline -lm -lrt -ldl -lgcc

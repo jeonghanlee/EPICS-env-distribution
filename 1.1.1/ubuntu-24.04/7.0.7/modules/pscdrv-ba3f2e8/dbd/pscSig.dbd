@@ -1,0 +1,26 @@
+# PSD Calculation
+device(mbbo, INST_IO, devMBBOFFTsetwin, "PSC PSD windtype")
+device(longout, INST_IO, devLOFFTnfft, "PSC PSD nfft")
+device(longout, INST_IO, devLOFFTstart, "PSC PSD start")
+device(longout, INST_IO, devLOFFTwidth, "PSC PSD width")
+device(ao, INST_IO, devAOFFTFSamp, "PSC PSD fsamp")
+device(ao, INST_IO, devAOFFTScale, "PSC PSD scale")
+device(ai, INST_IO, devAIFFTTotPwrTime, "PSC PSD totpwrtime")
+device(ai, INST_IO, devAIFFTTotPwrFreq, "PSC PSD totpwrfreq")
+device(ai, INST_IO, devAIFFTLasttime, "PSC PSD runtime")
+device(waveform, CONSTANT, devWFFFTInput, "PSC PSD input")
+device(waveform, INST_IO, devWFFFTOutput, "PSC PSD output")
+device(waveform, INST_IO, devWFFFTOutputInt, "PSC PSD out integral")
+device(waveform, INST_IO, devWFFFTFScale, "PSC PSD fscale")
+device(waveform, INST_IO, devWFFFTFWindow, "PSC PSD window")
+registrar(fftcalcReg)
+
+# Linear scaling
+function(wf_scale)
+
+# Basic stats
+function(wf_stats)
+function(wf_timebase)
+
+# debugging noise
+variable(PSCPSDDebug, int)

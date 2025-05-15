@@ -1,0 +1,37 @@
+
+# logic continues from CONFIG_PVXS_MODULE
+
+# we're appending so must be idempotent
+ifeq (,$(_PVXS_RULE_INCLUDED))
+_PVXS_RULE_INCLUDED := YES
+
+ifneq ($(_PVXS_CONF_INCLUDED),YES)
+$(error CONFIG_PVXS_MODULE was not loaded)
+endif
+
+_PVXS_CHECK_VARS := PROD TESTPROD LIB $(PROD) $(TESTPROD) $(LIBRARY)
+
+ifeq (,$(LIBEVENT))
+# libevent in default search path
+
+# $(1) is PROD or LIBRARY name
+define _PVXS_ADD_LIBEVENT
+$(1)_SYS_LIBS := $$($(1)_SYS_LIBS) $$(if $$(filter pvxs,$$($(1)_LIBS)),$$(LIBEVENT_BUNDLE_LIBS))
+$(1)_SYS_LIBS := $$($(1)_SYS_LIBS) $$(if $$(filter pvxs,$$($(1)_LIBS)),$$(LIBEVENT_SYS_LIBS))
+endef
+
+else
+# libevent in specific location
+
+# $(1) is PROD or LIBRARY name
+define _PVXS_ADD_LIBEVENT
+$(1)_LIBS     := $$($(1)_LIBS)     $$(if $$(filter pvxs,$$($(1)_LIBS)),$$(LIBEVENT_BUNDLE_LIBS))
+$(1)_SYS_LIBS := $$($(1)_SYS_LIBS) $$(if $$(filter pvxs,$$($(1)_LIBS)),$$(LIBEVENT_SYS_LIBS))
+$(1)_LDFLAGS  := $$($(1)_LDFLAGS)  $$(if $$(filter pvxs,$$($(1)_LIBS)),$$(LIBEVENT_BUNDLE_LDFLAGS))
+endef
+
+endif
+
+$(foreach loc,$(_PVXS_CHECK_VARS),$(eval $(call _PVXS_ADD_LIBEVENT,$(loc))))
+
+endif # _PVXS_RULE_INCLUDED

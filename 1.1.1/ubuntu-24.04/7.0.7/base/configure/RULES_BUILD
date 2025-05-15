@@ -1,0 +1,600 @@
+#*************************************************************************
+# Copyright (c) 2006 UChicago Argonne LLC, as Operator of Argonne
+#     National Laboratory.
+# Copyright (c) 2002 The Regents of the University of California, as
+#     Operator of Los Alamos National Laboratory.
+# EPICS BASE is distributed subject to a Software License Agreement found
+# in the file LICENSE that is included with this distribution.
+#*************************************************************************
+
+# RULES_BUILD
+
+# Rules for making things specified in a Makefile
+#
+# CWD is O.$(T_A), but most sources are elsewhere
+
+ifndef BASE_RULES_BUILD
+BASE_RULES_BUILD=1
+
+vpath %.c $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.cc $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.cpp $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.rc $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.h $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.hpp $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.html $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.skel.static $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.y $(USR_VPATH) $(ALL_SRC_DIRS)
+vpath %.l $(USR_VPATH) $(ALL_SRC_DIRS)
+
+#---------------------------------------------------------------
+
+include $(CONFIG)/CONFIG_ADDONS
+
+#---------------------------------------------------------------
+
+SCRIPTS_HOST += $(PERL_SCRIPTS)
+# PERL_SCRIPTS are installed into existing $(INSTALL_BIN) for Host systems
+
+# Host targets can compile and run programs
+ifneq (,$(findstring Host,$(VALID_BUILDS)))
+LIBRARY += $(LIBRARY_HOST)
+LOADABLE_LIBRARY += $(LOADABLE_LIBRARY_HOST)
+OBJS += $(OBJS_HOST)
+PROD += $(PROD_HOST)
+SCRIPTS += $(SCRIPTS_HOST)
+TARGETS += $(TARGETS_HOST)
+TESTLIBRARY += $(TESTLIBRARY_HOST)
+TESTSCRIPTS += $(TESTSCRIPTS_HOST)
+TESTPROD += $(TESTPROD_HOST)
+endif
+
+# Command targets have a command line and support main()
+ifneq (,$(findstring Command,$(VALID_BUILDS)))
+LIBRARY += $(LIBRARY_CMD)
+LOADABLE_LIBRARY += $(LOADABLE_LIBRARY_CMD)
+OBJS += $(OBJS_CMD)
+PROD += $(PROD_CMD)
+SCRIPTS += $(SCRIPTS_CMD)
+TARGETS += $(TARGETS_CMD)
+TESTLIBRARY += $(TESTLIBRARY_CMD)
+TESTSCRIPTS += $(TESTSCRIPTS_CMD)
+TESTPROD += $(TESTPROD_CMD)
+endif
+
+# Ioc targets can run IOCs
+ifneq (,$(findstring Ioc,$(VALID_BUILDS)))
+LIBRARY += $(LIBRARY_IOC)
+LOADABLE_LIBRARY += $(LOADABLE_LIBRARY_IOC)
+OBJS += $(OBJS_IOC)
+PROD += $(PROD_IOC)
+SCRIPTS += $(SCRIPTS_IOC)
+TARGETS += $(TARGETS_IOC)
+TESTLIBRARY += $(TESTLIBRARY_IOC)
+TESTSCRIPTS += $(TESTSCRIPTS_IOC)
+TESTPROD += $(TESTPROD_IOC)
+endif
+
+#---------------------------------------------------------------
+
+ifdef TEMPLATES_DIR
+INSTALL_TEMPLATES_SUBDIR = $(INSTALL_TEMPLATES)/$(TEMPLATES_DIR)
+else
+INSTALL_TEMPLATES_SUBDIR = $(INSTALL_TEMPLATES)
+endif
+
+HTMLS_DIR ?= .
+
+#---------------------------------------------------------------
+#	First target
+
+all: install
+ifeq ($(EPICS_HOST_ARCH),$(T_A))
+host: install
+else
+# Do nothing
+host:
+endif
+
+include $(CONFIG)/RULES_FILE_TYPE
+
+include $(CONFIG)/RULES.Db
+
+#---------------------------------------------------------------
+# Include defines and rules for prod, library and test* targets
+
+ifneq (,$(strip $(PROD) $(TESTPROD) $(LIBRARY) $(TESTLIBRARY) \
+        $(LOADABLE_LIBRARY)))
+include $(CONFIG)/RULES_TARGET
+endif
+
+#---------------------------------------------------------------
+# Read dependency files
+
+ifneq (inc,$(strip $(MAKECMDGOALS)))
+ifneq (,$(strip $(HDEPENDS_FILES)))
+$(filter-out $(wildcard *$(DEP)), $(HDEPENDS_FILES)): | $(COMMON_INC)
+-include $(HDEPENDS_FILES)
+endif
+endif
+
+#---------------------------------------------------------------
+#   Products and Object libraries
+#
+PRODTARGETS += $(PRODNAME) $(MUNCHNAME) $(CTDT_SRCS) $(CTDT_OBJS) $(NMS)
+TESTPRODTARGETS += $(TESTPRODNAME) $(TESTMUNCHNAME)
+
+#---------------------------------------------------------------
+#   Test result files
+#
+
+# Enable testing if this host can run tests for the current target
+ifneq (,$(filter $(T_A), $(EPICS_HOST_ARCH) $(CROSS_COMPILER_RUNTEST_ARCHS)))
+RUNTESTS_ENABLED = YES
+TESTSCRIPTS.t = $(filter %.t, $(TESTSCRIPTS))
+TAPFILES.t += $(TESTSCRIPTS.t:.t=.tap)
+JUNITFILES.t += $(TESTSCRIPTS.t:.t=-results.xml)
+TAPFILES += $(TAPFILES.t)
+JUNITFILES += $(JUNITFILES.t)
+endif
+
+#---------------------------------------------------------------
+#   Libraries
+#
+
+LIBTARGETS += $(LIBNAME) $(INSTALL_LIBS) $(TESTLIBNAME) \
+  $(SHRLIBNAME) $(INSTALL_SHRLIBS) $(TESTSHRLIBNAME) \
+  $(DLLSTUB_LIBNAME) $(INSTALL_DLLSTUB_LIBS) $(TESTDLLSTUB_LIBNAME) \
+  $(LOADABLE_SHRLIBNAME) $(INSTALL_LOADABLE_SHRLIBS)
+
+
+#	Main targets
+
+install: buildInstall
+
+buildInstall: build
+
+# Allows rebuild to work with parallel builds option, -j.
+install: $(patsubst rebuild,clean,$(filter rebuild,$(MAKECMDGOALS)))
+
+rebuild: clean install
+
+build: inc
+
+build: $(OBJSNAME) $(LIBTARGETS) $(PRODTARGETS) $(TESTPRODTARGETS) \
+	$(TARGETS) $(TESTSCRIPTS) $(INSTALL_LIB_INSTALLS)
+
+inc: $(COMMON_INC) $(INSTALL_INC) $(INSTALL_CONFIGS) $(INSTALLS_CFG) \
+	$(INSTALL_HTMLS) $(INSTALLS_PERL_MODULES) $(INSTALL_SCRIPTS)
+
+buildInstall: \
+	$(INSTALL_PROD) $(INSTALL_MUNCHS) \
+	$(INSTALL_TCLLIBS) $(INSTALL_TCLINDEX) \
+	$(INSTALL_DOCS) \
+	$(INSTALL_OBJS) \
+	$(INSTALL_TEMPLATE) \
+	$(INSTALL_BIN_INSTALLS)
+
+clean: build_clean
+
+build_clean:
+	$(ECHO) "Cleaning"
+	@$(RM) *.i *$(OBJ) *.a \
+	$(LIBNAME) $(TESTLIBNAME) $(SHRLIBNAME) $(TESTSHRLIBNAME) \
+	$(DLLSTUB_LIBNAME) $(TESTDLLSTUB_LIBNAME) \
+	$(LOADABLE_SHRLIBNAME) \
+	$(INC) $(TARGETS) $(TDS) $(CLEANS) \
+	*.out MakefileInclude *.manifest *.exp \
+	$(COMMON_INC) $(HDEPENDS_FILES) $(PRODTARGETS) $(TESTPRODTARGETS) \
+	$(TESTSCRIPTS) $(TAPFILES) $(JUNITFILES)
+ifdef RES
+	@$(RM) *$(RES)
+endif
+
+# Sort directories to remove duplicates & make parents first
+$(sort $(DIRECTORY_TARGETS)):
+	$(MKDIR) $@
+
+# Install LIB_INSTALLS libraries before linking executables
+$(TESTPRODNAME) $(PRODNAME): | $(INSTALL_LIB_INSTALLS)
+
+# Install built libraries too, unless Makefile says to wait
+ifneq ($(DELAY_INSTALL_LIBS),YES)
+$(TESTPRODNAME) $(PRODNAME): | $(INSTALL_LIBS) $(INSTALL_DLLSTUB_LIBS)
+endif
+
+# RELEASE file consistency checking
+checkRelease:
+	+$(CONVERTRELEASE) checkRelease
+warnRelease:
+	-$(CONVERTRELEASE) checkRelease
+noCheckRelease:
+ifeq ($(EPICS_HOST_ARCH),$(T_A))
+	$(info Warning: RELEASE file consistency checks have been disabled)
+endif
+
+# $(FINAL_DIR) signals eventual install locations to makeRPath script
+$(TESTPRODNAME): FINAL_DIR=.
+$(PRODNAME): FINAL_DIR=$(INSTALL_BIN)
+$(TESTSHRLIBNAME): FINAL_DIR=.
+$(SHRLIBNAME): FINAL_DIR=$(INSTALL_SHRLIB)
+$(LOADABLE_SHRLIBNAME): FINAL_DIR=$(INSTALL_SHRLIB)
+
+#---------------------------------------------------------------
+#  The order of the following rules is
+#  VERY IMPORTANT !!!!
+
+$(TESTPRODNAME) $(PRODNAME): $(PRODUCT_OBJS) $(PROD_RESS) $(PROD_DEPLIBS)
+
+$(TESTPRODNAME) $(PRODNAME): %$(EXE): | $(INSTALL_LIB)
+	@$(RM) $@
+	$(LINK.cpp)
+	$(MT_EXE_COMMAND)
+
+%_ctdt$(OBJ): %_ctdt.c
+	@$(RM) $@
+	$(COMPILE.ctdt) $<
+
+%$(DEP):%.c
+	@$(RM) $@
+	$(HDEPENDS.c) $<
+
+%$(DEP):%.cc
+	@$(RM) $@
+	$(HDEPENDS.cpp) $<
+
+%$(DEP):%.cpp
+	@$(RM) $@
+	$(HDEPENDS.cpp) $<
+
+# Cancel GNUMake's built-in rules, which don't have our _INC
+# dependencies so could get used in some circumstances (gdd)
+%.o: %.c
+%.o: %.cc
+%.o: %.cpp
+
+# Include files are order-only prerequisites for compilation:
+%$(OBJ): %.c | $(COMMON_INC) $(INSTALL_INC)
+	@$(RM) $@
+	$(COMPILE.c) -c $<
+
+%$(OBJ): %.cc | $(COMMON_INC) $(INSTALL_INC)
+	@$(RM) $@
+	$(COMPILE.cpp) -c $<
+
+%$(OBJ): %.cpp | $(COMMON_INC) $(INSTALL_INC)
+	@$(RM) $@
+	$(COMPILE.cpp) -c $<
+
+# Windows resource compiler
+%$(RES): %.rc
+	@$(RM) $@
+	$(RCCMD)
+
+YACCOPT ?= $($*_YACCOPT)
+#
+# rename the y.tab.h file only if we
+# are creating it
+#
+%.c: %.y
+	@$(RM) $*.tab.c
+	@$(RM) $*.tab.h
+	$(YACC) -b$* $(YACCOPT) $<
+	$(MV) $*.tab.c $*.c
+	$(if $(findstring -d, $(YACCOPT)),$(MV) $*.tab.h $*.h,)
+
+# must be a separate rule since when not using '-d' the
+# prefix for .h will be different then .c
+%.h: %.c %.y
+
+%.c: %.l
+	@$(RM) $@
+	$(LEX) $(LEXOPT) -o$@ $<
+
+#---------------------------------------------------------------
+# Libraries, shared/DLL and stubs
+
+$(LIBNAME) $(TESTLIBNAME): $(LIBRARY_OBJS)
+
+$(filter-out $(DLLSTUB_LIBNAME) $(TESTDLLSTUB_LIBNAME), $(LIBNAME) $(TESTLIBNAME)): $(LIB_PREFIX)%$(LIB_SUFFIX):
+	@$(RM) $@
+	$(ARCMD)
+ifneq ($(strip $(RANLIB)),)
+	$(RANLIB) $@
+endif # RANLIB
+
+$(SHRLIBNAME) $(DLLSTUB_LIBNAME) $(TESTSHRLIBNAME) $(TESTDLLSTUB_LIBNAME): \
+    $(LIBRARY_OBJS) $(LIBRARY_RESS) $(SHRLIB_DEPLIBS)
+
+# Stub library timestamps may be earlier than the DLL itself.
+# This order-only prerequisite resolves any related problems.
+# The $(LINK.shrlib) command must build both library files if
+# the target requires a separate stub library file.
+$(DLLSTUB_LIBNAME): | $(SHRLIBNAME);
+$(SHRLIBNAME): $(SHRLIB_PREFIX)%$(SHRLIB_SUFFIX):
+	@$(RM) $@
+	$(LINK.shrlib)
+	$(MT_DLL_COMMAND)
+
+$(TESTDLLSTUB_LIBNAME): | $(TESTSHRLIBNAME);
+$(TESTSHRLIBNAME): $(SHRLIB_PREFIX)%$(SHRLIB_SUFFIX):
+	@$(RM) $@
+	$(LINK.shrlib)
+	$(MT_DLL_COMMAND)
+
+$(LOADABLE_SHRLIBNAME): $(LIBRARY_OBJS) $(LIBRARY_RESS) $(SHRLIB_DEPLIBS)
+
+$(LOADABLE_SHRLIBNAME): $(LOADABLE_SHRLIB_PREFIX)%$(LOADABLE_SHRLIB_SUFFIX):
+	@$(RM) $@
+	$(LINK.shrlib)
+	$(MT_DLL_COMMAND)
+
+$(LIBNAME) $(SHRLIBNAME) $(LOADABLE_SHRLIBNAME): | $(INSTALL_LIB)
+$(INSTALL_LIB):
+	@$(MKDIR) $@
+
+#---------------------------------------------------------------
+# C++ munching for VxWorks
+
+%.nm: %$(EXE)
+	@$(RM) $@
+	$(NM) $<  > $@
+
+%.nm: %$(OBJ)
+	@$(RM) $@
+	$(NM) $<  > $@
+
+%_ctdt.c: %.nm $(TOOLS)/munch.pl
+	@$(RM) $@
+	$(PERL) $(TOOLS)/munch.pl -o $@ $<
+
+$(MUNCHNAME): %$(MUNCH_SUFFIX): $(MUNCH_DEPENDS) %$(EXE)
+	@$(RM) $@
+	$(MUNCH_CMD)
+
+$(TESTMUNCHNAME): %$(MUNCH_SUFFIX): $(MUNCH_DEPENDS) %$(EXE)
+	@$(RM) $@
+	$(MUNCH_CMD)
+
+#---------------------------------------------------------------
+# GeSys modules for RTEMS
+$(MODNAME): %$(MODEXT): %$(EXE)
+	@echo "Building module $@"
+	@$(RM) $@
+	$(LINK.mod)
+
+#---------------------------------------------------------------
+# Generate Perl include path module
+%ModuleDirs.pm: $(wildcard $(TOP)/configure/RELEASE*)
+	@$(MKDIR) $(dir $@)
+	$(CONVERTRELEASE) -T $(TOP) $@
+
+#---------------------------------------------------------------
+# Automated testing
+
+runtests: run-tap-tests
+run-tap-tests: | build
+ifneq ($(TESTSCRIPTS.t),)
+ifdef RUNTESTS_ENABLED
+	$(ECHO) "$(PROVE) $(TESTSCRIPTS.t)"
+	@$(PROVE) $(TESTSCRIPTS.t) || $(PROVE_FAILURE)
+endif
+endif
+
+tapfiles: $(TAPFILES)
+junitfiles: $(JUNITFILES)
+# prevent deletion of partial output from failing tests
+.PRECIOUS: $(TAPFILES) $(JUNITFILES)
+
+test-results: tap-results
+tap-results: $(TAPFILES)
+ifneq ($(strip $(TAPFILES)),)
+ifdef RUNTESTS_ENABLED
+	$(ECHO) "$(PROVE.tap) $(TAPFILES)"
+	@$(PROVE.tap) $(TAPFILES) || $(PROVE_FAILURE)
+endif
+
+CURRENT_TAPFILES := $(wildcard $(TAPFILES))
+CURRENT_JUNITFILES := $(wildcard $(JUNITFILES))
+endif
+
+clean-tests:
+ifneq ($(CURRENT_TAPFILES)$(TAPS_FAILED_LOG),)
+	$(RM) $(CURRENT_TAPFILES) $(TAPS_FAILED_LOG)
+endif
+ifneq ($(CURRENT_JUNITFILES),)
+	$(RM) $(CURRENT_JUNITFILES)
+endif
+
+# A .tap file is the output from running the associated test script
+$(TAPFILES.t): %.tap: %.t | build
+ifdef RUNTESTS_ENABLED
+	$(ECHO) "$(PERL) $< -tap > $@"
+	@$(PERL) $< -tap > $@ || $(TAPFILE_FAILURE)
+endif
+
+$(JUNITFILES.t): %-results.xml: %.tap
+	$(TAPTOJUNIT) --puretap --output $@ --input $< $*
+
+# If there's a perl test script (.plt) available, use it
+%.t: ../%.plt
+	@$(RM) $@
+	$(EXPAND_TOOL) -t $(INSTALL_LOCATION) -a $(T_A) $< $@
+
+# Test programs (.t files) must be written in Perl.
+# Generate a perl program to exec the real test binary.
+%.t: %$(EXE) $(TOOLS)/makeTestfile.pl
+	@$(RM) $@
+	$(PERL) $(TOOLS)/makeTestfile.pl $(T_A) $(EPICS_HOST_ARCH) $@ $<
+
+#---------------------------------------------------------------
+# Generate $(API_HEADER) files on request (%API.h)
+
+ifdef API_HEADER
+# Install them
+INC += $(API_HEADER)
+
+# Ensure we generate them early enough
+INSTALL_API_HEADERS = $(addprefix $(INSTALL_INCLUDE)/,$(API_HEADER))
+$(filter-out $(INSTALL_API_HEADERS), $(INSTALL_INC)) $(HDEPENDS_FILES): \
+    | $(INSTALL_API_HEADERS)
+
+# How to make one
+$(COMMON_DIR)/%API.h: $(TOOLS)/makeAPIheader.pl
+	@$(RM) $@
+	$(PERL) $(TOOLS)/makeAPIheader.pl -o $@ $(@:$(COMMON_DIR)/%API.h=%)
+endif
+
+# Generate header with version number from VCS
+
+ifneq ($(GENVERSION),)
+$(COMMON_DIR)/$(GENVERSION): FORCE
+	$(GENVERSIONHEADER) -t $(TOP) -N $(GENVERSIONMACRO) -V "$(GENVERSIONDEFAULT)" $@
+endif
+
+#---------------------------------------------------------------
+# Install rules for BIN_INSTALLS and LIB_INSTALLS
+
+define  BIN_INSTALLS_template
+$$(INSTALL_BIN)/$$(notdir $(1)): $(1)
+	$(ECHO) "Installing $$(<F)"
+	@$$(INSTALL) -d -m $$(BIN_PERMISSIONS) $$^ $$(INSTALL_BIN)
+endef
+$(foreach file, $(BIN_INSTALLS), $(eval $(call BIN_INSTALLS_template, $(file))))
+
+define  LIB_INSTALLS_template
+$$(INSTALL_LIB)/$$(notdir $(1)): $(1)
+	$(ECHO) "Installing $$(<F)"
+	@$$(INSTALL) -d -m $$(LIB_PERMISSIONS) $$^ $$(INSTALL_LIB)
+endef
+$(foreach file, $(LIB_INSTALLS), $(eval $(call LIB_INSTALLS_template, $(file))))
+
+#---------------------------------------------------------------
+
+$(INSTALL_BIN)/%: ../os/$(OS_CLASS)/%
+	$(ECHO) "Installing os-specific script $@"
+	@$(INSTALL_PRODUCT) -d -m $(BIN_PERMISSIONS) $< $(INSTALL_BIN)
+
+$(INSTALL_BIN)/%: %
+	$(ECHO) "Installing created executable $@"
+	@$(INSTALL_PRODUCT) -d -m $(BIN_PERMISSIONS) $< $(INSTALL_BIN)
+
+$(INSTALL_BIN)/%: ../%
+	$(ECHO) "Installing script $@"
+	@$(INSTALL_PRODUCT) -d -m $(BIN_PERMISSIONS) $< $(INSTALL_BIN)
+
+$(INSTALL_LIB)/%$(LIB_SUFFIX): %$(LIB_SUFFIX)
+	$(ECHO) "Installing library $@"
+	@$(INSTALL_LIBRARY) -d -m $(LIB_PERMISSIONS) $< $(INSTALL_LIB)
+
+ifneq ($(LIB_SUFFIX),$(DLLSTUB_SUFFIX))
+$(INSTALL_LIB)/%$(DLLSTUB_SUFFIX): %$(DLLSTUB_SUFFIX)
+	$(ECHO) "Installing DLL stub library $@"
+	@$(INSTALL_LIBRARY) -d -m $(LIB_PERMISSIONS) $< $(INSTALL_LIB)
+endif # SUFFIX
+
+$(INSTALL_SHRLIBS): $(INSTALL_SHRLIB)/%: %
+	$(ECHO) "Installing shared library $@"
+	@$(INSTALL_LIBRARY) -d -m $(SHRLIB_PERMISSIONS) $< $(INSTALL_SHRLIB)
+ifneq ($(SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE))
+ifneq (,$(strip $(SHRLIB_VERSION)))
+	@$(RM) $(subst $(SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE),$@)
+	ln -s $< $(subst $(SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE),$@)
+endif # SHRLIB_VERSION
+endif # SHRLIB_SUFFIX
+
+ifneq ($(INSTALL_TCLLIB),$(INSTALL_BIN))
+$(INSTALL_TCLLIB)/%: %
+	$(ECHO) "Installing Tcl library $@"
+	@$(INSTALL) -d -m $(BIN_PERMISSIONS) $< $(INSTALL_TCLLIB)
+
+$(INSTALL_TCLLIB)/%: ../%
+	$(ECHO) "Installing Tcl library $@"
+	@$(INSTALL) -d -m $(BIN_PERMISSIONS) $< $(INSTALL_TCLLIB)
+endif
+
+ifneq ($(TCLINDEX),)
+$(INSTALL_TCLLIB)/$(TCLINDEX): $(INSTALL_TCLLIBS)
+	$(ECHO) "Updating $@"
+	$(ECHO) eval auto_mkindex $(INSTALL_TCLLIB) "$(TCLLIBNAME)" | tclsh
+endif
+
+$(INSTALL_LOADABLE_SHRLIBS): $(INSTALL_SHRLIB)/%: %
+	$(ECHO) "Installing loadable shared library $@"
+	@$(INSTALL_LIBRARY) -d -m $(SHRLIB_PERMISSIONS) $< $(INSTALL_SHRLIB)
+ifneq ($(LOADABLE_SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE))
+ifneq (,$(strip $(LOADABLE_SHRLIB_VERSION)))
+	@$(RM) $(subst $(LOADABLE_SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE),$@)
+	ln -s $< $(subst $(LOADABLE_SHRLIB_SUFFIX),$(SHRLIB_SUFFIX_BASE),$@)
+endif # LOADABLE_SHRLIB_VERSION
+endif # LOADABLE_SHRLIB_SUFFIX
+
+ifneq ($(INSTALL_CONFIGS),)
+$(INSTALL_CONFIG)/%: %
+	$(ECHO) "Installing config file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_CONFIG)/%: ../%
+	$(ECHO) "Installing config file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+endif
+
+$(INSTALL_INCLUDE)/%: $(COMMON_DIR)/%
+	$(ECHO) "Installing generated generic include file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_INCLUDE)/%: %
+	$(ECHO) "Installing generic include file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_INCLUDE)/os/$(OS_CLASS)/%: %
+	$(ECHO) "Installing OS dependent include file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_INCLUDE)/compiler/$(CMPLR_CLASS)/%: %
+	$(ECHO) "Installing compiler dependent include file $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_DOC)/%: %
+	$(ECHO) "Installing doc $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(INSTALL_DOC)
+
+$(INSTALL_DOC)/%: ../%
+	$(ECHO) "Installing doc $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(INSTALL_DOC)
+
+$(INSTALL_HTML)/$(HTMLS_DIR)/%: $(COMMON_DIR)/%
+	$(ECHO) "Installing generated html $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_HTML)/$(HTMLS_DIR)/%: %
+	$(ECHO) "Installing html $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_HTML)/$(HTMLS_DIR)/%: ../%
+	$(ECHO) "Installing html $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_TEMPLATES_SUBDIR)/%: ../%
+	$(ECHO) "Installing $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+$(INSTALL_TEMPLATES_SUBDIR)/%: %
+	$(ECHO) "Installing $@"
+	@$(INSTALL) -d -m $(INSTALL_PERMISSIONS) $< $(@D)
+
+include $(CONFIG)/RULES_EXPAND
+
+.PRECIOUS: %.i %.o %.c %.nm %.cpp %.cc
+.PRECIOUS: $(COMMON_INC)
+
+.PHONY: all host inc build install clean rebuild buildInstall build_clean
+.PHONY: runtests run-tap-tests tapfiles junitfiles test-results tap-results
+.PHONY: clean-tests checkRelease warnRelease noCheckRelease FORCE
+
+include $(CONFIG)/RULES_COMMON
+
+else
+    $(warning Warning: Base configure/RULES_BUILD file included more than once. \
+        Does configure/RELEASE have multiple pointers to $(EPICS_BASE)?)
+endif # BASE_RULES_BUILD

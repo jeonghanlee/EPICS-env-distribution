@@ -1,0 +1,220 @@
+record(bo, "$(P)userStringCalc$(N1)Enable") {
+  field(DESC, "userStringCalc $(N1) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N1)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N1)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N1)") {
+  field(DESC, "userStringCalc$(N1)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N2)Enable") {
+  field(DESC, "userStringCalc $(N2) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N2)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N2)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N2)") {
+  field(DESC, "userStringCalc$(N2)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N3)Enable") {
+  field(DESC, "userStringCalc $(N3) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N3)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N3)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N3)") {
+  field(DESC, "userStringCalc$(N3)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N4)Enable") {
+  field(DESC, "userStringCalc $(N4) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N4)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N4)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N4)") {
+  field(DESC, "userStringCalc$(N4)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N5)Enable") {
+  field(DESC, "userStringCalc $(N5) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N5)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N5)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N5)") {
+  field(DESC, "userStringCalc$(N5)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N6)Enable") {
+  field(DESC, "userStringCalc $(N6) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N6)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N6)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N6)") {
+  field(DESC, "userStringCalc$(N6)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N7)Enable") {
+  field(DESC, "userStringCalc $(N7) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N7)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N7)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N7)") {
+  field(DESC, "userStringCalc$(N7)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N8)Enable") {
+  field(DESC, "userStringCalc $(N8) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N8)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N8)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N8)") {
+  field(DESC, "userStringCalc$(N8)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N9)Enable") {
+  field(DESC, "userStringCalc $(N9) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N9)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N9)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N9)") {
+  field(DESC, "userStringCalc$(N9)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringCalc$(N10)Enable") {
+  field(DESC, "userStringCalc $(N10) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringCalc$(N10)EnableCalc") {
+	field(INPA, "$(P)userStringCalc$(N10)Enable CP")
+	field(INPB, "$(P)userStringCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(scalcout, "$(P)userStringCalc$(N10)") {
+  field(DESC, "userStringCalc$(N10)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringCalcEnable.VAL  CA MS")
+  field(PREC, "5")
+}
+

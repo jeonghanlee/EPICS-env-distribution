@@ -1,0 +1,67 @@
+record(ao,"$(P)$(R)") {
+    field(PINI, "$(PINI=YES)")
+    # Setting PHAS=2 ensures that the Range record will process before this record during iocInit
+    field(PHAS, "2")
+    field(DTYP, "asynInt32")
+    field(FLNK, "$(P)$(R)Return.PROC  PP MS")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_OUT_VALUE")
+    field(EGUL, "$(EGUL)")
+    field(DRVL, "$(DRVL)")
+    field(LOPR, "$(LOPR)")
+    field(EGUF, "$(EGUF)")
+    field(DRVH, "$(DRVH)")
+    field(HOPR, "$(HOPR)")
+    field(PREC, "$(PREC)")
+    field(LINR, "LINEAR")
+    field(VAL,  "$(VAL)")
+}
+
+# Note: the driver constructs these enum fields based on model.
+record(mbbo,"$(P)$(R)Range")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_OUT_RANGE")
+}
+
+record(ao,"$(P)$(R)Return") {
+    field(DTYP, "asynInt32")
+    field(DISV, "0")
+    field(SDIS, "$(P)$(R)Pulse.VAL  NPP NMS")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_OUT_VALUE")
+    field(OMSL, "closed_loop")
+    field(EGUL, "$(EGUL)")
+    field(DRVL, "$(DRVL)")
+    field(LOPR, "$(LOPR)")
+    field(EGUF, "$(EGUF)")
+    field(DRVH, "$(DRVH)")
+    field(HOPR, "$(HOPR)")
+    field(PREC, "$(PREC)")
+    field(LINR, "LINEAR")
+    field(VAL,  "$(VAL)")
+}
+
+record(bo,"$(P)$(R)Pulse") {
+    field(ZNAM, "Normal")
+    field(ONAM, "Pulse")
+}
+
+record(ao,"$(P)$(R)TweakVal") {
+    field(PREC, "$(PREC)")
+}
+
+record(calcout,"$(P)$(R)TweakUp") {
+    field(CALC, "A+B")
+    field(INPA, "$(P)$(R).VAL  NPP MS")
+    field(INPB, "$(P)$(R)TweakVal.VAL  NPP MS")
+    field(OUT,  "$(P)$(R).VAL  PP MS")
+    field(PREC, "$(PREC)")
+}
+
+record(calcout,"$(P)$(R)TweakDown") {
+    field(CALC, "A-B")
+    field(INPA, "$(P)$(R).VAL  NPP MS")
+    field(INPB, "$(P)$(R)TweakVal.VAL  NPP MS")
+    field(OUT,  "$(P)$(R).VAL  PP MS")
+    field(PREC, "$(PREC)")
+}
