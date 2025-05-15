@@ -1,0 +1,32 @@
+
+record(bi, "$(P)Conn-Sts") {
+  field(DTYP, "PSC Ctrl Connected")
+  field(DESC, "Connection status")
+  field(INP , "@$(NAME)")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(ZSV , "MAJOR")
+}
+
+record(bo, "$(P)Reconn-Cmd") {
+  field(DTYP, "PSC Ctrl Reconnect")
+  field(OUT , "@$(NAME)")
+  field(ZNAM, "Reconnect")
+  field(ONAM, "Reconnect")
+}
+
+record(bo, "$(P)Send-Cmd") {
+  field(DTYP, "PSC Ctrl Send All")
+  field(DESC, "Send pending to PSC")
+  field(OUT , "@$(NAME)")
+  field(ZNAM, "Send")
+  field(ONAM, "Send")
+}
+
+record(stringin, "$(P)Msg-I") {
+  field(DTYP, "PSC Ctrl Message")
+  field(DESC, "Last message")
+  field(INP , "@$(NAME)")
+  field(SCAN, "I/O Intr")
+}

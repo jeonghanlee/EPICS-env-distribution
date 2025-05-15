@@ -1,0 +1,9 @@
+INSTALL_LOCATION=/home/jeonglee/epics/1.1.1/rocky-9.5/7.0.7/base
+CROSS_COMPILER_TARGET_ARCHS=
+LINKER_USE_RPATH = YES
+LINKER_ORIGIN_ROOT = /home/jeonglee/epics/1.1.1/rocky-9.5/7.0.7/base:/home/jeonglee/temp_folder/EPICS-env/epics-base-src
+EPICS_SITE_VERSION = "github.com/jeonghanlee/EPICS-env"
+GENVERSIONDEFAULT = "EPICS-env-7.0.7-v1.1.0-rc1-51-gdce3d6a"
+USR_CFLAGS   += -g0 -gz=zlib
+USR_CXXFLAGS += -g0 -gz=zlib
+USR_LDFLAGS  += -g0 -gz=zlib

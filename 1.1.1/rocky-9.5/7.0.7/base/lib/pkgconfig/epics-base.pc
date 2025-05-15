@@ -1,0 +1,29 @@
+# standard variables
+prefix=/home/jeonglee/epics/1.1.1/rocky-9.5/7.0.7/base
+exec_prefix=${prefix}
+bindir=${prefix}/bin/linux-x86_64
+libdir=${prefix}/lib/linux-x86_64
+
+# non-standard variables
+
+# EPICS Base install location
+FINAL_LOCATION=${prefix}
+ARCH=linux-x86_64
+OS_CLASS=Linux
+CMPLR_CLASS=gcc
+
+# Directories
+
+includedir_osi=${prefix}/include
+includedir_osd=${prefix}/include/os/Linux
+includedir_comp=${prefix}/include/compiler/gcc
+
+includedirs=${includedir_osi} ${includedir_osd} ${includedir_comp}
+
+dbddir=${prefix}/dbd
+dbdir=${prefix}/db
+
+Name: epics-base
+Version: 7.0.7.0
+Description: EPICS Base for the host arch
+Requires: epics-base-linux-x86_64 = 7.0.7.0
