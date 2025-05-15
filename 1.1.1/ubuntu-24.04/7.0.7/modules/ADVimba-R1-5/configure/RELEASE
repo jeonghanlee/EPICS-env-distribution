@@ -1,0 +1,4 @@
+EPICS_BASE:=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/base
+ASYN:=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/base/../modules/asyn
+ADCORE:=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/base/../modules/ADCore-R3-14
+ADGENICAM:=/home/jeonglee/epics/1.1.1/ubuntu-24.04/7.0.7/base/../modules/ADGenICam-R1-10

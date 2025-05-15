@@ -1,0 +1,946 @@
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, PMAC, PV Prefix for the motor controller
+# % macro, NPOINTS, Number of points that can be built at any time
+# % macro, MAXPOINTS, Maximum number of points in a scan
+# % macro, NAxes,   Number of axes
+# % macro, PREC, precision of axis defnitions
+
+
+#
+# allow query of parent's Port Name
+#
+record(stringout, "$(PMAC):ParentPort")
+{
+    field(VAL, "$(PORT)")
+    field(PINI, "YES")
+}
+
+##
+## Records to read the motion program and driver versions
+##
+record(ai, "$(PMAC):ProgramVersion_RBV") {
+  field(DESC, "Motion Program Version")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG_V")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(PMAC):DriverVersion_RBV") {
+  field(DESC, "EPICS Driver Version")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CODE_V")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):ProfileNaxes") {
+  field(PINI, "YES")
+  field(VAL, "$(NAxes)")
+}
+
+##
+## Record to read the number of axes selected for the current
+## trajectory scan
+##
+record(longin, "$(PMAC):ProfileNumAxes_RBV") {
+  field(DESC, "Number of axes selected")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_AXES")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longout,"$(PMAC):ProfileNumPoints") {
+    field(DESC, "# of points in profile")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_NUM_POINTS")
+    field(VAL,  "$(MAXPOINTS=4000000)")
+}
+
+##
+## Records to specify the number of motion points that define
+## the trajectory scan
+##
+record(longin, "$(PMAC):ProfileNumPoints_RBV") {
+  field(DESC, "Number of points defined")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_POINTS")
+  field(SCAN, "I/O Intr")  
+}
+
+
+##
+## Records to specify the number of motion points to build
+## into the scan currently
+##
+record(longout,"$(PMAC):ProfilePointsToBuild") {
+    field(DESC, "# of points to build/append")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_NUM_BUILD")
+    field(VAL,  "0")
+}
+
+record(longin, "$(PMAC):ProfilePointsToBuild_RBV") {
+  field(DESC, "# of points to build/append")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_BUILD")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):ProfilePointsBuilt_RBV") {
+  field(DESC, "# of points built into scan")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_POINTS_BUILT")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Record to read the current executing point of trajectory scan
+##
+record(longin, "$(PMAC):ProfileCurrentPoint_RBV") {
+  field(DESC, "Currently executing point")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_CURRENT_POINT")
+  field(SCAN, "I/O Intr")  
+}
+
+
+##
+## Records to set the current time mode for the trajectory scan
+## FIXED => A single value is used for each point
+## ARRAY => An array of time points is supplied
+##
+record(bo, "$(PMAC):ProfileTimeMode")
+{
+  field(DESC, "Time mode for trajectory scan")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0)PROFILE_TIME_MODE")
+  field(ZNAM, "FIXED")
+  field(ONAM, "ARRAY")
+  field(VAL,  "1")
+  field(PINI, "YES")
+}
+
+record(bi, "$(PMAC):ProfileTimeMode_RBV")
+{
+  field(DESC, "Time mode for trajectory scan")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),0)PROFILE_TIME_MODE")
+  field(ZNAM, "FIXED")
+  field(ONAM, "ARRAY")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Records to specify the fixed time between points
+##
+record(ao, "$(PMAC):ProfileFixedTime") {
+  field(DESC, "Fixed time between points")
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(PINI, "NO")
+}
+
+record(ai, "$(PMAC):ProfileFixedTime_RBV") {
+  field(DESC, "Fixed time between points")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Record to specify the array of times between points
+##
+record(waveform, "$(PMAC):ProfileTimeArray")
+{
+    field(PINI, "NO")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_TIME_ARRAY")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NPOINTS)")
+}
+
+## Record to specify the User profile called at each point
+record(waveform,"$(PMAC):UserArray") {
+    field(DESC, "User profile call at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_USER")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+
+##
+## Records to set the velocities calculation
+## NO => The velocities arrays are supplied
+## YES => The velocities arrays are calculated using the VelocityMode
+##
+record(bo, "$(PMAC):ProfileCalcVel")
+{
+  field(DESC, "Calculate the velocities arrays")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+}
+
+record(bi, "$(PMAC):ProfileCalcVel_RBV")
+{
+  field(DESC, "Calculate the velocities arrays")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+  field(SCAN, "I/O Intr")
+}
+
+## Record to specific the Velocity mode to use at each point
+record(waveform,"$(PMAC):VelocityMode") {
+    field(DESC, "Velocity mode at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_VELMODE")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+
+
+###################################################################
+#  These records control trajectory scan building (pre-execute)   # 
+#                                                                 #
+###################################################################
+
+#record(stringout, "$(PMAC):ProfileCsName") {
+#  field(DTYP, "asynOctetWrite")
+#  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+#}
+
+record(mbbo, "$(PMAC):ProfileCsName") 
+{
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT) 0)PMAC_C_TRAJ_CS_PORT")
+  field(PINI, "YES")
+  field(VAL,  "0")  
+}
+
+#record(stringin, "$(PMAC):ProfileCsName_RBV") {
+#  field(DTYP, "asynOctetRead")
+#  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+#  field(SCAN, "I/O Intr")  
+#}
+
+record(mbbi, "$(PMAC):ProfileCsName_RBV") 
+{
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT) 0)PMAC_C_TRAJ_CS_PORT")
+  field(SCAN, "I/O Intr")
+  field(VAL,  "0")
+}
+
+###################################################################
+#  These records control trajectory scan building (pre-execute)   # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):ProfileBuild") {
+    field(DESC,"Build and check profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_BUILD")
+    field(ZNAM, "Done")
+    field(ONAM, "Build")
+}
+
+record(mbbi, "$(PMAC):ProfileBuildState_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Busy")
+  field(ONSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(PMAC):ProfileBuildStatus_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(PMAC):ProfileBuildMessage_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_BUILD_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records control trajectory scan appending (points can    # 
+#  only be appended after a scan has been built)                  #
+###################################################################
+
+record(bo,"$(PMAC):ProfileAppend") {
+    field(DESC,"Append points to profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_APPEND")
+    field(ZNAM, "Done")
+    field(ONAM, "Append")
+}
+
+record(mbbi, "$(PMAC):ProfileAppendState_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_APPEND_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Busy")
+  field(ONSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(PMAC):ProfileAppendStatus_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_APPEND_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(PMAC):ProfileAppendMessage_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_APPEND_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records control trajectory scan execution                # 
+#                                                                 #
+###################################################################
+
+record(busy,"$(PMAC):ProfileExecute") {
+    field(DESC,"Execute the profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_EXECUTE")
+    field(ZNAM, "Done")
+    field(ONAM, "Execute")
+}
+
+record(mbbi, "$(PMAC):ProfileExecuteState_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Move start")
+  field(ONSV, "MINOR")
+  field(TWVL, "2")
+  field(TWST, "Executing")
+  field(TWSV, "MINOR")
+  field(THVL, "3")
+  field(THST, "Flyback")
+  field(THSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(PMAC):ProfileExecuteStatus_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(THVL, "3")
+  field(THST, "Abort")
+  field(THSV, "MAJOR")
+  field(FRVL, "4")
+  field(FRST, "Timeout")
+  field(FRSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(PMAC):ProfileExecuteMessage_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_EXECUTE_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  This record aborts a trajectory scan                           # 
+#                                                                 #
+###################################################################
+
+record(busy,"$(PMAC):ProfileAbort") {
+    field(DESC,"Abort currently executing profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_ABORT")
+    field(ZNAM, "Done")
+    field(ONAM, "Abort")
+}
+
+###################################################################
+#  These records are to set and read the motion program number    # 
+#                                                                 #
+###################################################################
+
+record(longout, "$(PMAC):TscanProgNo") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+}
+
+record(longin, "$(PMAC):TscanProgNo_RBV") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+  field(SCAN, "I/O Intr")  
+}
+
+###################################################################
+#  These records provide status feedback                          # 
+#                                                                 #
+###################################################################
+
+record(longin, "$(PMAC):BufferAAddress_RBV") {
+  field(DESC, "PMAC address of buffer A")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRA")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):BufferBAddress_RBV") {
+  field(DESC, "PMAC address of buffer B")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRB")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):BufferLength_RBV") {
+  field(DESC, "Length of trajectory buffers")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_LENGTH")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):CurrentIndex_RBV") {
+  field(DESC, "Current PMAC index of buffer")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_INDEX")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):TotalPoints_RBV") {
+  field(DESC, "Total points scanned")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_POINTS")
+  field(SCAN, "I/O Intr")  
+}
+
+record(bi, "$(PMAC):CurrentBuffer_RBV") {
+  field(DESC, "Current PMAC buffer in use")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CBUFF")
+  field(ZNAM, "A")
+  field(ONAM, "B")
+  field(SCAN, "I/O Intr")  
+}
+
+record(mbbi, "$(PMAC):TrajectoryStatus_RBV") {
+  field(DESC, "Current PMAC trajectory status")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_STATUS")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  field(ZRST, "Idle")
+  field(ONST, "Running")
+  field(TWST, "Finished")
+  field(THST, "Error")
+  field(SCAN, "I/O Intr")  
+}
+
+###################################################################
+#  These records report the current EPICS filled buffer ptrs      # 
+#                                                                 #
+###################################################################
+
+record(longin, "$(PMAC):EpicsBufferAPtr_RBV") {
+  field(DESC, "Current EPICS buffer A Ptr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLA")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):EpicsBufferBPtr_RBV") {
+  field(DESC, "Current EPICS buffer B Ptr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLB")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(PMAC):TscanTime_RBV") {
+  field(DESC, "Time of scan (s)")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_TIME")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(PMAC):TscanCs_RBV") {
+  field(DESC, "CS Number of current scan")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(PMAC):TscanPercent_RBV") {
+  field(DESC, "Time of scan (s)")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PERCENT")
+  field(SCAN, "I/O Intr")  
+  field(EGU, "%")  
+}
+
+record(mbbi, "$(PMAC):TscanExtStatus_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ESTATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Good")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Bad")
+  field(ONSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  Axis A Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):A:UseAxis") {
+    field(DESC, "Use axis A in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_A")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):A:Positions") {
+    field(DESC, "Axis A positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_A")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):A:Velocities") {
+    field(DESC, "Axis A velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_A")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):A:NoOfPts") {
+    field(DESC, "Axis A Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):A:Positions.NORD")
+}
+
+###################################################################
+#  Axis B Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):B:UseAxis") {
+    field(DESC, "Use axis B in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_B")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):B:Positions") {
+    field(DESC, "Axis B positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_B")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):B:Velocities") {
+    field(DESC, "Axis B velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_B")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):B:NoOfPts") {
+    field(DESC, "Axis B Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):B:Positions.NORD")
+}
+
+
+###################################################################
+#  Axis C Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):C:UseAxis") {
+    field(DESC, "Use axis C in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_C")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):C:Positions") {
+    field(DESC, "Axis C positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_C")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):C:Velocities") {
+    field(DESC, "Axis C velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_C")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):C:NoOfPts") {
+    field(DESC, "Axis C Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):C:Positions.NORD")
+}
+
+
+###################################################################
+#  Axis U Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):U:UseAxis") {
+    field(DESC, "Use axis U in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_U")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):U:Positions") {
+    field(DESC, "Axis U positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_U")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):U:Velocities") {
+    field(DESC, "Axis U velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_U")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):U:NoOfPts") {
+    field(DESC, "Axis U Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):U:Positions.NORD")
+}
+
+
+###################################################################
+#  Axis V Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):V:UseAxis") {
+    field(DESC, "Use axis V in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_V")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):V:Positions") {
+    field(DESC, "Axis V positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_V")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):V:Velocities") {
+    field(DESC, "Axis V velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_V")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):V:NoOfPts") {
+    field(DESC, "Axis V Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):V:Positions.NORD")
+}
+
+###################################################################
+#  Axis W Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):W:UseAxis") {
+    field(DESC, "Use axis W in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_W")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):W:Positions") {
+    field(DESC, "Axis W positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_W")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):W:Velocities") {
+    field(DESC, "Axis W velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_W")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):W:NoOfPts") {
+    field(DESC, "Axis W Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):W:Positions.NORD")
+}
+
+###################################################################
+#  Axis X Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):X:UseAxis") {
+    field(DESC, "Use axis X in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_X")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):X:Positions") {
+    field(DESC, "Axis X positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_X")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):X:Velocities") {
+    field(DESC, "Axis X velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_X")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):X:NoOfPts") {
+    field(DESC, "Axis X Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):X:Positions.NORD")
+}
+
+###################################################################
+#  Axis Y Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):Y:UseAxis") {
+    field(DESC, "Use axis Y in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_Y")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):Y:Positions") {
+    field(DESC, "Axis Y positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_Y")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):Y:Velocities") {
+    field(DESC, "Axis Y velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_Y")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):Y:NoOfPts") {
+    field(DESC, "Axis Y Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):Y:Positions.NORD")
+}
+
+###################################################################
+#  Axis Z Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(PMAC):Z:UseAxis") {
+    field(DESC, "Use axis Z in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_Z")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(PMAC):Z:Positions") {
+    field(DESC, "Axis Z positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_Z")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):Z:Velocities") {
+    field(DESC, "Axis Z velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_Z")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(PMAC):Z:NoOfPts") {
+    field(DESC, "Axis Z Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(PMAC):Z:Positions.NORD")
+}
+

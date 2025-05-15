@@ -1,0 +1,20 @@
+################
+# RECORD SUPPORT
+################
+include "scalerRecord.dbd"
+
+################
+# DEVICE SUPPORT
+################
+
+# Scaler record
+device(scaler,INST_IO,devScalerAsyn,"Asyn Scaler")
+
+################
+# OTHER SUPPORT
+################
+
+registrar(drvScalerSoftRegister)
+registrar(Scaler974Register)
+variable(scalerRecordDebug)
+variable(scaler_wait_time)

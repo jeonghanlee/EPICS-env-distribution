@@ -1,0 +1,4 @@
+# extensions/configure/RULES
+
+include $(CONFIG)/RULES
+-include $(TOP)/configure/RULES_IDL

@@ -1,0 +1,21 @@
+#=================================================================#
+# Template file: NDAttribute.template
+# % macro, P, Device Prefix
+# % macro, R, Device Suffix
+# % macro, PORT, Asyn Port name
+# The asyn port name should match what you have
+# written in your startup script
+# % macro, NCHANS, Number of elements in attribute waveform
+# % macro, ADDR, Asyn Port address
+# % macro, TIMEOUT, Timeout
+
+include "NDPluginBase.template"
+
+record(bo, "$(P)$(R)Reset")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ATTR_RESET")
+   field(ZNAM, "Done Reset")
+   field(ONAM, "Reset")
+   field(VAL,  "0")
+}
