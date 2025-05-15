@@ -1,0 +1,10 @@
+TARGET_CFLAGS += -Wno-unused-result -Wsign-compare
+TARGET_CXXFLAGS += -Wno-unused-result -Wsign-compare
+PY_VER := 3.10
+PY_LD_VER := 3.10
+PY_INCDIRS := /usr/lib/python3/dist-packages/numpy/core/include /usr/include/python3.10
+PY_LIBDIRS := /usr/lib/x86_64-linux-gnu
+HAVE_NUMPY := YES
+HAVE_ASYNCIO := YES
+HAVE_COTHREAD := NO
+PY_OK := YES

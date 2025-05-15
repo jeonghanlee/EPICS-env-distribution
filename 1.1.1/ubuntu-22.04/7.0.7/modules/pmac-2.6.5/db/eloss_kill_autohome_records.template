@@ -1,0 +1,132 @@
+# These are the supporting records for doing kill, eloss, and adding autohome 
+# support to a motor record
+
+#% macro, SPORT, Asyn port for eloss commands 
+# usually PMAC_S<n> for pmacs, the name of the pmacAsynIpPort for bricks
+#% macro, HOME, Prefix for autohome instance. Defaults to $(P). If unspecified,
+# the template contains enough records to keep the motor record happy
+#% macro, PMAC, Prefix for pmacStatus instance. Needed to get axis descriptions
+# onto pmacStatusAxis screen
+#% macro, ALLOW_HOMED_SET, Set to a blank to allow this axis to have its homed
+# status manually.  This is set to a comment character by default.
+
+# disable motor when homing
+record(calcout, "$(P)$(M):SDIS") {
+#  field(INPA, "$(HOME=$(P)):HM:HOMING CP")
+}
+
+# dummy record in case we aren't homing
+record(busy, "$(HOME=$(P)):HM:HOMING") {
+}
+
+# Monitor homing status
+record(bi, "$(P)$(M):HOMING") {
+  field(DESC, "Monitor homing status of autohome")
+  field(INP, "$(HOME=$(P)):HM:HOMING CP")
+  field(FLNK, "$(P)$(M):HOMING_CALC")
+  field(ZNAM, "Done")
+  field(ONAM, "Busy")
+}
+
+# report to the driver if this motor is being autohomed
+record(calcout, $(P)$(M):HOMING_CALC)
+{
+    field(PINI, 1)
+    field(INPA, "$(P)$(M):HOMING")
+    field(CALC, "A")
+    field(OUT, "$(P)$(M):HOMING_STATUS PP")
+}
+
+# report to the driver if this motor is being autohomed
+record(ao, $(P)$(M):HOMING_STATUS)
+{
+    field(DESC, "driver update on autohome")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR))HOMING_STATUS")
+}
+
+
+# reports position of motor without offset
+record(ai, "$(P)$(M):HMPOS_RBV") {
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_VDF_#$(ADDR)P")
+  field(DESC, "$(DESC)")
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(PREC, "$(PREC)")
+  field(EGU, "$(EGU)")
+}
+
+record(calcout, "$(P)$(M):HMPOS:CALC") {
+  field(INPA, "$(P)$(M).MRES CP")
+  field(INPB, "$(P)$(M):SCALE")  
+  field(INPC, "$(P)$(M):HMPOS_RBV CP")  
+  field(CALC, "A*B*C")
+  field(OUT, "$(P)$(M):HMPOS PP")
+}
+
+record(ai, "$(P)$(M):HMPOS") {
+  field(DESC, "$(DESC)")
+  field(PREC, "$(PREC)")
+  field(EGU, "$(EGU)")
+}
+
+# at startup, tell autohome template about this motor
+record(stringout, "$(P)$(M):SETHMPV") {
+  field(PINI, "YES")
+  field(VAL, "$(P)$(M)")
+  field(OUT, "$(HOME=$(P)):HM:M$(ADDR)PV PP")
+}
+
+record(stringout, "$(HOME=$(P)):HM:M$(ADDR)PV"){
+}
+
+# define a kill record
+record(ao, "$(P)$(M):KILL") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),$(ADDR))PMAC_C_KILL_AXIS")  
+  field(VAL, "0")
+}
+
+record(calc, "$(P)$(M):ELOSSVAR") {
+  field(CALC, "464+$(ADDR)")
+  field(PINI, "YES")
+}
+
+record(ai, "$(P)$(M):ELOSS") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_P`464+$(ADDR)`")  
+  field(SCAN, "I/O Intr")  
+}
+
+record(calcout, "$(P)$(M):ELOSSRC") {
+  field(OUT, "$(P)$(M):SEND_ELOSSRC PP") 
+  field(DESC, "Write 0 to A to reset Eloss")
+  field(CALC, "A")
+  field(A, "0")  
+}
+
+record(ao, "$(P)$(M):SEND_ELOSSRC") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_VIS_P`464+$(ADDR)`")  
+}
+
+# Overwrite the description of pmacStatus
+record(stringout, "$(PMAC=$(P)):AXIS$(ADDR):DESC"){
+  field(VAL, "$(name=) $(DESC)")
+}
+
+$(ALLOW_HOMED_SET=#)record(bo, "$(P)$(M):HOMED") {
+$(ALLOW_HOMED_SET=#)  field(DESC, "Set homed status for axis $(ADDR)")
+$(ALLOW_HOMED_SET=#)  field(ZNAM, "NOT HOMED")
+$(ALLOW_HOMED_SET=#)  field(ONAM, "HOMED")
+$(ALLOW_HOMED_SET=#)  field(FLNK, "$(P)$(M):HOMEDSET")
+$(ALLOW_HOMED_SET=#)}
+
+$(ALLOW_HOMED_SET=#)record(calcout, "$(P)$(M):HOMEDSET") {
+$(ALLOW_HOMED_SET=#)  field(DESC, "Homed status")
+$(ALLOW_HOMED_SET=#)  field(DTYP, "stream")
+$(ALLOW_HOMED_SET=#)  field(CALC, "A")
+$(ALLOW_HOMED_SET=#)  field(INPA, "$(P)$(M):HOMED")
+$(ALLOW_HOMED_SET=#)  field(OUT, "@pmac.proto setIntVar(m$(ADDR)45) $(SPORT)")
+$(ALLOW_HOMED_SET=#)}

@@ -1,0 +1,5 @@
+SNCSEQ=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/modules/seq-2.2.9
+ASYN=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/modules/asyn-4.44.2
+BUSY=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/modules/busy-1.7.4
+LUA=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/modules/lua-fe1efd3
+MODBUS=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/modules/modbus-24a0746

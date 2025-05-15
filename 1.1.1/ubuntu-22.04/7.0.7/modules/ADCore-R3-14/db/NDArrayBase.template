@@ -1,0 +1,911 @@
+#=================================================================#
+# Template file: NDArrayBase.template
+# Database for area detector control using asyn driver and standard asyn device support
+# Mark Rivers
+# March 9, 2008
+
+###################################################################
+#  This record contains the version of ADCore                     #
+###################################################################
+
+record(stringin, "$(P)$(R)ADCoreVersion_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ADCORE_VERSION")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  This record contains the version of the driver or plugin       #
+###################################################################
+
+record(stringin, "$(P)$(R)DriverVersion_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))DRIVER_VERSION")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  This record contains the asyn port name of this detector       #
+###################################################################
+
+record(stringin, "$(P)$(R)PortName_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))PORT_NAME_SELF")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records contain basic information about the detector     # 
+###################################################################
+
+record(stringin, "$(P)$(R)Manufacturer_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))MANUFACTURER")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)Model_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))MODEL")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)SerialNumber_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))SERIAL_NUMBER")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)SDKVersion_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))SDK_VERSION")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+record(stringin, "$(P)$(R)FirmwareVersion_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))FIRMWARE_VERSION")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records control acquisition start and stop               #
+###################################################################
+
+record(bo, "$(P)$(R)Acquire") {
+   field(DTYP, "asynInt32")
+   field(OUT, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ACQUIRE")
+   field(ZNAM, "Done")
+   field(ONAM, "Acquire")
+   field(VAL,  "0")
+   field(FLNK, "$(P)$(R)SetAcquireBusy")
+   info(asyn:READBACK, "1")
+}
+
+record(bi, "$(P)$(R)Acquire_RBV") {
+   field(DTYP, "asynInt32")
+   field(INP, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ACQUIRE")
+   field(ZNAM, "Done")
+   field(ZSV,  "NO_ALARM")
+   field(ONAM, "Acquiring")
+   field(OSV,  "MINOR")
+   field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(P)$(R)SetAcquireBusy")
+{
+    field(INPA, "$(P)$(R)Acquire NPP")
+    field(CALC, "A")
+    field(OOPT, "Transition To Non-zero")
+    field(OUT,  "$(P)$(R)AcquireBusy PP")
+}
+
+record(busy, "$(P)$(R)AcquireBusy") {
+   field(ZNAM, "Done")
+   field(ZSV,  "NO_ALARM")
+   field(ONAM, "Acquiring")
+   field(OSV,  "MINOR")
+   field(VAL,  "0")
+}
+
+record(bi, "$(P)$(R)AcquireBusyCB") {
+   field(DTYP, "asynInt32")
+   field(INP, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ACQUIRE_BUSY")
+   field(ZNAM, "Done")
+   field(ZSV,  "NO_ALARM")
+   field(ONAM, "Acquiring")
+   field(OSV,  "MINOR")
+   field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(P)$(R)ClearAcquireBusy") {
+    field(INPA, "$(P)$(R)AcquireBusyCB CP")
+    field(CALC, "A")
+    field(OOPT, "Transition To Zero")
+    field(OUT,  "$(P)$(R)AcquireBusy PP")
+}
+
+record(bo, "$(P)$(R)WaitForPlugins") {
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))WAIT_FOR_PLUGINS")
+   field(ZNAM, "No")
+   field(ONAM, "Yes")
+   field(VAL,  "0")
+}
+
+###################################################################
+#  These records are the array size and data type                 #
+###################################################################
+# The number of dimensions
+record(longout, "$(P)$(R)NDimensions")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_NDIMENSIONS")
+}
+
+record(longin, "$(P)$(R)NDimensions_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_NDIMENSIONS")
+    field(SCAN, "I/O Intr")
+}
+
+# The array dimensions waveform records
+record(waveform, "$(P)$(R)Dimensions")
+{
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_DIMENSIONS")
+    field(FTVL, "LONG")
+    field(NELM, "10")
+    field(FLNK, "$(P)$(R)Dim0SA")
+}
+
+record(subArray, "$(P)$(R)Dim0SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "0")
+    field(FLNK, "$(P)$(R)ArraySize0")
+}
+
+record(longin, "$(P)$(R)ArraySize0")
+{
+    field(INP,  "$(P)$(R)Dim0SA")
+    field(FLNK, "$(P)$(R)Dim1SA")
+}
+
+record(subArray, "$(P)$(R)Dim1SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "1")
+    field(FLNK, "$(P)$(R)ArraySize1")
+}
+
+record(longin, "$(P)$(R)ArraySize1")
+{
+    field(INP,  "$(P)$(R)Dim1SA")
+    field(FLNK, "$(P)$(R)Dim2SA")
+}
+
+record(subArray, "$(P)$(R)Dim2SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "2")
+    field(FLNK, "$(P)$(R)ArraySize2")
+}
+
+record(longin, "$(P)$(R)ArraySize2")
+{
+    field(INP,  "$(P)$(R)Dim2SA")
+    field(FLNK, "$(P)$(R)Dim3SA")
+}
+
+record(subArray, "$(P)$(R)Dim3SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "3")
+    field(FLNK, "$(P)$(R)ArraySize3")
+}
+
+record(longin, "$(P)$(R)ArraySize3")
+{
+    field(INP,  "$(P)$(R)Dim3SA")
+    field(FLNK, "$(P)$(R)Dim4SA")
+}
+
+record(subArray, "$(P)$(R)Dim4SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "4")
+    field(FLNK, "$(P)$(R)ArraySize4")
+}
+
+record(longin, "$(P)$(R)ArraySize4")
+{
+    field(INP,  "$(P)$(R)Dim4SA")
+    field(FLNK, "$(P)$(R)Dim5SA")
+}
+
+record(subArray, "$(P)$(R)Dim5SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "5")
+    field(FLNK, "$(P)$(R)ArraySize5")
+}
+
+record(longin, "$(P)$(R)ArraySize5")
+{
+    field(INP,  "$(P)$(R)Dim5SA")
+    field(FLNK, "$(P)$(R)Dim6SA")
+}
+
+record(subArray, "$(P)$(R)Dim6SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "6")
+    field(FLNK, "$(P)$(R)ArraySize6")
+}
+
+record(longin, "$(P)$(R)ArraySize6")
+{
+    field(INP,  "$(P)$(R)Dim6SA")
+    field(FLNK, "$(P)$(R)Dim7SA")
+}
+
+record(subArray, "$(P)$(R)Dim7SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "7")
+    field(FLNK, "$(P)$(R)ArraySize7")
+}
+
+record(longin, "$(P)$(R)ArraySize7")
+{
+    field(INP,  "$(P)$(R)Dim7SA")
+    field(FLNK, "$(P)$(R)Dim8SA")
+}
+
+record(subArray, "$(P)$(R)Dim8SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "8")
+    field(FLNK, "$(P)$(R)ArraySize8")
+}
+
+record(longin, "$(P)$(R)ArraySize8")
+{
+    field(INP,  "$(P)$(R)Dim8SA")
+    field(FLNK, "$(P)$(R)Dim9SA")
+}
+
+record(subArray, "$(P)$(R)Dim9SA")
+{
+    field(INP,  "$(P)$(R)Dimensions NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "9")
+    field(FLNK, "$(P)$(R)ArraySize9")
+}
+
+record(longin, "$(P)$(R)ArraySize9")
+{
+    field(INP,  "$(P)$(R)Dim9SA")
+}
+
+
+record(waveform, "$(P)$(R)Dimensions_RBV")
+{
+    field(DTYP, "asynInt32ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_DIMENSIONS")
+    field(FTVL, "LONG")
+    field(NELM, "10")
+    field(FLNK, "$(P)$(R)Dim0SA_RBV")
+    field(SCAN, "I/O Intr")
+}
+
+record(subArray, "$(P)$(R)Dim0SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "0")
+    field(FLNK, "$(P)$(R)ArraySize0_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize0_RBV")
+{
+    field(INP,  "$(P)$(R)Dim0SA_RBV")
+    field(FLNK, "$(P)$(R)Dim1SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim1SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "1")
+    field(FLNK, "$(P)$(R)ArraySize1_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize1_RBV")
+{
+    field(INP,  "$(P)$(R)Dim1SA_RBV")
+    field(FLNK, "$(P)$(R)Dim2SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim2SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "2")
+    field(FLNK, "$(P)$(R)ArraySize2_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize2_RBV")
+{
+    field(INP,  "$(P)$(R)Dim2SA_RBV")
+    field(FLNK, "$(P)$(R)Dim3SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim3SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "3")
+    field(FLNK, "$(P)$(R)ArraySize3_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize3_RBV")
+{
+    field(INP,  "$(P)$(R)Dim3SA_RBV")
+    field(FLNK, "$(P)$(R)Dim4SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim4SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "4")
+    field(FLNK, "$(P)$(R)ArraySize4_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize4_RBV")
+{
+    field(INP,  "$(P)$(R)Dim4SA_RBV")
+    field(FLNK, "$(P)$(R)Dim5SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim5SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "5")
+    field(FLNK, "$(P)$(R)ArraySize5_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize5_RBV")
+{
+    field(INP,  "$(P)$(R)Dim5SA_RBV")
+    field(FLNK, "$(P)$(R)Dim6SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim6SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "6")
+    field(FLNK, "$(P)$(R)ArraySize6_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize6_RBV")
+{
+    field(INP,  "$(P)$(R)Dim6SA_RBV")
+    field(FLNK, "$(P)$(R)Dim7SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim7SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "7")
+    field(FLNK, "$(P)$(R)ArraySize7_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize7_RBV")
+{
+    field(INP,  "$(P)$(R)Dim7SA_RBV")
+    field(FLNK, "$(P)$(R)Dim8SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim8SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "8")
+    field(FLNK, "$(P)$(R)ArraySize8_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize8_RBV")
+{
+    field(INP,  "$(P)$(R)Dim8SA_RBV")
+    field(FLNK, "$(P)$(R)Dim9SA_RBV")
+}
+
+record(subArray, "$(P)$(R)Dim9SA_RBV")
+{
+    field(INP,  "$(P)$(R)Dimensions_RBV NPP NMS")
+    field(FTVL, "LONG")
+    field(MALM, "10")
+    field(NELM, "1")
+    field(INDX, "9")
+    field(FLNK, "$(P)$(R)ArraySize9_RBV")
+}
+
+record(longin, "$(P)$(R)ArraySize9_RBV")
+{
+    field(INP,  "$(P)$(R)Dim9SA_RBV")
+}
+
+
+record(mbbi, "$(P)$(R)BayerPattern_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))BAYER_PATTERN")
+   field(ZRST, "RGGB")
+   field(ZRVL, "0")
+   field(ONST, "GBRG")
+   field(ONVL, "1")
+   field(TWST, "GRBG")
+   field(TWVL, "2")
+   field(THST, "BGGR")
+   field(THVL, "3")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)ArraySizeX_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_SIZE_X")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)ArraySizeY_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_SIZE_Y")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)ArraySizeZ_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_SIZE_Z")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)ArraySize_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_SIZE")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records have information on the compression              # 
+###################################################################
+record(stringin, "$(P)$(R)Codec_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))CODEC")
+   field(VAL,  "")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)CompressedSize_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))COMPRESSED_SIZE")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records control the data type                            # 
+###################################################################
+
+record(mbbo, "$(P)$(R)DataType")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))DATA_TYPE")
+   field(ZRST, "Int8")
+   field(ZRVL, "0")
+   field(ONST, "UInt8")
+   field(ONVL, "1")
+   field(TWST, "Int16")
+   field(TWVL, "2")
+   field(THST, "UInt16")
+   field(THVL, "3")
+   field(FRST, "Int32")
+   field(FRVL, "4")
+   field(FVST, "UInt32")
+   field(FVVL, "5")
+   field(SXST, "Int64")
+   field(SXVL, "6")
+   field(SVST, "UInt64")
+   field(SVVL, "7")
+   field(EIST, "Float32")
+   field(EIVL, "8")
+   field(NIST, "Float64")
+   field(NIVL, "9")
+   field(VAL,  "$(DATATYPE=0)")
+   info(autosaveFields, "VAL")
+}
+
+record(mbbi, "$(P)$(R)DataType_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))DATA_TYPE")
+   field(ZRST, "Int8")
+   field(ZRVL, "0")
+   field(ONST, "UInt8")
+   field(ONVL, "1")
+   field(TWST, "Int16")
+   field(TWVL, "2")
+   field(THST, "UInt16")
+   field(THVL, "3")
+   field(FRST, "Int32")
+   field(FRVL, "4")
+   field(FVST, "UInt32")
+   field(FVVL, "5")
+   field(SXST, "Int64")
+   field(SXVL, "6")
+   field(SVST, "UInt64")
+   field(SVVL, "7")
+   field(EIST, "Float32")
+   field(EIVL, "8")
+   field(NIST, "Float64")
+   field(NIVL, "9")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records control the color mode                           #
+#  These choices must agree with NDColorMode_t in NDArray.h       # 
+###################################################################
+
+record(mbbo, "$(P)$(R)ColorMode")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))COLOR_MODE")
+   field(ZRST, "Mono")
+   field(ZRVL, "0")
+   field(ONST, "Bayer")
+   field(ONVL, "1")
+   field(TWST, "RGB1")
+   field(TWVL, "2")
+   field(THST, "RGB2")
+   field(THVL, "3")
+   field(FRST, "RGB3")
+   field(FRVL, "4")
+   field(FVST, "YUV444")
+   field(FVVL, "5")
+   field(SXST, "YUV422")
+   field(SXVL, "6")
+   field(SVST, "YUV421")
+   field(SVVL, "7")
+   info(autosaveFields, "VAL")
+}
+
+record(mbbi, "$(P)$(R)ColorMode_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))COLOR_MODE")
+   field(ZRST, "Mono")
+   field(ZRVL, "0")
+   field(ONST, "Bayer")
+   field(ONVL, "1")
+   field(TWST, "RGB1")
+   field(TWVL, "2")
+   field(THST, "RGB2")
+   field(THVL, "3")
+   field(FRST, "RGB3")
+   field(FRVL, "4")
+   field(FVST, "YUV444")
+   field(FVVL, "5")
+   field(SXST, "YUV422")
+   field(SXVL, "6")
+   field(SVST, "YUV421")
+   field(SVVL, "7")
+   field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records are the uniqueId and time stamps of the array     #
+###################################################################
+record(longin, "$(P)$(R)UniqueId_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))UNIQUE_ID")
+    field(SCAN, "$(SCANRATE=I/O Intr)")
+}
+
+record(ai, "$(P)$(R)TimeStamp_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))TIME_STAMP")
+    field(PREC, "3")
+    field(SCAN, "$(SCANRATE=I/O Intr)")
+}
+
+record(longin, "$(P)$(R)EpicsTSSec_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))EPICS_TS_SEC")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)EpicsTSNsec_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))EPICS_TS_NSEC")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records provide statistics on array callbacks and        #
+#  array callback rates                                           # 
+###################################################################
+record(longout, "$(P)$(R)ArrayCounter")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_COUNTER")
+}
+
+record(longin, "$(P)$(R)ArrayCounter_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_COUNTER")
+    field(SCAN, "$(SCANRATE=I/O Intr)")
+}
+
+# Updated rate calculation to use a smoothing factor w/ guard against negative values
+record(calc, "$(P)$(R)ArrayRate_RBV")
+{
+    field(INPA, "$(P)$(R)ArrayRate_RBV.LB NPP NMS")   # Previous counter value
+    field(INPB, "$(P)$(R)ArrayCounter_RBV NPP NMS")   # Current counter value
+    field(INPC, "1.0")                                # Delta time in seconds
+    field(INPD, "$(P)$(R)ArrayRate_RBV.VAL NPP NMS")  # Previous rate
+    field(INPE, "$(RATE_SMOOTH=0.0)")                 # Smoothing factor
+    field(CALC, "(D*E)/C+MAX(0,B-A)*(1-E)/C")
+    field(PREC, "2" )
+    field(EGU,  "Hz" )
+    field(SCAN, "1 second")
+}
+
+###################################################################
+#  These records control NDArray callacks                         # 
+###################################################################
+record(bo, "$(P)$(R)ArrayCallbacks")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_CALLBACKS")
+    field(ZNAM, "Disable")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "Enable")
+    field(OSV,  "MINOR")
+    field(VAL, "1")
+    info(autosaveFields, "VAL")
+}
+
+record(bi, "$(P)$(R)ArrayCallbacks_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ARRAY_CALLBACKS")
+    field(ZNAM, "Disable")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "Enable")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  This record contains macro definitions for the attributes      # 
+###################################################################
+
+record(waveform, "$(P)$(R)NDAttributesMacros")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ND_ATTRIBUTES_MACROS")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    info(autosaveFields, "VAL")
+}
+
+###################################################################
+#  This record is the name of a file defining attributes          # 
+###################################################################
+
+record(waveform, "$(P)$(R)NDAttributesFile")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ND_ATTRIBUTES_FILE")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    info(autosaveFields, "VAL")
+}
+
+###################################################################
+#  This record defines the status of reading attributes file      # 
+###################################################################
+
+record(mbbi, "$(P)$(R)NDAttributesStatus")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))ND_ATTRIBUTES_STATUS")
+    field(ZRVL, "0")
+    field(ZRST, "Attributes file OK")
+    field(ZRSV, "NO_ALARM")
+    field(ONVL, "1")
+    field(ONST, "File not found")
+    field(ONSV, "MINOR")
+    field(TWVL, "2")
+    field(TWST, "XML syntax error")
+    field(TWSV, "MAJOR")
+    field(THVL, "3")
+    field(THST, "Macro substitution error")
+    field(THSV, "MAJOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  Status of NDArrayPool - number of buffers, memory used etc.    # 
+###################################################################
+
+record(ai, "$(P)$(R)PoolMaxMem")
+{
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_MAX_MEMORY")
+   field(PREC, "1")
+   field(EGU,  "MB")
+   field(SCAN, "Passive")
+   field(PINI, "YES")
+}
+
+record(bo, "$(P)$(R)PoolPollStats")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_POLL_STATS")
+   field(SCAN, "1 second")
+   info(autosaveFields, "SCAN")
+}
+
+record(ai, "$(P)$(R)PoolUsedMem")
+{
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_USED_MEMORY")
+   field(PREC, "1")
+   field(EGU,  "MB")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)PoolAllocBuffers")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_ALLOC_BUFFERS")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)PoolFreeBuffers")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_FREE_BUFFERS")
+   field(SCAN, "I/O Intr")
+}
+
+record(calc, "$(P)$(R)PoolUsedBuffers")
+{
+    field(INPA, "$(P)$(R)PoolAllocBuffers CP MS")
+    field(INPB, "$(P)$(R)PoolFreeBuffers CP MS")
+    field(CALC, "A-B")
+}
+
+record(bo, "$(P)$(R)EmptyFreeList")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_EMPTY_FREELIST")
+}
+
+# Pre-allocate buffers
+record(busy, "$(P)$(R)PreAllocBuffers")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_PRE_ALLOC_BUFFERS")
+    field(ZNAM, "Done")
+    field(ONAM, "Allocate")
+}
+
+record(longout, "$(P)$(R)NumPreAllocBuffers")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_NUM_PRE_ALLOC_BUFFERS")
+    field(VAL,  "100")
+}
+
+record(longin, "$(P)$(R)NumPreAllocBuffers_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))POOL_NUM_PRE_ALLOC_BUFFERS")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)NumQueuedArrays")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))NUM_QUEUED_ARRAYS")
+   field(SCAN, "$(SCANRATE=I/O Intr)")
+}
