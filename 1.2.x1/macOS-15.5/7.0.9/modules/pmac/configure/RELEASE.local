@@ -1,0 +1,5 @@
+ASYN=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/asyn-4.45.0
+BUSY=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/busy-2dfe92d
+CALC=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/calc-04b5cab
+MOTOR=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/motor-752696e
+EPICS_BASE:=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/base

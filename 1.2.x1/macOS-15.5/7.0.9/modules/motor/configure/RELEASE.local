@@ -1,0 +1,5 @@
+SNCSEQ=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/seq-2.2.9
+ASYN=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/asyn-4.45.0
+BUSY=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/busy-2dfe92d
+LUA=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/lua-17475b5
+MODBUS=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/modbus-3.4.0

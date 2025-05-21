@@ -1,0 +1,16 @@
+#libevent pkg-config source file
+
+prefix=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/pvxs-1.3.3/bundle/usr/darwin-aarch64
+exec_prefix=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/pvxs-1.3.3/bundle/usr/darwin-aarch64
+libdir=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/pvxs-1.3.3/bundle/usr/darwin-aarch64/lib
+includedir=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/pvxs-1.3.3/bundle/usr/darwin-aarch64/include
+
+Name: libevent_pthreads
+Description: libevent_pthreads adds pthreads-based threading support to libevent
+Version: 2.2.0
+Requires: libevent_core
+Conflicts:
+Libs: -L${libdir} -levent_pthreads
+Libs.private:  
+Cflags: -I${includedir} 
+

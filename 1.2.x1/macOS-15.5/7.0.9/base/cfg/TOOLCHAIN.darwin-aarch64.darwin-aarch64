@@ -1,0 +1,13 @@
+# 1 "../toolchain.c"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 465 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "../toolchain.c" 2
+# 22 "../toolchain.c"
+CLANG_MAJOR = 17
+CLANG_MINOR = 0
+CLANG_PATCH = 0
+# 60 "../toolchain.c"
+COMMANDLINE_LIBRARY ?= READLINE

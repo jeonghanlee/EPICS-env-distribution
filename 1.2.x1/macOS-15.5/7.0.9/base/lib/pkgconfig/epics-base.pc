@@ -1,0 +1,29 @@
+# standard variables
+prefix=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/base
+exec_prefix=${prefix}
+bindir=${prefix}/bin/darwin-aarch64
+libdir=${prefix}/lib/darwin-aarch64
+
+# non-standard variables
+
+# EPICS Base install location
+FINAL_LOCATION=${prefix}
+ARCH=darwin-aarch64
+OS_CLASS=Darwin
+CMPLR_CLASS=clang
+
+# Directories
+
+includedir_osi=${prefix}/include
+includedir_osd=${prefix}/include/os/Darwin
+includedir_comp=${prefix}/include/compiler/clang
+
+includedirs=${includedir_osi} ${includedir_osd} ${includedir_comp}
+
+dbddir=${prefix}/dbd
+dbdir=${prefix}/db
+
+Name: epics-base
+Version: 7.0.9.0
+Description: EPICS Base for the host arch
+Requires: epics-base-darwin-aarch64 = 7.0.9.0

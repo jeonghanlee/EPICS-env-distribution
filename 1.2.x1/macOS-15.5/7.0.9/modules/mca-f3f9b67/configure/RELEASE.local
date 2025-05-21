@@ -1,0 +1,8 @@
+SNCSEQ=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/seq-2.2.9
+SSCAN=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/sscan-6cf6740
+CALC=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/calc-04b5cab
+ASYN=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/asyn-4.45.0
+AUTOSAVE=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/autosave-0bf8f21
+BUSY=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/busy-2dfe92d
+SCALER=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/scaler-beb5521
+STD=/Users/JeongLee/EPICS-env-distribution/epics/1.2.x1/macOS-15.5/7.0.9/modules/std-6b893a7
