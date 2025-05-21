@@ -79,3 +79,12 @@ $ which caget
 ```
 
 If these commands run successfully and show help/path information, you have successfully configured the ALS-U EPICS environment in your current terminal session.
+
+## macOS (M1) Support
+
+* Version 1.1.1 does not currently support macOS 15.5. This setup is intended for training purposes only.
+* Compatibility with all modules is not guaranteed and has not been fully tested.
+* There are no plans to support macOS (Intel). If you are using an Intel-based Mac, please use UTM to virtualize Debian or Ubuntu Linux.
+
+
+
