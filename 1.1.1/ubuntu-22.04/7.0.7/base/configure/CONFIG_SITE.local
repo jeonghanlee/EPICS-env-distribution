@@ -1,9 +1,8 @@
 INSTALL_LOCATION=/home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/base
 CROSS_COMPILER_TARGET_ARCHS=
-LINKER_USE_RPATH = YES
-LINKER_ORIGIN_ROOT = /home/jeonglee/epics/1.1.1/ubuntu-22.04/7.0.7/base:/home/jeonglee/temp_folder/EPICS-env/epics-base-src
+LINKER_USE_RPATH = ORIGIN
 EPICS_SITE_VERSION = "github.com/jeonghanlee/EPICS-env"
-GENVERSIONDEFAULT = "EPICS-env-7.0.7-v1.1.0-rc1-46-g5cb4851"
+GENVERSIONDEFAULT = "EPICS-env-7.0.7-v1.1.0-rc1-47-gf358868"
 USR_CFLAGS   += -g0 -gz=zlib
 USR_CXXFLAGS += -g0 -gz=zlib
 USR_LDFLAGS  += -g0 -gz=zlib
