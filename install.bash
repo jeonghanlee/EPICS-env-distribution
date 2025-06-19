@@ -25,6 +25,11 @@ ulimit -c unlimited
 function pushdd { builtin pushd "$@" > /dev/null || exit; }
 function popdd  { builtin popd  > /dev/null || exit; }
 
+SRC_VER="$1";shift;
+if [ -z "$SRC_VER" ]; then
+    SRC_VER="master"
+fi
+
 
 pushdd ${HOME}
 mkdir temp_folder
@@ -37,6 +42,7 @@ git clone git@github.com:jeonghanlee/uldaq-env.git
 
 
 pushdd EPICS-env
+git checkout "${SRC_VER}"
 echo "INSTALL_LOCATION=${SC_TOP}" > configure/CONFIG_SITE.local
 popdd
 
