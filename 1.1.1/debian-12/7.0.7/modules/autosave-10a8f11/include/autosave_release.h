@@ -1,1 +1,1 @@
-#define AUTOSAVE_RELEASE "Autosave release 5.10.3, compiled Wed Jun 18 21:12:45 2025"
+#define AUTOSAVE_RELEASE "Autosave release 5.10.3, compiled Mon Jun 23 12:38:46 2025"

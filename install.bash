@@ -25,14 +25,18 @@ ulimit -c unlimited
 function pushdd { builtin pushd "$@" > /dev/null || exit; }
 function popdd  { builtin popd  > /dev/null || exit; }
 
+#
+# EPICS-env / EPICS-env-support must have the same branch name
+#
 SRC_VER="$1";shift;
 if [ -z "$SRC_VER" ]; then
     SRC_VER="master"
 fi
 
-
+# ${HOME}
 pushdd ${HOME}
 mkdir temp_folder
+## temp_folder
 pushdd temp_folder
 rm -rf *
 
@@ -40,18 +44,15 @@ git clone git@github.com:jeonghanlee/EPICS-env.git
 git clone git@github.com:jeonghanlee/EPICS-env-support.git
 git clone git@github.com:jeonghanlee/uldaq-env.git
 
-
+###
 pushdd EPICS-env
-git checkout "${SRC_VER}"
+git checkout "${SRC_VER}" || exit
 echo "INSTALL_LOCATION=${SC_TOP}" > configure/CONFIG_SITE.local
-popdd
-
-pushdd EPICS-env
 OS_NAME=`make print-OS_NAME`
 OS_VERSION=`make print-OS_VERSION`
 INSTALL_LOCATION_EPICS=`make print-INSTALL_LOCATION_EPICS`
 INSTALL_LOCATION_VER=`make print-INSTALL_LOCATION_VER`
-popdd
+popdd #### EPICS-env
 
 EPICS_BASE_PATH=${INSTALL_LOCATION_EPICS}/base
 VENDOR_LIB_PATH=${INSTALL_LOCATION_VER}
@@ -76,17 +77,19 @@ make -C EPICS-env/ build.gz || exit
 make -C EPICS-env/ install || exit
 make -C EPICS-env/ symlinks || exit
 
+###
+pushdd EPICS-env-support
+git checkout "${SRC_VER}" || exit
+echo "INSTALL_LOCATION=${EPICS_BASE_PATH}" > configure/CONFIG_SITE.local
+make init || exit
+make conf || exit
+make build.gz || exit
+make symlinks || exit
+popdd ### EPICS-env-support
 
-echo "INSTALL_LOCATION=${EPICS_BASE_PATH}" > EPICS-env-support/configure/CONFIG_SITE.local
-make -C EPICS-env-support/ init || exit
-make -C EPICS-env-support/ conf || exit
-make -C EPICS-env-support/ build.gz || exit
-make -C EPICS-env-support/ symlinks || exit
+popdd ## temp_folder
 
-
-popdd
-
-popdd
+popdd # $HOME
 
 scp -r ${SC_TOP}/epics/* .
 rm -rf ${SC_TOP}/epics
