@@ -17,7 +17,7 @@ Requires=network.target
 After=network.target
 
 [Service]
-ExecStart=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base/bin/linux-x86_64/caRepeater
+ExecStart=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/bin/linux-x86_64/caRepeater
 Restart=always
 User=daemon
 

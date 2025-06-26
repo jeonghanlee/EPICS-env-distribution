@@ -3,7 +3,7 @@
 # System-V init script for the EPICS IOC Log Server.
 #
 
-INSTALL_BIN=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base/bin/linux-x86_64
+INSTALL_BIN=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/bin/linux-x86_64
 
 # To change the default values for the EPICS Environment parameters,
 # uncomment and modify the relevant lines below.

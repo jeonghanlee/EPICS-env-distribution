@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/home/jeonglee/epics/1.1.1/rocky-8.10/vendor/lib'
+libdir='/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/vendor/lib'
