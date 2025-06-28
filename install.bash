@@ -17,8 +17,6 @@ SC_RPATH="$(realpath "$0")";
 SC_TOP="${SC_RPATH%/*}"
 SC_TIME="$(date +%y%m%d%H%M)"
 
-
-
 # Enable core dumps in case the JVM fails
 ulimit -c unlimited
 
@@ -40,6 +38,8 @@ mkdir temp_folder
 pushdd temp_folder
 rm -rf *
 
+## EPICS-env, EPICS-env-support, and alsu-site-modules
+## must be the same "branch" or "tag"
 git clone git@github.com:jeonghanlee/EPICS-env.git
 git clone git@github.com:jeonghanlee/EPICS-env-support.git
 git clone git@github.com:jeonghanlee/uldaq-env.git
@@ -55,11 +55,10 @@ INSTALL_LOCATION_VER=`make print-INSTALL_LOCATION_VER`
 popdd #### EPICS-env
 
 EPICS_BASE_PATH=${INSTALL_LOCATION_EPICS}/base
-VENDOR_LIB_PATH=${INSTALL_LOCATION_VER}
+VENDOR_LIB_PATH=${INSTALL_LOCATION_EPICS}/vendor
 
 echo ${EPICS_BASE_PATH}
 echo ${VENDOR_LIB_PATH}
-
 
 echo "INSTALL_LOCATION=${VENDOR_LIB_PATH}" > uldaq-env/configure/CONFIG_SITE.local
 make -C uldaq-env/ init || exit
@@ -70,7 +69,7 @@ make -C uldaq-env/ install || exit
 
 # git checkout 1.1.1
 echo "EPICS_TS_NTP_INET=time1.google.com" > EPICS-env/configure/RELEASE.local
-echo "VENDOR_ULDAQ_PATH=${VENDOR_LIB_PATH}/${OS_NAME}-${OS_VERSION}/vendor" >> EPICS-env/configure/RELEASE.local
+echo "VENDOR_ULDAQ_PATH=${VENDOR_LIB_PATH}" >> EPICS-env/configure/RELEASE.local
 make -C EPICS-env/ init || exit
 make -C EPICS-env/ patch || exit
 make -C EPICS-env/ build.gz || exit
