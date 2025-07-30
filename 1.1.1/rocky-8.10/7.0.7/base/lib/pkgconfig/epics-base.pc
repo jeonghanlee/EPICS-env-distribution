@@ -1,5 +1,5 @@
 # standard variables
-prefix=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base
+prefix=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base
 exec_prefix=${prefix}
 bindir=${prefix}/bin/linux-x86_64
 libdir=${prefix}/lib/linux-x86_64

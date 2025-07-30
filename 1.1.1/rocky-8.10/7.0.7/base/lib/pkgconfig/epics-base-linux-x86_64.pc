@@ -1,5 +1,5 @@
 # standard variables
-prefix=/home/jeonglee/epics/1.1.1/rocky-8.10/7.0.7/base
+prefix=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base
 exec_prefix=${prefix}
 bindir=${prefix}/bin/linux-x86_64
 libdir=${prefix}/lib/linux-x86_64
@@ -38,5 +38,5 @@ Name: epics-base-linux-x86_64
 Version: 7.0.7.0
 Description: EPICS Base for linux-x86_64
 Cflags: -I${includedir_osi} -I${includedir_osd} -I${includedir_comp} -D_GNU_SOURCE -D_DEFAULT_SOURCE -D_X86_64_ -DUNIX -Dlinux -g0 -gz=zlib -mtune=generic -m64
-Libs: -L${libdir} -g0 -gz=zlib -rdynamic -m64
+Libs: -L${libdir} -g0 -gz=zlib -Wl,-rpath-link,/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/lib/linux-x86_64 -rdynamic -m64
 Libs.private: -lpthread -lreadline -lm -lrt -ldl -lgcc

@@ -1,0 +1,56 @@
+
+record(longin, "$(P)li:cnt") {
+  field(DTYP, "Python Device")
+  field(INP , "@test1 hello world")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)val:a") {
+  field(DTYP, "Python Device")
+  field(INP , "@test2 AAAA")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)val:b") {
+  field(DTYP, "Python Device")
+  field(INP , "@test2 AAAA")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)wf") {
+  field(DTYP, "Python Device")
+  field(INP , "@test3")
+  field(FTVL, "FLOAT")
+  field(NELM, "10")
+  field(SCAN, "2 second")
+}
+
+record(longin, "$(P)async:cnt") {
+  field(DTYP, "Python Device")
+  field(INP , "@test4")
+  field(SCAN, "1 second")
+}
+
+
+record(ao, "$(P):A-SP") {
+  field(DTYP, "Python Device")
+  field(OUT , "@test5 hello none")
+}
+
+record(ao, "$(P):B-SP") {
+  field(DTYP, "Python Device")
+  field(OUT , "@test5 hello half")
+}
+
+record(ai, "$(P):A-RB") {
+  field(DTYP, "Python Device")
+  field(INP , "@test5 hello none")
+}
+
+
+record(longin, "$(P)li:time") {
+  field(DTYP, "Python Device")
+  field(INP , "@timetest")
+  field(SCAN, "1 second")
+  field(TSEL, "-2")
+}
