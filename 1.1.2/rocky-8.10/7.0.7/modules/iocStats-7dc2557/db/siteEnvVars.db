@@ -1,0 +1,36 @@
+record(stringin, "$(IOCNAME):TZ") {
+    field(DESC, "EPICS_TZ")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_TZ")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):TS_NTP_INET") {
+    field(DESC, "EPICS_TS_NTP_INET")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_TS_NTP_INET")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_INET") {
+    field(DESC, "EPICS_IOC_LOG_INET")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_IOC_LOG_INET")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_FILE_NAME") {
+    field(DESC, "EPICS_IOC_LOG_FILE_NAME")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_IOC_LOG_FILE_NAME")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_FILE_COMMAND") {
+    field(DESC, "EPICS_IOC_LOG_FILE_COMMAND")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_IOC_LOG_FILE_COMMAND")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):IOC_LOG_FILE_LIMIT") {
+    field(DESC, "EPICS_IOC_LOG_FILE_LIMIT")
+    field(DTYP, "IOC epics var")
+    field(INP,  "@EPICS_IOC_LOG_FILE_LIMIT")
+    field(PINI, "YES")
+}

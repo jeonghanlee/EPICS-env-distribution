@@ -1,0 +1,24 @@
+# EPICS Database file                    -*- shell-script -*-
+
+record(ai, "$(IOC):ai")
+{
+    field(SCAN, "1 second")
+    field(DTYP, "EtherIP")
+    field(INP, "@$(PLC) DINT")
+    field(PREC, "3")
+}
+
+
+record(stringin, "string")
+{
+	field(SCAN, "1 second")
+	field(DTYP, "EtherIP")
+	field(INP, "@$(PLC) testStr2")
+}
+
+record(stringout, "out")
+{
+	field(DTYP, "EtherIP")
+	field(OUT, "@$(PLC) testStr2")
+}
+

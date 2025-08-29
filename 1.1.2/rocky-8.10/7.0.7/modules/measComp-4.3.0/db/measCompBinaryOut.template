@@ -1,0 +1,25 @@
+record(bo, "$(P)$(R)")
+{
+    field(PINI, "$(PINI=YES)")
+    # Setting PHAS=2 ensures that the Direction record will process before this record during iocInit
+    field(PHAS, "2")
+    field(DESC, "$(DESC=)")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT,  "@asynMask($(PORT),$(ADDR),$(MASK))DIGITAL_OUTPUT")
+    field(ZNAM, "$(ZNAM=Low)")
+    field(ZSV,  "$(ZSV=NO_ALARM)")
+    field(ONAM, "$(ONAM=High)")
+    field(OSV,  "$(OSV=NO_ALARM)")
+}
+
+record(bi, "$(P)$(R)_RBV")
+{
+    field(DESC, "$(DESC=)")
+    field(DTYP, "asynUInt32Digital")
+    field(INP,  "@asynMask($(PORT),$(ADDR),$(MASK))DIGITAL_INPUT")
+    field(ZNAM, "$(ZNAM=Low)")
+    field(ZSV,  "$(ZSV=NO_ALARM)")
+    field(ONAM, "$(ONAM=High)")
+    field(OSV,  "$(OSV=NO_ALARM)")
+    field(SCAN, "I/O Intr")
+}

@@ -47,6 +47,7 @@ declare -g OS_VERSION;
 declare -g INSTALL_LOCAITON_EPICS;
 declare -g INSTALL_LOCATION_VER;
 declare -g EPICS_BASE_PATH;
+declare -g EPICS_MODS_PATH;
 declare -g VENDOR_LIB_PATH;
 
 declare -g WORKING_FOLDER=${HOME}/.temp_folder
@@ -140,6 +141,7 @@ function _fill_env
     INSTALL_LOCATION_EPICS=$(make print-INSTALL_LOCATION_EPICS)
     INSTALL_LOCATION_VER=$(make print-INSTALL_LOCATION_VER)
     EPICS_BASE_PATH=${INSTALL_LOCATION_EPICS}/base
+	EPICS_MODS_PATH=${INSTALL_LOCATION_EPICS}/modules
     VENDOR_LIB_PATH=${INSTALL_LOCATION_EPICS}/vendor
     popdd
 }
@@ -154,6 +156,7 @@ function _echo_env
     echo "INSTALL_LOCAITON_EPICS: ${INSTALL_LOCATION_EPICS}"
     echo "INSTALL_LOCATION_VER: ${INSTALL_LOCATION_VER}"
     echo "EPICS_BASE_PATH: ${EPICS_BASE_PATH}"
+	echo "EPICS_MODS_PATH: ${EPOCS_MODS_PATH}"
     echo "VENDOR_LIB_PATH: ${VENDOR_LIB_PATH}"
     echo "WORKING_FOLDER: ${WORKING_FOLDER}"
     echo "EPICS_ENV_PATH: ${EPICS_ENV_PATH}"
@@ -254,7 +257,9 @@ function epics_env
     # WHAT: Force a 'distclean' on all modules to remove old configurations
     # (e.g., CFG/CONFIG_OPCUA) and ensure a clean build state.
     # make clean.modules actually perform "make distclean" in each module source
-    make clean.modules || exit
+	if [ -d "${EPICS_MODS_PATH}" ]; then
+		make clean.modules || exit
+	fi
     make conf        || exit
     make build.gz       || exit
     make install     || exit
@@ -416,9 +421,6 @@ case "$COMMAND" in
     OS)
         if is_redhat_variant; then
             echo "Error: This system is an ugly Red Hat variant."
-            echo "This is a Red Hat-based system."
-            echo "OS Name: $OS_NAME"
-            echo "OS Version: $OS_VERSION"
         else
             echo "Whoray! This system is not a Red Hat variant."
         fi
