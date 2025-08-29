@@ -1,0 +1,318 @@
+# This file contains the commands to build driver applications using the common set of plugins
+# The variable DBD_NAME should be defined to specify the name of the application DBD file.
+# For backwards compatibilty if DBD_NAME is not specified then PROD_NAME must be specified,
+# and DBD_NAME will set to this.
+
+ifndef DBD_NAME
+  DBD_NAME = $(PROD_NAME)
+endif
+
+$(DBD_NAME)_DBD += base.dbd
+
+PROD_LIBS        += NDPlugin
+$(DBD_NAME)_DBD += NDPluginSupport.dbd
+
+PROD_LIBS        += ADBase
+$(DBD_NAME)_DBD += ADSupport.dbd
+
+$(DBD_NAME)_DBD += NDFileNull.dbd
+
+# Note that if WITH_QSRV is YES then WITH_PVA must also be YES
+ifeq ($(WITH_QSRV),YES)
+  $(DBD_NAME)_DBD += qsrv.dbd
+  PROD_LIBS += qsrv
+endif
+
+ifeq ($(WITH_PVA),YES)
+  $(DBD_NAME)_DBD += NDPluginPva.dbd
+  $(DBD_NAME)_DBD += PVAServerRegister.dbd
+  PROD_LIBS += ntndArrayConverter
+  PROD_LIBS += nt
+  PROD_LIBS += pvDatabase
+  ifdef EPICS_BASE_PVA_CORE_LIBS
+    PROD_LIBS += $(EPICS_BASE_PVA_CORE_LIBS)
+  else
+    PROD_LIBS += pvAccess
+    PROD_LIBS += pvData
+  endif
+endif
+
+ifeq ($(WITH_NETCDF),YES)
+  $(DBD_NAME)_DBD += NDFileNetCDF.dbd
+  ifeq ($(NETCDF_EXTERNAL),NO)
+    PROD_LIBS += netCDF
+  else
+    ifdef NETCDF_LIB
+      netcdf_DIR   = $(NETCDF_LIB)
+      PROD_LIBS     += netcdf
+    else
+      PROD_SYS_LIBS += netcdf
+    endif
+  endif
+endif
+
+ifeq ($(WITH_GRAPHICSMAGICK), YES)
+  $(DBD_NAME)_DBD += NDFileMagick.dbd
+  ifeq ($(GRAPHICSMAGICK_EXTERNAL),NO)
+    PROD_LIBS               += Magick++ coders Magick jbig jp2 bzlib png webp lcms ttf wmf filters
+    PROD_LIBS += nanohttp_stream
+  else
+    ifdef GRAPHICSMAGICK_LIB
+      GraphicsMagick_DIR     = $(GRAPHICSMAGICK_LIB)
+      GraphicsMagick++_DIR   = $(GRAPHICSMAGICK_LIB)
+      GraphicsMagickWand_DIR = $(GRAPHICSMAGICK_LIB)
+      PROD_LIBS             += GraphicsMagick++ GraphicsMagick
+    else
+      PROD_SYS_LIBS         += GraphicsMagick++ GraphicsMagick
+    endif
+  endif
+  # The following system libraries must be installed to use GraphicsMagick
+  PROD_SYS_LIBS_Linux    += X11 Xext
+endif
+
+ifeq ($(WITH_TIFF),YES)
+  $(DBD_NAME)_DBD += NDFileTIFF.dbd
+  ifeq ($(TIFF_EXTERNAL),NO)
+    PROD_LIBS += tiff
+  else
+    ifdef TIFF_LIB
+      tiff_DIR     = $(TIFF_LIB)
+      PROD_LIBS     += tiff
+    else
+      PROD_SYS_LIBS += tiff
+    endif
+  endif
+endif
+
+ifeq ($(XML2_EXTERNAL),NO)
+  PROD_LIBS += xml2
+else
+  ifdef XML2_LIB
+    xml2_DIR     = $(XML2_LIB)
+    PROD_LIBS     += xml2
+  else
+    PROD_SYS_LIBS += xml2
+  endif
+endif
+
+ifeq ($(WITH_NEXUS),YES)
+  $(DBD_NAME)_DBD += NDFileNexus.dbd
+  ifeq ($(NEXUS_EXTERNAL),NO)
+    PROD_LIBS += NeXus
+  else
+    ifdef NEXUS_LIB
+      NeXus_DIR    = $(NEXUS_LIB)
+      PROD_LIBS     += NeXus
+    else
+      PROD_SYS_LIBS += NeXus
+    endif
+  endif
+endif
+
+ifeq ($(WITH_HDF5),YES)
+  $(DBD_NAME)_DBD += NDFileHDF5.dbd
+  ifeq ($(HDF5_EXTERNAL),NO)
+    PROD_LIBS += hdf5
+    PROD_LIBS += hdf5_hl
+  else
+    ifdef HDF5_LIB
+      hdf5_DIR     = $(HDF5_LIB)
+      hdf5_hl_DIR  = $(HDF5_LIB)
+      PROD_LIBS     += hdf5
+      PROD_LIBS     += hdf5_hl
+    else
+      PROD_SYS_LIBS += hdf5
+      PROD_SYS_LIBS += hdf5_hl
+    endif
+  endif
+  ifeq ($(HDF5_STATIC_BUILD), NO)
+    USR_CXXFLAGS_WIN32    += -DH5_BUILT_AS_DYNAMIC_LIB
+    USR_CFLAGS_WIN32      += -DH5_BUILT_AS_DYNAMIC_LIB
+  else
+    USR_CXXFLAGS_WIN32    += -DH5_BUILT_AS_STATIC_LIB
+    USR_CFLAGS_WIN32      += -DH5_BUILT_AS_STATIC_LIB
+  endif
+endif
+
+ifeq ($(WITH_BITSHUFFLE),YES)
+  ifeq ($(BITSHUFFLE_EXTERNAL),NO)
+    PROD_LIBS += bitshuffle
+  else
+    ifdef BITSHUFFLE_LIB
+      bitshuffle_DIR = $(BITSHUFFLE_LIB)
+      PROD_LIBS     += bitshuffle
+    else
+      PROD_SYS_LIBS += bitshuffle
+    endif
+  endif
+endif
+
+ifeq ($(WITH_BLOSC),YES)
+  ifeq ($(BLOSC_EXTERNAL),NO)
+    PROD_LIBS += blosc
+  else
+    ifdef BLOSC_LIB
+      blosc_DIR      = $(BLOSC_LIB)
+      PROD_LIBS     += blosc
+    else
+      PROD_SYS_LIBS += blosc
+    endif
+  endif
+endif
+
+ifeq ($(WITH_SZIP),YES)
+  ifeq ($(SZIP_EXTERNAL),NO)
+    PROD_LIBS += szip
+  else
+    ifdef SZIP_LIB
+      sz_DIR       = $(SZIP_LIB)
+      PROD_LIBS     += sz
+    else
+      PROD_SYS_LIBS += sz
+    endif
+  endif
+endif
+
+ifeq ($(WITH_ZLIB),YES)
+  ifeq ($(ZLIB_EXTERNAL),NO)
+    PROD_LIBS += zlib
+  else
+    ifdef ZLIB_LIB
+      z_DIR        = $(ZLIB_LIB)
+      PROD_LIBS     += z
+    else
+      PROD_SYS_LIBS += z
+    endif
+  endif
+endif
+
+ifeq ($(WITH_BOOST),YES)
+  ifeq ($(BOOST_EXTERNAL),NO)
+    PROD_SYS_LIBS += boost_system
+  else
+    ifdef BOOST_LIB
+      boost_system_DIR = $(BOOST_LIB)
+      PROD_LIBS     += boost_system
+    else
+      PROD_SYS_LIBS += boost_system
+    endif
+  endif
+endif
+
+ifeq ($(WITH_JPEG),YES)
+  $(DBD_NAME)_DBD += NDFileJPEG.dbd
+  ifeq ($(JPEG_EXTERNAL),NO)
+    PROD_LIBS += jpeg
+  else
+    ifdef JPEG_LIB
+      jpeg_DIR     = $(JPEG_LIB)
+      PROD_LIBS     += jpeg
+    else
+      PROD_SYS_LIBS += jpeg
+    endif
+  endif
+endif
+
+ifdef FFMPEGSERVER
+  $(DBD_NAME)_DBD += ffmpegServer.dbd
+  PROD_LIBS       += ffmpegServer
+  PROD_LIBS       += avdevice avformat avcodec swresample swscale avutil
+endif
+
+ifdef RECCASTER
+  $(DBD_NAME)_DBD += reccaster.dbd
+  PROD_LIBS       += reccaster
+endif
+
+ifdef ADPLUGINEDGE
+  $(DBD_NAME)_DBD  += NDPluginEdge.dbd
+  PROD_LIBS         += NDPluginEdge
+  ifdef OPENCV_LIB
+    opencv_core_DIR += $(OPENCV_LIB)
+    PROD_LIBS       += opencv_core opencv_imgproc
+  else
+    PROD_SYS_LIBS   += opencv_core opencv_imgproc
+  endif
+endif
+
+ifdef ADPLUGINBAR
+  $(DBD_NAME)_DBD += NDPluginBar.dbd
+  PROD_LIBS	  += NDPluginBar
+  ifdef OPENCV_LIB
+    opencv_core_DIR +=$(OPENCV_LIB)
+    PROD_LIBS       += opencv_core opencv_imgproc opencv_highgui zbar
+  else
+    PROD_SYS_LIBS   += opencv_core opencv_imgproc opencv_highgui zbar
+  endif
+endif
+
+ifdef ADCOMPVISION
+  $(DBD_NAME)_DBD  += NDPluginCV.dbd
+  PROD_LIBS     += NDPluginCV
+  ifdef OPENCV_LIB
+    opencv_core_DIR += $(OPENCV_LIB)
+    PROD_LIBS       += opencv_core opencv_imgproc opencv_highgui
+    ifeq ($(WITH_OPENCV_VIDEO), YES)
+      PROD_LIBS     += opencv_video opencv_videoio
+    endif
+  else
+    PROD_SYS_LIBS   += opencv_core opencv_imgproc opencv_highgui
+    ifeq ($(WITH_OPENCV_VIDEO), YES)
+      PROD_SYS_LIBS += opencv_video opencv_videoio
+    endif
+  endif
+endif
+
+ifdef ADPLUGINCENTROIDS
+  $(DBD_NAME)_DBD += NDPluginCentroids.dbd
+  PROD_LIBS += NDPluginCentroids centroids
+endif
+
+# Required modules
+$(DBD_NAME)_DBD   += asyn.dbd
+PROD_LIBS          += asyn
+
+ifeq ($(EPICS_LIBCOM_ONLY),YES)
+  PROD_LIBS        += Com
+else
+  # Optional modules
+  ifdef ALIVE
+    $(DBD_NAME)_DBD += aliveSupport.dbd
+    PROD_LIBS        += alive
+  endif
+
+  ifdef AUTOSAVE
+    $(DBD_NAME)_DBD += asSupport.dbd
+    PROD_LIBS        += autosave
+  endif
+
+  ifdef BUSY
+    $(DBD_NAME)_DBD += busySupport.dbd
+    PROD_LIBS        += busy
+  endif
+
+  ifdef CALC
+    $(DBD_NAME)_DBD += calcSupport.dbd
+    PROD_LIBS        += calc
+  endif
+
+  ifdef DEVIOCSTATS
+    $(DBD_NAME)_DBD += devIocStats.dbd
+    PROD_LIBS        += devIocStats
+  endif
+
+  ifdef SSCAN
+    $(DBD_NAME)_DBD += sscanSupport.dbd
+    PROD_LIBS        += sscan
+  endif
+
+  ifdef SNCSEQ
+    PROD_LIBS             += seq pv
+  endif
+
+  PROD_LIBS        += $(EPICS_BASE_IOC_LIBS)
+endif
+
+PROD_SYS_LIBS_WIN32      += gdi32 oleaut32 psapi
+
+USR_LDFLAGS_Darwin      += -framework CoreFoundation

@@ -48,7 +48,6 @@ declare -g INSTALL_LOCAITON_EPICS;
 declare -g INSTALL_LOCATION_VER;
 declare -g EPICS_BASE_PATH;
 declare -g VENDOR_LIB_PATH;
-declare -g IS_REDHAT_VARIANT;
 
 declare -g WORKING_FOLDER=${HOME}/.temp_folder
 declare -g EPICS_ENV_PATH=${WORKING_FOLDER}/EPICS-env
@@ -135,10 +134,9 @@ function initial_setup
 #              within the main EPICS environment to retrieve paths and OS information.
 function _fill_env
 {
-    IS_REDHAT=$(is_redhat_variant)
     pushdd "${EPICS_ENV_PATH}"
-#    OS_NAME=$(make print-OS_NAME)
-#    OS_VERSION=$(make print-OS_VERSION)
+    OS_NAME=$(make print-OS_NAME)
+    OS_VERSION=$(make print-OS_VERSION)
     INSTALL_LOCATION_EPICS=$(make print-INSTALL_LOCATION_EPICS)
     INSTALL_LOCATION_VER=$(make print-INSTALL_LOCATION_VER)
     EPICS_BASE_PATH=${INSTALL_LOCATION_EPICS}/base
@@ -157,7 +155,6 @@ function _echo_env
     echo "INSTALL_LOCATION_VER: ${INSTALL_LOCATION_VER}"
     echo "EPICS_BASE_PATH: ${EPICS_BASE_PATH}"
     echo "VENDOR_LIB_PATH: ${VENDOR_LIB_PATH}"
-    echo "IS_REDHAT_VARIANT: ${IS_REDHAT_VARIANT}"
     echo "WORKING_FOLDER: ${WORKING_FOLDER}"
     echo "EPICS_ENV_PATH: ${EPICS_ENV_PATH}"
     echo "EPICS_ENV_SUPPORT_PATH: ${EPICS_ENV_SUPPORT_PATH}"
@@ -180,9 +177,9 @@ function _prep_vendor()
     make init    || exit
    	if is_redhat_variant; then
         echo "Error: This system is an ugly Red Hat variant."
-   		make conf.rocky8 || exit;
+        make conf.rocky8 || exit;
     else
-   		echo "Whoray! This system is not a Red Hat variant."
+        echo "Whoray! This system is not a Red Hat variant."
         make conf || exit;
     fi
     make build   || exit
@@ -209,7 +206,7 @@ function _pre_support
     echo "INSTALL_LOCATION=${EPICS_BASE_PATH}" > configure/CONFIG_SITE.local
     make init     || exit
     make conf     || exit
-    make build.gz || exit
+    make build.gz    || exit
     make symlinks || exit
     popdd
 }
@@ -234,6 +231,7 @@ function prep_vendors
 #              by calling the generic '_pre_support' function.
 function epics_env_support { _fill_env; local version="$1"; _pre_support "$version" "${EPICS_ENV_SUPPORT_PATH}"; }
 
+
 # Function: epics_env
 # Description: Builds and installs the main EPICS environment by configuring
 #              release paths, cleaning, patching, and then running a full build
@@ -246,10 +244,10 @@ function epics_env
     echo "EPICS_TS_NTP_INET=tic.lbl.gov"         > configure/RELEASE.local
     echo "VENDOR_ULDAQ_PATH=${VENDOR_LIB_PATH}" >> configure/RELEASE.local
     echo 'OPEN62541_PATH=\$$\$$\(\_OPEN62541_CONFIG_OPCUA\)/../../../vendor'    >> configure/RELEASE.local
-    make distclean     || exit
-    make init          || exit
-    make patch         || exit
-    make conf          || exit
+    make distclean   || exit
+    make init        || exit
+    make patch       || exit
+    make conf        || exit
     # WHY: The build system reuses existing configuration files instead of overwriting them.
     # This can cause conflicts with stale configurations from previous Git commits.
     #
@@ -257,10 +255,10 @@ function epics_env
     # (e.g., CFG/CONFIG_OPCUA) and ensure a clean build state.
     # make clean.modules actually perform "make distclean" in each module source
     make clean.modules || exit
-    make conf          || exit
-    make build.gz      || exit
-    make install       || exit
-    make symlinks      || exit
+    make conf        || exit
+    make build.gz       || exit
+    make install     || exit
+    make symlinks    || exit
     popdd
 }
 
@@ -279,7 +277,7 @@ function epics_build
     echo "EPICS_TS_NTP_INET=tic.lbl.gov"         > configure/RELEASE.local
     echo "VENDOR_ULDAQ_PATH=${VENDOR_LIB_PATH}" >> configure/RELEASE.local
     echo 'OPEN62541_PATH=\$$\$$\(\_OPEN62541_CONFIG_OPCUA\)/../../../vendor' >> configure/RELEASE.local
-    make $cmd  || exit
+    make $cmd        || exit
     popdd
 }
 
