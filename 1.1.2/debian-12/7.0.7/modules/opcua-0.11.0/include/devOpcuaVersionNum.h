@@ -1,0 +1,8 @@
+#ifndef DEVOPCUA_DEVOPCUAVERSION_H
+#  error include devOpcuaVersion.h, not this header
+#endif
+#define EPICS_OPCUA_MAJOR_VERSION 0
+#define EPICS_OPCUA_MINOR_VERSION 11
+#define EPICS_OPCUA_MAINTENANCE_VERSION 0
+#define EPICS_OPCUA_DEVELOPMENT_FLAG 0
+#define EPICS_OPCUA_GIT_COMMIT "v0.11.0-0-g1bcc6d7-dirty"

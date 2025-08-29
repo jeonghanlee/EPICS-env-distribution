@@ -1,0 +1,528 @@
+record(bo, "$(IOC):NET:$(NIC):NETDEV_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@ifstat|$(NIC)|xxx")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):NET:$(NIC):NETDEV_SCAN_")
+}
+record(calcout, "$(IOC):NET:$(NIC):NETDEV_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):NET:$(NIC):NETDEV_SCAN.PROC CA")
+}
+record(bo, "$(IOC):NET:$(NIC):ETHTOOL_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@ethtool|$(NIC)|xxx")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):NET:$(NIC):ETHTOOL_SCAN_")
+}
+record(calcout, "$(IOC):NET:$(NIC):ETHTOOL_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):NET:$(NIC):ETHTOOL_SCAN.PROC CA")
+}
+record(stringin, "$(IOC):NET:$(NIC):NAME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|name")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(int64in, "$(IOC):NET:$(NIC):RX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|rx_bytes")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):RXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):RXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):RX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):RX")
+}
+record(calc, "$(IOC):NET:$(NIC):RX") {
+    field(INPA, "$(IOC):NET:$(NIC):RX_")
+    field(INPB, "$(IOC):NET:$(NIC):RXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):RX_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):RX:E_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|rx_errors")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):RX:ER_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):RX:ER_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:E_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):RX:E")
+}
+record(calc, "$(IOC):NET:$(NIC):RX:E") {
+    field(INPA, "$(IOC):NET:$(NIC):RX:E_")
+    field(INPB, "$(IOC):NET:$(NIC):RX:ER_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.1")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:E_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):RX:D:IP_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|rx_dropped")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):RX:D:IPR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):RX:D:IPR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:D:IP_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):RX:D:IP")
+}
+record(calc, "$(IOC):NET:$(NIC):RX:D:IP") {
+    field(INPA, "$(IOC):NET:$(NIC):RX:D:IP_")
+    field(INPB, "$(IOC):NET:$(NIC):RX:D:IPR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.0001")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:D:IP_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):TX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|tx_bytes")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):TXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):TXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):TX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):TX")
+}
+record(calc, "$(IOC):NET:$(NIC):TX") {
+    field(INPA, "$(IOC):NET:$(NIC):TX_")
+    field(INPB, "$(IOC):NET:$(NIC):TXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):TX_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):TX:E_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|tx_errors")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):TX:ER_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):TX:ER_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:E_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):TX:E")
+}
+record(calc, "$(IOC):NET:$(NIC):TX:E") {
+    field(INPA, "$(IOC):NET:$(NIC):TX:E_")
+    field(INPB, "$(IOC):NET:$(NIC):TX:ER_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.1")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:E_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):TX:D:IP_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|tx_dropped")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):TX:D:IPR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):TX:D:IPR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:D:IP_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):TX:D:IP")
+}
+record(calc, "$(IOC):NET:$(NIC):TX:D:IP") {
+    field(INPA, "$(IOC):NET:$(NIC):TX:D:IP_")
+    field(INPB, "$(IOC):NET:$(NIC):TX:D:IPR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.0001")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:D:IP_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):UP:R_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|carrier_up_count")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):UP:RR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):UP:RR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):UP:R_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):UP:R")
+}
+record(calc, "$(IOC):NET:$(NIC):UP:R") {
+    field(INPA, "$(IOC):NET:$(NIC):UP:R_")
+    field(INPB, "$(IOC):NET:$(NIC):UP:RR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):UP:R_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):DOWN:R_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|carrier_down_count")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):DOWN:RR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):DOWN:RR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):DOWN:R_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):DOWN:R")
+}
+record(calc, "$(IOC):NET:$(NIC):DOWN:R") {
+    field(INPA, "$(IOC):NET:$(NIC):DOWN:R_")
+    field(INPB, "$(IOC):NET:$(NIC):DOWN:RR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):DOWN:R_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):RX:D:DRV_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ethtool|$(NIC)|rx_dropped")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):RX:D:DRVR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):RX:D:DRVR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:D:DRV_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):RX:D:DRV")
+}
+record(calc, "$(IOC):NET:$(NIC):RX:D:DRV") {
+    field(INPA, "$(IOC):NET:$(NIC):RX:D:DRV_")
+    field(INPB, "$(IOC):NET:$(NIC):RX:D:DRVR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.0001")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):RX:D:DRV_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):TX:D:DRV_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ethtool|$(NIC)|tx_dropped")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:$(NIC):TX:D:DRVR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:$(NIC):TX:D:DRVR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:D:DRV_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:$(NIC):TX:D:DRV")
+}
+record(calc, "$(IOC):NET:$(NIC):TX:D:DRV") {
+    field(INPA, "$(IOC):NET:$(NIC):TX:D:DRV_")
+    field(INPB, "$(IOC):NET:$(NIC):TX:D:DRVR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "0.0001")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "MAJOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    field(TSEL, "$(IOC):NET:$(NIC):TX:D:DRV_.TIME")
+}
+record(int64in, "$(IOC):NET:$(NIC):IFFLAGS") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|if_flags")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):NET:$(NIC):MTU") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|mtu")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(stringin, "$(IOC):NET:$(NIC):DRV") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ethtool|$(NIC)|driver")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+
+record(mbbi, "$(IOC):NET:$(NIC):OPER") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|operatate")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "1")
+    field(TSE , "-2")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(SXVL, "6")
+    field(ZRST, "Unknown")
+    field(ONST, "Not present")
+    field(TWST, "Down")
+    field(THST, "Lower Down")
+    field(FRST, "Testing")
+    field(FVST, "Dormant")
+    field(SXST, "Up")
+}
+
+record(bi, "$(IOC):NET:$(NIC):LINK") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|linkmode")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "1")
+    field(TSE , "-2")
+    field(ZNAM, "Down")
+    field(ONAM, "Up")
+}
+
+record(bi, "$(IOC):NET:$(NIC):CR") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ifstat|$(NIC)|carrier")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "1")
+    field(TSE , "-2")
+    field(ZNAM, "No Carrier")
+    field(ONAM, "Running")
+    field(ZSV , "MAJOR")
+}
+
+record(bi, "$(IOC):NET:$(NIC):DRV:STAT") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@ethtool|$(NIC)|found_stat")
+    field(SCAN, "I/O Intr")
+    field(TSE , "-2")
+    field(ZNAM, "No Stats")
+    field(ONAM, "Has Stat")
+}
+
+# aggregate packet drop rates
+record(calc, "$(IOC):NET:$(NIC):RX:D") {
+    field(INPA, "$(IOC):NET:$(NIC):RX:D:IP CP MS")
+    field(INPB, "$(IOC):NET:$(NIC):RX:D:DRV CP MS")
+    field(CALC, "A+B")
+    field(EGU , "pkt/s")
+    field(PREC, "1")
+}
+record(calc, "$(IOC):NET:$(NIC):TX:D") {
+    field(INPA, "$(IOC):NET:$(NIC):TX:D:IP CP MS")
+    field(INPB, "$(IOC):NET:$(NIC):TX:D:DRV CP MS")
+    field(CALC, "A+B")
+    field(EGU , "pkt/s")
+    field(PREC, "1")
+}
