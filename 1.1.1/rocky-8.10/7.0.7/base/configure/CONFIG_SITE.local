@@ -1,9 +1,0 @@
-INSTALL_LOCATION=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base
-CROSS_COMPILER_TARGET_ARCHS=
-LINKER_USE_RPATH = ORIGIN
-EPICS_SITE_VERSION = "github.com/jeonghanlee/EPICS-env"
-GENVERSIONDEFAULT = "EPICS-env-7.0.7-1.1.1-6-gdd75d3d"
-OP_SYS_LDFLAGS += $(SHRLIB_SEARCH_DIRS:%=-Wl,-rpath-link,%)
-USR_CFLAGS   += -g0 -gz=zlib
-USR_CXXFLAGS += -g0 -gz=zlib
-USR_LDFLAGS  += -g0 -gz=zlib

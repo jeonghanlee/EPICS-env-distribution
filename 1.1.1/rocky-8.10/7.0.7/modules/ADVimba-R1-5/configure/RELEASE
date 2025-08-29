@@ -1,4 +1,0 @@
-EPICS_BASE:=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base
-ASYN:=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/../modules/asyn
-ADCORE:=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/../modules/ADCore-R3-14
-ADGENICAM:=/home/jeonglee/gitsrc/EPICS-env-distribution/epics/1.1.1/rocky-8.10/7.0.7/base/../modules/ADGenICam-R1-10
