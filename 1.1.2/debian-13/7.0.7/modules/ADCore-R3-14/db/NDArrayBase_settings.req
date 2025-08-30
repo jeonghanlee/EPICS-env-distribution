@@ -1,0 +1,8 @@
+$(P)$(R)DataType
+$(P)$(R)ColorMode
+$(P)$(R)ArrayCallbacks
+$(P)$(R)NDAttributesFile
+$(P)$(R)NDAttributesMacros
+$(P)$(R)PoolPollStats.SCAN
+$(P)$(R)NumPreAllocBuffers
+$(P)$(R)WaitForPlugins

@@ -1,0 +1,5 @@
+ASYN=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/asyn-4.45.0
+BUSY=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/busy-2dfe92d
+CALC=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/calc-f6a39b6
+MOTOR=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/motor-26efd2f
+EPICS_BASE:=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/base

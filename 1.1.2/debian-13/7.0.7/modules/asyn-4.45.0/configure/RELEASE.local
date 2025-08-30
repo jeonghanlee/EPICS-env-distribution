@@ -1,0 +1,3 @@
+SNCSEQ=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/seq-2.2.9
+SSCAN=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/sscan-6cf6740
+CALC=/home/jeonglee/EPICS-env-distribution/1.1.2/debian-13/7.0.7/modules/calc-f6a39b6
