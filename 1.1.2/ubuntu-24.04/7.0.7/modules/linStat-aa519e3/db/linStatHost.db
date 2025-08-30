@@ -1,0 +1,919 @@
+record(bo, "$(IOC):MEM_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@memInfo|localhost|MemTotal")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):MEM_SCAN_")
+}
+record(calcout, "$(IOC):MEM_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):MEM_SCAN.PROC CA")
+}
+record(bo, "$(IOC):HOST_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@host|localhost|ncpu")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):HOST_SCAN_")
+}
+record(calcout, "$(IOC):HOST_SCAN_") {
+    field(ODLY, "60")
+    field(OUT , "$(IOC):HOST_SCAN.PROC CA")
+}
+record(bo, "$(IOC):STAT_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@stat|localhost|cpu:2")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):STAT_SCAN_")
+}
+record(calcout, "$(IOC):STAT_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):STAT_SCAN.PROC CA")
+}
+record(bo, "$(IOC):UP_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@uptime|localhost|uptime")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):UP_SCAN_")
+}
+record(calcout, "$(IOC):UP_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):UP_SCAN.PROC CA")
+}
+record(bo, "$(IOC):HWMON_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@hwmon|localhost|temp_max")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):HWMON_SCAN_")
+}
+record(calcout, "$(IOC):HWMON_SCAN_") {
+    field(ODLY, "30")
+    field(OUT , "$(IOC):HWMON_SCAN.PROC CA")
+}
+record(int64in, "$(IOC):MEM_MAX") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@memInfo|localhost|MemTotal")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MEM_FREE") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@memInfo|localhost|MemAvailable")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "MINOR")
+    field(LLSV, "MAJOR")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "LOW LOLO LSV LLSV")
+}
+record(int64in, "$(IOC):SWP_MAX") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@memInfo|localhost|SwapTotal")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SWP_FREE") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@memInfo|localhost|SwapFree")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "MINOR")
+    field(LLSV, "MAJOR")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "LOW LOLO LSV LLSV")
+}
+record(int64in, "$(IOC):CPU_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@host|localhost|ncpu")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_UTIME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:2")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_NTIME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:3")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_CTIME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:4")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_IDLE") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:5")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_IOWAIT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:6")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_IRQ") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:7")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_SIRQ") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:8")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_STEAL") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:9")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_GUEST") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:10")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):SYS_GUESTWAIT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:11")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(stringin, "$(IOC):KERNEL_VERS") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@host|localhost|version")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(stringin, "$(IOC):HOSTNAME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@host|localhost|nodename")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(stringin, "$(IOC):UPTIME") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@uptime|localhost|uptime:disp")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(lsi, "$(IOC):KERNEL_VERS_FULL") {
+    field(DESC, "")
+    field(SIZV, "128")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@host|localhost|version")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(ai, "$(IOC):T_MAX") {
+    field(DESC, "Hottest temperature")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@hwmon|localhost|temp_max")
+    field(SCAN, "I/O Intr")
+    field(ASLO, "0.001")
+    field(EGU , "C")
+    field(HOPR, "100")
+    field(HIHI, "80")
+    field(HIGH, "70")
+    field(HHSV, "MAJOR")
+    field(HSV , "MINOR")
+    field(ADEL, "0.5")
+    field(FLNK, "$(IOC):T_LOC_MAX")
+
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(stringin, "$(IOC):T_LOC_MAX") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@hwmon|localhost|name_max")
+}
+
+record(calcout, "$(IOC):MEM_USED_") {
+    field(INPA, "$(IOC):MEM_MAX CP MS")
+    field(INPB, "$(IOC):MEM_FREE CP MS")
+    field(CALC, "A-B")
+    field(OUT , "$(IOC):MEM_USED PP MS")
+    field(TSEL, "$(IOC):MEM_MAX.TIME")
+}
+record(int64in, "$(IOC):MEM_USED") {
+    field(ADEL, "1048576")
+}
+
+# updated HOPR when MEM_MAX changes (~never)
+record(dfanout, "$(IOC):MEM_MAX_") {
+    field(DOL , "$(IOC):MEM_MAX CP")
+    field(OMSL, "closed_loop")
+    field(OUTA, "$(IOC):MEM_FREE.HOPR NPP")
+    field(OUTB, "$(IOC):MEM_USED.HOPR NPP")
+    field(TSEL, "$(IOC):MEM_MAX.TIME")
+}
+
+record(calcout, "$(IOC):SWP_USED_") {
+    field(INPA, "$(IOC):SWP_MAX CP MS")
+    field(INPB, "$(IOC):SWP_FREE CP MS")
+    field(CALC, "A-B")
+    field(OUT , "$(IOC):SWP_USED PP MS")
+    field(TSEL, "$(IOC):SWP_MAX.TIME")
+}
+record(int64in, "$(IOC):SWP_USED") {
+    field(ADEL, "1048576")
+    field(TSEL, "$(IOC):SWP_MAX.TIME")
+}
+
+# updated HOPR when SWP_MAX changes (~never)
+record(dfanout, "$(IOC):SWP_MAX_") {
+    field(DOL , "$(IOC):SWP_MAX CP")
+    field(OMSL, "closed_loop")
+    field(OUTA, "$(IOC):SWP_FREE.HOPR NPP")
+    field(OUTB, "$(IOC):SWP_USED.HOPR NPP")
+    field(TSEL, "$(IOC):SWP_MAX.TIME")
+}
+
+
+
+# SYS_CPU_LOAD
+
+record(int64in, "$(IOC):SYS_TOT_") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@stat|localhost|cpu:2")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "1") # after constituent SYS_* processed
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+    field(FLNK, "$(IOC):SYS_TOT")
+}
+record(calc, "$(IOC):SYS_TOT") {
+    field(INPA, "$(IOC):SYS_UTIME NPP MS")
+    field(INPB, "$(IOC):SYS_NTIME NPP MS")
+    field(INPC, "$(IOC):SYS_CTIME NPP MS")
+    field(INPD, "$(IOC):SYS_IDLE NPP MS")
+    field(INPE, "$(IOC):SYS_IOWAIT NPP MS")
+    field(INPF, "$(IOC):SYS_IRQ NPP MS")
+    field(INPG, "$(IOC):SYS_SIRQ NPP MS")
+    field(INPH, "$(IOC):SYS_STEAL NPP MS")
+    field(INPI, "$(IOC):SYS_GUEST NPP MS")
+    field(INPJ, "$(IOC):SYS_GUESTWAIT NPP MS")
+    field(CALC, "A+B+C+D+E+F+G+H+I+J")
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+    field(FLNK, "$(IOC):SYS_ACT")
+}
+record(calc, "$(IOC):SYS_ACT") { # all not idle
+    field(INPA, "$(IOC):SYS_UTIME NPP MS")
+    field(INPB, "$(IOC):SYS_NTIME NPP MS")
+    field(INPC, "$(IOC):SYS_CTIME NPP MS")
+    # omit IDLE
+    field(INPE, "$(IOC):SYS_IOWAIT NPP MS")
+    field(INPF, "$(IOC):SYS_IRQ NPP MS")
+    field(INPG, "$(IOC):SYS_SIRQ NPP MS")
+    field(INPH, "$(IOC):SYS_STEAL NPP MS")
+    field(INPI, "$(IOC):SYS_GUEST NPP MS")
+    field(INPJ, "$(IOC):SYS_GUESTWAIT NPP MS")
+    field(CALC, "A+B+C+E+F+G+H+I+J")
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+    field(FLNK, "$(IOC):SYS_BUSY")
+}
+record(calc, "$(IOC):SYS_BUSY") { # all not idle
+    field(INPA, "$(IOC):SYS_UTIME NPP MS")
+    field(INPB, "$(IOC):SYS_NTIME NPP MS")
+    field(INPC, "$(IOC):SYS_CTIME NPP MS")
+    field(CALC, "A+B+C")
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+    field(FLNK, "$(IOC):SYS_CPU_LOAD")
+}
+record(calc, "$(IOC):SYS_CPU_LOAD") {
+    # load excluding IRQ ...
+    field(INPA, "$(IOC):SYS_TOT NPP MS")
+    field(INPB, "$(IOC):SYS_BUSY NPP MS")
+    # C - prev. num.
+    # D - prev. denom.
+    # E - result
+    field(CALC, "E:=(B-C)/(A-D);C:=B;D:=A;E*100")
+    field(EGU , "%")
+    field(PREC, "2")
+    field(HOPR, "100")
+    field(HIHI, "80")
+    field(HIGH, "70")
+    field(HHSV, "MAJOR")
+    field(HSV,  "MINOR")
+    field(ADEL, "5")
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+    field(FLNK, "$(IOC):SYS_TOT_LOAD")
+
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):SYS_TOT_LOAD") {
+    # load including IRQ ...
+    field(INPA, "$(IOC):SYS_TOT NPP MS")
+    field(INPB, "$(IOC):SYS_ACT NPP MS")
+    # C - prev. num.
+    # D - prev. denom.
+    # E - result
+    field(CALC, "E:=(B-C)/(A-D);C:=B;D:=A;E*100")
+    field(EGU, "%")
+    field(PREC, "2")
+    field(HOPR, "100")
+    field(HIHI, "80")
+    field(HIGH, "70")
+    field(HHSV, "MAJOR")
+    field(HSV,  "MINOR")
+    field(ADEL, "5")
+    field(TSEL, "$(IOC):SYS_UTIME.TIME")
+
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(stringin, "$(IOC):TOD") {
+    field(DESC, "Current time and date")
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "1 second")
+    field(INP,  "@%m/%d/%Y %H:%M:%S%z")
+}
+record(bo, "$(IOC):NET:HOST:SNMP_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@netstat|/proc/net/snmp|Ip:InReceives")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):NET:HOST:SNMP_SCAN_")
+}
+record(calcout, "$(IOC):NET:HOST:SNMP_SCAN_") {
+    field(ODLY, "60")
+    field(OUT , "$(IOC):NET:HOST:SNMP_SCAN.PROC CA")
+}
+record(bo, "$(IOC):NET:HOST:NET_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@netstat|/proc/net/netstat|IpExt:InOctets")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):NET:HOST:NET_SCAN_")
+}
+record(calcout, "$(IOC):NET:HOST:NET_SCAN_") {
+    field(ODLY, "60")
+    field(OUT , "$(IOC):NET:HOST:NET_SCAN.PROC CA")
+}
+record(int64in, "$(IOC):NET:HOST:UDP_RX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/snmp|Udp:InDatagrams")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:UDP_RXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:UDP_RXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:UDP_RX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:UDP_RX")
+}
+record(calc, "$(IOC):NET:HOST:UDP_RX") {
+    field(INPA, "$(IOC):NET:HOST:UDP_RX_")
+    field(INPB, "$(IOC):NET:HOST:UDP_RXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Kpkt/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:UDP_RX_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:UDP_TX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/snmp|Udp:OutDatagrams")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:UDP_TXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:UDP_TXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:UDP_TX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:UDP_TX")
+}
+record(calc, "$(IOC):NET:HOST:UDP_TX") {
+    field(INPA, "$(IOC):NET:HOST:UDP_TX_")
+    field(INPB, "$(IOC):NET:HOST:UDP_TXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Kpkt/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:UDP_TX_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:RX:D_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/snmp|Ip:InDiscards")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:RX:DR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:RX:DR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:RX:D_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:RX:D")
+}
+record(calc, "$(IOC):NET:HOST:RX:D") {
+    field(INPA, "$(IOC):NET:HOST:RX:D_")
+    field(INPB, "$(IOC):NET:HOST:RX:DR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Kpkt/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:RX:D_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:RX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:InOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:RXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:RXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:RX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:RX")
+}
+record(calc, "$(IOC):NET:HOST:RX") {
+    field(INPA, "$(IOC):NET:HOST:RX_")
+    field(INPB, "$(IOC):NET:HOST:RXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:RX_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:RX:B_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:InBcastOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:RX:BR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:RX:BR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:RX:B_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:RX:B")
+}
+record(calc, "$(IOC):NET:HOST:RX:B") {
+    field(INPA, "$(IOC):NET:HOST:RX:B_")
+    field(INPB, "$(IOC):NET:HOST:RX:BR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:RX:B_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:RX:M_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:InMcastOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:RX:MR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:RX:MR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:RX:M_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:RX:M")
+}
+record(calc, "$(IOC):NET:HOST:RX:M") {
+    field(INPA, "$(IOC):NET:HOST:RX:M_")
+    field(INPB, "$(IOC):NET:HOST:RX:MR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:RX:M_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:TX_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:OutBcastOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:TXR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:TXR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:TX_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:TX")
+}
+record(calc, "$(IOC):NET:HOST:TX") {
+    field(INPA, "$(IOC):NET:HOST:TX_")
+    field(INPB, "$(IOC):NET:HOST:TXR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:TX_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:TX:B_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:OutBcastOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:TX:BR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:TX:BR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:TX:B_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:TX:B")
+}
+record(calc, "$(IOC):NET:HOST:TX:B") {
+    field(INPA, "$(IOC):NET:HOST:TX:B_")
+    field(INPB, "$(IOC):NET:HOST:TX:BR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:TX:B_.TIME")
+}
+record(int64in, "$(IOC):NET:HOST:TX:M_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@netstat|/proc/net/netstat|IpExt:OutMcastOctets")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):NET:HOST:TX:MR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):NET:HOST:TX:MR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):NET:HOST:TX:M_.TIME") # table update time
+    field(FLNK, "$(IOC):NET:HOST:TX:M")
+}
+record(calc, "$(IOC):NET:HOST:TX:M") {
+    field(INPA, "$(IOC):NET:HOST:TX:M_")
+    field(INPB, "$(IOC):NET:HOST:TX:MR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "0.0009765625")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "KB/s")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    field(TSEL, "$(IOC):NET:HOST:TX:M_.TIME")
+}

@@ -1,0 +1,44 @@
+record(waveform, "$(P):test_array")
+{
+    field(NELM, "10")
+    field(FTVL, "LONG")
+    field(INP, "[0, -1, 2, -3, 4, -5, 6, -7, 8, -9]")
+}
+
+record(ao, "$(P):test_number")
+{
+    field(PINI, "YES")
+    field(VAL, "-10")
+}
+
+record(acalcout, "$(P):calc_aneg_array")
+{
+    field(NELM, "10")
+    field(NUSE, "10")
+    field(INAA, "$(P):test_array CP NMA")
+    field(CALC, "ANEG(AA)")
+}
+
+record(acalcout, "$(P):calc_aneg")
+{
+    field(NELM, "10")
+    field(NUSE, "10")
+    field(INPA, "$(P):test_number CP NMA")
+    field(CALC, "ANEG(A)")
+}
+
+record(acalcout, "$(P):calc_apos_array")
+{
+    field(NELM, "10")
+    field(NUSE, "10")
+    field(INAA, "$(P):test_array CP NMA")
+    field(CALC, "APOS(AA)")
+}
+
+record(acalcout, "$(P):calc_apos")
+{
+    field(NELM, "10")
+    field(NUSE, "10")
+    field(INPA, "$(P):test_number CP NMA")
+    field(CALC, "APOS(A)")
+}

@@ -1,0 +1,128 @@
+#*************************************************************************
+# Copyright (c) 2011 UChicago Argonne LLC, as Operator of Argonne
+#     National Laboratory.
+# Copyright (c) 2002 The Regents of the University of California, as
+#     Operator of Los Alamos National Laboratory.
+# EPICS BASE is distributed subject to a Software License Agreement found
+# in the file LICENSE that is included with this distribution.
+#*************************************************************************
+
+include $(CONFIG)/RULES_DIRS
+
+# Disable most top rules when installing into a parent's tree, indicated
+# by PARENT_MODULE being set in the modules/CONFIG_SITE.local file and
+# INSTALL_LOCATION pointing to the the same place as in the parent.
+ifeq ($(origin PARENT_MODULE),file)
+  ifeq ($(INSTALL_LOCATION),$($(PARENT_MODULE)))
+    DISABLE_TOP_RULES=YES
+  endif
+endif
+
+ifndef DISABLE_TOP_RULES
+  #
+  # Rules for a regular application top directory
+  #
+
+  # When run by 'make distclean' the realuninstall target also
+  # removes any modules/RELEASE.<host>.local files
+  distclean: realclean cvsclean realuninstall
+
+  realuninstall: uninstallDirs
+	$(RMDIR) $(INSTALL_LOCATION_BIN) $(INSTALL_LOCATION_LIB)
+  ifeq (modules,$(filter modules,$(DIRS)))
+    ifeq (distclean,$(filter distclean,$(MAKECMDGOALS)))
+	$(RM) $(wildcard modules/RELEASE.*.local)
+    endif
+  endif
+
+  UNINSTALL_DIRS += $(INSTALL_DB) $(INSTALL_DBD) $(INSTALL_DOC) $(INSTALL_HTML)
+  UNINSTALL_DIRS += $(INSTALL_INCLUDE) $(INSTALL_TEMPLATES) $(DIRECTORY_TARGETS)
+  ifneq ($(INSTALL_LOCATION),$(TOP))
+    UNINSTALL_DIRS += $(INSTALL_CONFIG)
+  endif
+  uninstallDirs:
+	$(RMDIR) $(UNINSTALL_DIRS)
+
+  # Remove the bin and lib directories if they have no sub-directories
+  #
+  EMPTY_INSTALL_DIRS = \
+      $(if $(wildcard $(INSTALL_LOCATION_BIN)/*),,$(INSTALL_LOCATION_BIN)) \
+      $(if $(wildcard $(INSTALL_LOCATION_LIB)/*),,$(INSTALL_LOCATION_LIB))
+  uninstall: archuninstall uninstallDirs
+	$(RMDIR) $(EMPTY_INSTALL_DIRS)
+
+  archuninstall: $(addprefix uninstall$(DIVIDER),$(BUILD_ARCHS))
+
+  uninstall$(DIVIDER)%:
+	$(RMDIR) $(addsuffix /$(subst uninstall$(DIVIDER),,$@), \
+	    $(INSTALL_LOCATION_BIN) $(INSTALL_LOCATION_LIB))
+
+  # Only run this at the top of the parent
+  runtests test-results:
+	@$(SHOWTESTFAILURES)
+
+else
+  #
+  # Using a disabled rule aborts
+  #
+
+  distclean uninstall realuninstall archuninstall:
+	$(error Target '$@' not available in a submodule)
+
+endif # DISABLE_TOP_RULES
+
+# Clean out old results
+before-runtests before-test-results: rm-failure-file
+rm-failure-file:
+	$(RM) $(TESTS_FAILED_PATH)
+
+help:
+	@echo "Usage: gnumake [options] [target] ..."
+	@echo "Targets supported by all Makefiles:"
+	@echo "     all            - Same as install (default rule)"
+	@echo "     inc            - Installs header, dbd and html files"
+	@echo "     build          - Builds and installs all targets"
+	@echo "     install        - Builds and installs all targets"
+	@echo "     clean          - Removes the O.<arch> dirs created by running make"
+	@echo "                      In O.<arch> dir, clean removes build created files"
+	@echo "     realclean      - Removes ALL O.<arch> dirs"
+	@echo "                      Cannot be used within an O.<arch> dir"
+	@echo "     rebuild        - Same as clean install"
+	@echo "     archclean      - Removes O.<arch> dirs but not O.Common dir"
+	@echo "     depclean       - Removes .d files from all O.<arch> dirs."
+	@echo "     cvsclean       - Removes backup files etc. from all dirs below"
+	@echo "     runtests       - Run self-tests, summarize results immediately"
+	@echo "     tapfiles       - Run self-tests, save to O.<arch>/*.tap files"
+	@echo "     test-results   - Summarize all O.<arch>/*.tap files"
+	@echo "     clean-tests    - Removes all O.<arch>/*.tap files"
+	@echo "\"Partial\" build targets supported by Makefiles:"
+	@echo "     host           - Builds and installs $(EPICS_HOST_ARCH) only."
+	@echo "     inc$(DIVIDER)<arch>     - Installs <arch> only header files."
+	@echo "     build$(DIVIDER)<arch>   - Builds and installs <arch> only."
+	@echo "     install$(DIVIDER)<arch> - Builds and installs <arch> only."
+	@echo "     clean$(DIVIDER)<arch>   - Cleans <arch> binaries in O.<arch> dirs only."
+	@echo "Targets supported by top level Makefile:"
+ifndef DISABLE_TOP_RULES
+	@echo "     archuninstall  - Remove bin & lib directories created by this hostarch."
+	@echo "     uninstall$(DIVIDER)<arch> - Remove bin & lib directories for <arch> only."
+	@echo "     uninstall      - Remove install directories created by this hostarch."
+	@echo "     realuninstall  - Removes ALL install dirs"
+	@echo "     distclean      - Does realclean cvsclean realuninstall and deletes any"
+	@echo "                      generated modules/RELEASE.<host>.local files"
+endif
+	@echo "     help           - Prints this list of valid make targets "
+	@echo "Object targets are supported by the O.<arch> level Makefile .e.g"
+	@echo "     xxxRecord.o"
+
+.PHONY: distclean uninstall rm-failure-file help
+.PHONY: realuninstall archuninstall uninstallDirs
+
+ifndef DISABLE_TOP_RULES
+  # Include <top>/cfg/TOP_RULES* files from tops defined in RELEASE* files
+  #
+  RELEASE_CFG_TOP_RULES = $(foreach top, $(RELEASE_TOPS), \
+      $(wildcard $($(top))/cfg/TOP_RULES*))
+  ifneq ($(RELEASE_CFG_TOP_RULES),)
+    include $(RELEASE_CFG_TOP_RULES)
+  endif
+endif

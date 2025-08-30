@@ -1,0 +1,4 @@
+include "busyRecord.dbd"
+device(busy,CONSTANT,devBusySoft,"Soft Channel")
+device(busy,CONSTANT,devBusySoftRaw,"Raw Soft Channel")
+device(busy,INST_IO,asynBusyInt32,"asynInt32")
