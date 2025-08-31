@@ -1,0 +1,8 @@
+SNCSEQ=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/seq-2.2.9
+SSCAN=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/sscan-6cf6740
+CALC=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/calc-f6a39b6
+ASYN=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/asyn-4.45.0
+AUTOSAVE=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/autosave-0bfbf3c
+BUSY=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/busy-2dfe92d
+SCALER=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/scaler-beb5521
+STD=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/std-6b893a7

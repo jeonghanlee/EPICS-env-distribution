@@ -1,0 +1,38 @@
+PVXS_MAJOR_VERSION = 1
+PVXS_MINOR_VERSION = 4
+PVXS_MAINTENANCE_VERSION = 0
+
+# Version range conditions in Makefiles
+#
+# ifdef PVXS_X_Y_Z   # PVXS >= X.Y.Z
+#
+# ifndef PVXS_X_Y_Z  # PVXS < X.Y.Z
+#
+# ifeq ($(PVXS_X_Y_Z),YES)   # PVXS == X.Y.Z
+#
+# ifneq ($(PVXS_X_Y_Z),YES)   # PVXS != X.Y.Z
+#
+PVXS_1_4_0 = YES
+PVXS_1_3_3 = NO
+PVXS_1_3_2 = NO
+PVXS_1_3_1 = NO
+PVXS_1_3_0 = NO
+PVXS_1_2_4 = NO
+PVXS_1_2_3 = NO
+PVXS_1_2_2 = NO
+PVXS_1_2_1 = NO
+PVXS_1_2_0 = NO
+PVXS_1_1_4 = NO
+PVXS_1_1_3 = NO
+PVXS_1_1_2 = NO
+PVXS_1_1_1 = NO
+PVXS_1_1_0 = NO
+PVXS_1_0_1 = NO
+PVXS_1_0_0 = NO
+PVXS_0_3_1 = NO
+PVXS_0_3_0 = NO
+PVXS_0_2_2 = NO
+PVXS_0_2_1 = NO
+PVXS_0_2_0 = NO
+# 0.1 series releases did not define any PVXS_0_1_X
+# use 'ifndef PVXS_0_2_0' to detect.

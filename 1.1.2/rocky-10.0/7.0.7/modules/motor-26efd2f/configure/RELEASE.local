@@ -1,0 +1,5 @@
+SNCSEQ=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/seq-2.2.9
+ASYN=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/asyn-4.45.0
+BUSY=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/busy-2dfe92d
+LUA=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/lua-17475b5
+MODBUS=/home/jeonglee/EPICS-env-distribution/1.1.2/rocky-10.0/7.0.7/modules/modbus-3.4.0

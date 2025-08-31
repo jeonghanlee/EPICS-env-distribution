@@ -1,0 +1,1363 @@
+record(bo, "$(IOC):PID_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@pid|self|cwd")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):PID_SCAN_")
+}
+record(calcout, "$(IOC):PID_SCAN_") {
+    field(ODLY, "60")
+    field(OUT , "$(IOC):PID_SCAN.PROC CA")
+}
+record(bo, "$(IOC):FD_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@fd|self|FD_CNT")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):FD_SCAN_")
+}
+record(calcout, "$(IOC):FD_SCAN_") {
+    field(ODLY, "60")
+    field(OUT , "$(IOC):FD_SCAN.PROC CA")
+}
+record(bo, "$(IOC):PID_STATUS_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@procStatus|self|Pid")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):PID_STATUS_SCAN_")
+}
+record(calcout, "$(IOC):PID_STATUS_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):PID_STATUS_SCAN.PROC CA")
+}
+record(bo, "$(IOC):PID_STAT_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@procStat|self|1")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):PID_STAT_SCAN_")
+}
+record(calcout, "$(IOC):PID_STAT_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):PID_STAT_SCAN.PROC CA")
+}
+record(bo, "$(IOC):PDB_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@pdb|self|nrec")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):PDB_SCAN_")
+}
+record(calcout, "$(IOC):PDB_SCAN_") {
+    field(ODLY, "10")
+    field(OUT , "$(IOC):PDB_SCAN.PROC CA")
+}
+record(bo, "$(IOC):MALL_SCAN") {
+    field(DTYP, "Linux Stat Scan")
+    field(OUT , "@mallinfo|self|arena")
+    field(PINI, "RUNNING")
+    field(ZNAM, "Scan")
+    field(ONAM, "Scan")
+    field(FLNK, "$(IOC):MALL_SCAN_")
+}
+record(calcout, "$(IOC):MALL_SCAN_") {
+    field(ODLY, "30")
+    field(OUT , "$(IOC):MALL_SCAN.PROC CA")
+}
+record(int64in, "$(IOC):PROCESS_ID") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|Pid")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):PARENT_ID") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|PPid")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MEM_SWP") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|VmSwap")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MEM_LCK") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|VmLck")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MEM_RSS") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|VmRSS")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MEM_RSS_PEAK") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|VmHWM")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):THREAD_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|Threads")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):FD_MAX") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pid|self|NOFILE")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):FD_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@fd|self|FD_CNT")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):TCKPSEC") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pid|self|ticks_per_sec")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):RECORD_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pdb|self|nrec")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):CA_CLNT_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pdb|self|rsrv:nconn")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "200")
+    field(LOPR, "")
+    field(HIHI, "175")
+    field(HIGH, "100")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "MAJOR")
+    field(HSV , "MINOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV")
+}
+record(int64in, "$(IOC):CA_CONN_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pdb|self|rsrv:nchan")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "5000")
+    field(LOPR, "")
+    field(HIHI, "4500")
+    field(HIGH, "4000")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "MAJOR")
+    field(HSV , "MINOR")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "10")
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV")
+}
+record(int64in, "$(IOC):SUSP_TASK_CNT") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pdb|self|nsuspend")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "1")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "MAJOR")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "")
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV")
+}
+record(int64in, "$(IOC):MALLOC_POOL") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@mallinfo|self|arena")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):MALLOC_USED") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@mallinfo|self|uordblks")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1048576")
+    info(autosaveFields_pass0, "")
+}
+record(int64in, "$(IOC):PGFLT_MAJ_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStat|self|10")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):PGFLT_MAJR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):PGFLT_MAJR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):PGFLT_MAJ_.TIME") # table update time
+    field(FLNK, "$(IOC):PGFLT_MAJ")
+}
+record(calc, "$(IOC):PGFLT_MAJ") {
+    field(INPA, "$(IOC):PGFLT_MAJ_")
+    field(INPB, "$(IOC):PGFLT_MAJR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1")
+    field(TSEL, "$(IOC):PGFLT_MAJ_.TIME")
+}
+record(int64in, "$(IOC):PGFLT_MIN_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStat|self|12")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):PGFLT_MINR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):PGFLT_MINR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):PGFLT_MIN_.TIME") # table update time
+    field(FLNK, "$(IOC):PGFLT_MIN")
+}
+record(calc, "$(IOC):PGFLT_MIN") {
+    field(INPA, "$(IOC):PGFLT_MIN_")
+    field(INPB, "$(IOC):PGFLT_MINR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1")
+    field(TSEL, "$(IOC):PGFLT_MIN_.TIME")
+}
+record(int64in, "$(IOC):SWTH_VOL_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|voluntary_ctxt_switches")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):SWTH_VOLR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):SWTH_VOLR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):SWTH_VOL_.TIME") # table update time
+    field(FLNK, "$(IOC):SWTH_VOL")
+}
+record(calc, "$(IOC):SWTH_VOL") {
+    field(INPA, "$(IOC):SWTH_VOL_")
+    field(INPB, "$(IOC):SWTH_VOLR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1")
+    field(TSEL, "$(IOC):SWTH_VOL_.TIME")
+}
+record(int64in, "$(IOC):SWTH_FRC_") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStatus|self|nonvoluntary_ctxt_switches")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):SWTH_FRCR_")
+    info(autosaveFields_pass0, "")
+}
+record(ai, "$(IOC):SWTH_FRCR_") {
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(IOC):SWTH_FRC_.TIME") # table update time
+    field(FLNK, "$(IOC):SWTH_FRC")
+}
+record(calc, "$(IOC):SWTH_FRC") {
+    field(INPA, "$(IOC):SWTH_FRC_")
+    field(INPB, "$(IOC):SWTH_FRCR_")
+    # C - prev count
+    # D - prev time
+    # E - result
+    field(INPF, "1.0")
+    field(CALC, "E:=(A-C)/(B-D);C:=A;D:=B;E*F")
+    field(EGU , "Hz")
+    field(PREC, "1")
+    field(HOPR, "")
+    field(LOPR, "")
+    field(HIHI, "")
+    field(HIGH, "")
+    field(LOW , "")
+    field(LOLO, "")
+    field(HHSV, "")
+    field(HSV , "")
+    field(LSV , "")
+    field(LLSV, "")
+    field(ADEL, "1")
+    field(TSEL, "$(IOC):SWTH_FRC_.TIME")
+}
+record(stringin, "$(IOC):APP_DIR1") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pid|self|cwd1")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(stringin, "$(IOC):APP_DIR2") {
+    field(DESC, "")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pid|self|cwd2")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(lsi, "$(IOC):APP_DIR") {
+    field(DESC, "")
+    field(SIZV, "128")
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@pid|self|cwd")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(TSE , "-2")
+}
+record(stringin, "$(IOC):ENGINEER") {
+    field(DESC, "ENGINEER")
+    field(DTYP, "getenv")
+    field(INP,  "@ENGINEER")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):LOCATION") {
+    field(DESC, "LOCATION")
+    field(DTYP, "getenv")
+    field(INP,  "@LOCATION")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):ST_SCRIPT1") {
+    field(DESC, "IOCSH_STARTUP_SCRIPT")
+    field(DTYP, "getenv")
+    field(INP,  "@IOCSH_STARTUP_SCRIPT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):EPICS_VERSION") {
+    field(DESC, "EPICS_VERSION_FULL")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_VERSION_FULL")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_ADDR_LIST") {
+    field(DESC, "EPICS_CA_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_CONN_TIME") {
+    field(DESC, "EPICS_CA_CONN_TMO")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_CONN_TMO")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_AUTO_ADDR") {
+    field(DESC, "EPICS_CA_AUTO_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_AUTO_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_RPTR_PORT") {
+    field(DESC, "EPICS_CA_REPEATER_PORT")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_REPEATER_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_SRVR_PORT") {
+    field(DESC, "EPICS_CA_SERVER_PORT")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_SERVER_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_MAX_ARRAY") {
+    field(DESC, "EPICS_CA_MAX_ARRAY_BYTES")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_MAX_ARRAY_BYTES")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_SRCH_TIME") {
+    field(DESC, "EPICS_CA_MAX_SEARCH_PERIOD")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_MAX_SEARCH_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CA_BEAC_TIME") {
+    field(DESC, "EPICS_CA_BEACON_PERIOD")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CA_BEACON_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_SRVR_PORT") {
+    field(DESC, "EPICS_CAS_SERVER_PORT")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_SERVER_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_AUTO_ADDR") {
+    field(DESC, "EPICS_CAS_AUTO_BEACON_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_AUTO_BEACON_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_ADDR_LIST") {
+    field(DESC, "EPICS_CAS_BEACON_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_BEACON_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_BEACON_PERIOD") {
+    field(DESC, "EPICS_CAS_BEACON_PERIOD")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_BEACON_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_BEACON_PORT") {
+    field(DESC, "EPICS_CAS_BEACON_PORT")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_BEACON_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_ADDR_INTF_LIST") {
+    field(DESC, "EPICS_CAS_INTF_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_INTF_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):CAS_ADDR_IGNORE_LIST") {
+    field(DESC, "EPICS_CAS_IGNORE_ADDR_LIST")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_CAS_IGNORE_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):TIMEZONE") {
+    field(DESC, "EPICS_TIMEZONE")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_TIMEZONE")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):TS_NTP_INET") {
+    field(DESC, "EPICS_TS_NTP_INET")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_TS_NTP_INET")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):IOC_LOG_PORT") {
+    field(DESC, "EPICS_IOC_LOG_PORT")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_IOC_LOG_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOC):IOC_LOG_INET") {
+    field(DESC, "EPICS_IOC_LOG_INET")
+    field(DTYP, "getenv")
+    field(INP,  "@EPICS_IOC_LOG_INET")
+    field(PINI, "YES")
+}
+record(bo, "$(IOC):SYSRESET") {
+    field(DTYP, "Linux Stat Exit")
+    field(OUT , "@")
+    field(ZNAM, "Exit")
+    field(ONAM, "Exit")
+    field(UDF, "0")
+}
+
+# records using devSup from Base
+record(mbbo, "$(IOC):ACCESS") {
+    field(DESC, "$(IOC) Acc Mode")
+    field(PINI, "YES")
+    field(ZRST, "Running")
+    field(ZRSV, "NO_ALARM")
+    field(ONST, "Maintenance")
+    field(ONSV, "MINOR")
+    field(TWST, "Test")
+    field(TWSV, "MINOR")
+    field(THST, "OFFLINE")
+    field(THSV, "MAJOR")
+    field(UDF, "0")
+
+    info(autosaveFields_pass0, "VAL")
+}
+
+record( sub, "$(IOC):READACF") {
+    field(DESC, "$(IOC) ACF Update")
+    field(INAM, "asSubInit")
+    field(SNAM, "asSubProcess")
+    field(BRSV, "INVALID")
+    field(UDF, "0")
+}
+
+
+record(ai, "$(IOC):GTIM_TIME") {
+    field(DESC, "Gen Time Secs since 1990")
+    field(SCAN, "1 second")
+    field(DTYP, "General Time")
+    field(PREC, "3")
+    field(INP,  "@TIME")
+    field(EGU,  "sec")
+}
+
+record(bo, "$(IOC):GTIM_RESET") {
+    field(DESC, "Gen Time Error Reset")
+    field(DTYP, "General Time")
+    field(OUT,  "@RSTERRCNT")
+    field(ZNAM, "Reset")
+    field(ONAM, "Reset")
+    field(UDF , "0")
+}
+
+record(longin, "$(IOC):GTIM_ERR_CNT") {
+    field(DESC, "Gen Time Error Count")
+    field(DTYP, "General Time")
+    field(INP,  "@GETERRCNT")
+    field(SCAN, "1 second")
+    field(HIHI, "1")
+    field(HHSV, "MAJOR")
+}
+
+record(stringin, "$(IOC):GTIM_CUR_SRC") {
+    field(DESC, "Gen Time Current Provider")
+    field(DTYP, "General Time")
+    field(INP,  "@BESTTCP")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(IOC):GTIM_EVT_SRC") {
+    field(DESC, "Gen Time Event Provider")
+    field(DTYP, "General Time")
+    field(INP,  "@BESTTEP")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(IOC):GTIM_HI_SRC") {
+    field(DESC, "Gen Time Highest Provider")
+    field(DTYP, "General Time")
+    field(INP,  "@TOPTCP")
+    field(SCAN, "1 second")
+}
+
+record(ai, "$(IOC):01HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "10 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):01HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "10 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):01HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):01HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):01HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):01HZ_END_ NPP MSS")
+    field(INPC, "10.0")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):01HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):01HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):01HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "10.0")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):01HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):01HZ_SEVR") {
+    field(INPA, "$(IOC):01HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):01HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):02HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "5 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):02HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "5 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):02HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):02HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):02HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):02HZ_END_ NPP MSS")
+    field(INPC, "5.0")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):02HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):02HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):02HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "5.0")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):02HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):02HZ_SEVR") {
+    field(INPA, "$(IOC):02HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):02HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):05HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "2 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):05HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "2 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):05HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):05HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):05HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):05HZ_END_ NPP MSS")
+    field(INPC, "2.0")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):05HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):05HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):05HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "2.0")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):05HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):05HZ_SEVR") {
+    field(INPA, "$(IOC):05HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):05HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):1HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "1 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):1HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, "1 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):1HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):1HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):1HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):1HZ_END_ NPP MSS")
+    field(INPC, "1.0")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):1HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):1HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):1HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "1.0")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):1HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):1HZ_SEVR") {
+    field(INPA, "$(IOC):1HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):1HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):2HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".5 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):2HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".5 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):2HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):2HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):2HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):2HZ_END_ NPP MSS")
+    field(INPC, "0.5")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):2HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):2HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):2HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "0.5")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):2HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):2HZ_SEVR") {
+    field(INPA, "$(IOC):2HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):2HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):5HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".2 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):5HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".2 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):5HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):5HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):5HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):5HZ_END_ NPP MSS")
+    field(INPC, "0.2")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):5HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):5HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):5HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "0.2")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):5HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):5HZ_SEVR") {
+    field(INPA, "$(IOC):5HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):5HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(ai, "$(IOC):10HZ_START_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".1 second")
+    field(PHAS, "-32768") # should be first record in scan list
+}
+# ... other records process
+record(ai, "$(IOC):10HZ_END_")
+{
+    field(DTYP, "Soft Timestamp")
+    field(SCAN, ".1 second")
+    field(PHAS, "32767") # should be last record in scan list
+    field(FLNK, "$(IOC):10HZ_SCAN_TIME")
+}
+record(calc, "$(IOC):10HZ_SCAN_TIME")
+{
+    field(DESC, "Fract of period not idle")
+    field(INPA, "$(IOC):10HZ_START_ NPP MSS")
+    field(INPB, "$(IOC):10HZ_END_ NPP MSS")
+    field(INPC, "0.1")
+    field(CALC, "(B-A)/C*100")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "100")
+    field(ADEL, "0.5")
+    field(LOW , "0")
+    field(HIGH, "75")
+    field(HIHI, "90")
+    field(LSV , "INVALID") # expect END >= START
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):10HZ_UPD_TIME")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calc, "$(IOC):10HZ_UPD_TIME")
+{
+    field(DESC, "period stability")
+    field(INPA, "$(IOC):10HZ_START_ NPP MSS")
+    # B holds previous start
+    field(INPC, "0.1")
+    # D holds temporary
+    field(CALC, "D:=(A-B)/C*100;B:=A;D")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(HOPR, "200")
+    field(ADEL, "0.5")
+    field(LOLO, "90")
+    field(LOW , "95")
+    field(HIGH, "105")
+    field(HIHI, "110")
+    field(LLSV, "MAJOR")
+    field(LSV , "MINOR")
+    field(HSV , "MINOR")
+    field(HHSV, "MAJOR")
+    field(FLNK, "$(IOC):10HZ_SEVR")
+
+    info(autosaveFields_pass0, "HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+record(calcout, "$(IOC):10HZ_SEVR") {
+    field(INPA, "$(IOC):10HZ_SCAN_TIME.SEVR NPP MSS")
+    field(INPB, "$(IOC):10HZ_UPD_TIME.SEVR NPP MSS")
+    field(CALC, "MAX(A,B)")
+}
+
+record(calc, "$(IOC):SCANMON_SEVR")
+{
+    field(INPA, "$(IOC):01HZ_SEVR CP MSS")
+    field(INPB, "$(IOC):02HZ_SEVR CP MSS")
+    field(INPC, "$(IOC):05HZ_SEVR CP MSS")
+    field(INPD, "$(IOC):1HZ_SEVR CP MSS")
+    field(INPE, "$(IOC):2HZ_SEVR CP MSS")
+    field(INPF, "$(IOC):5HZ_SEVR CP MSS")
+    field(INPG, "$(IOC):10HZ_SEVR CP MSS")
+    field(CALC, "MAX(A,B,C,D,E,F,G)")
+}
+
+alias("$(IOC):EPICS_VERSION", "$(IOC):EPICS_VERS")
+
+record(stringin, "$(IOC):ST_SCRIPT2") {
+    field(UDF , "0")
+}
+
+record(calc, "$(IOC):FD_FREE") {
+    field(DESC, "Available FDs")
+    field(CALC, "B-A")
+    field(INPA, "$(IOC):FD_CNT  CP MS")
+    field(INPB, "$(IOC):FD_MAX  CP MS")
+    field(LOLO, "5")
+    field(LOW,  "20")
+    field(LLSV, "MAJOR")
+    field(LSV,  "MINOR")
+    field(TSEL, "$(IOC):FD_CNT.TIME")
+
+    info(autosaveFields_pass0, "HOPR LOPR LOW LOLO LSV LLSV")
+}
+
+# updated HOPR when FD_MAX changes (~never)
+record(dfanout, "$(IOC):FD_MAX_") {
+    field(DOL , "$(IOC):FD_MAX CP")
+    field(OMSL, "closed_loop")
+    field(OUTA, "$(IOC):FD_CNT.HOPR NPP")
+    field(OUTB, "$(IOC):FD_FREE.HOPR NPP")
+    field(TSEL, "$(IOC):FD_MAX.TIME")
+}
+
+
+# calculate process CPU usage
+record(int64in, "$(IOC):UTIME") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStat|self|14") # utime
+    field(SCAN, "I/O Intr")
+    field(PINI, "RUNNING")
+    field(EGU , "ticks")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):CTIME")
+}
+record(int64in, "$(IOC):CTIME") {
+    field(DTYP, "Linux Stat Get")
+    field(INP , "@procStat|self|15") # ctime
+    field(EGU , "ticks")
+    field(TSE , "-2")
+    field(FLNK, "$(IOC):IOC_CPU_LOAD")
+}
+
+record(calcout, "$(IOC):IOC_CPU_LOAD") {
+    field(INPA, "$(IOC):TCKPSEC NPP MS") # tick / sec
+    field(INPB, "$(IOC):UTIME NPP MS") # tick
+    field(INPC, "$(IOC):CTIME NPP MS") # tick
+    field(INPD, "$(IOC):IOC_CPU_LOAD_ PP MS") # sec
+    # E - prev. num. (tick)
+    # F - prev. denom. (sec)
+    # G - result
+    field(CALC, "G:=(B+C-E)/A/(D-F);E:=B+C;F:=D;G*100")
+    field(EGU, "%")
+    field(PREC, "2")
+    field(HOPR, "100")
+    field(HIHI, "80")
+    field(HIGH, "70")
+    field(HHSV, "MAJOR")
+    field(HSV,  "MINOR")
+    field(ADEL, "5")
+    field(TSEL, "$(IOC):UTIME.TIME")
+
+    info(autosaveFields_pass0, "HOPR LOPR HIHI HIGH LOW LOLO HHSV HSV LSV LLSV ADEL")
+}
+
+record(ai, "$(IOC):IOC_CPU_LOAD_") {
+    field(DTYP, "General Time")
+    field(PREC, "3")
+    field(INP,  "@TIME")
+}
+
+# updated HOPR when MALLOC_POOL changes (~never)
+record(dfanout, "$(IOC):MALLOC_POOL_") {
+    field(DOL , "$(IOC):MALLOC_POOL CP")
+    field(OMSL, "closed_loop")
+    field(OUTA, "$(IOC):MALLOC_USED.HOPR NPP")
+    field(TSEL, "$(IOC):MALLOC_POOL.TIME")
+}
+
+record(stringin, "$(IOC):STARTTOD") {
+    field(DESC, "Time and date of startup")
+    field(DTYP, "Soft Timestamp")
+    field(PINI, "YES")
+    field(INP,  "@%m/%d/%Y %H:%M:%S%z")
+}
+
+record(calcout, "$(IOC):HEARTBEAT") {
+    field(DESC, "1 Hz counter since startup")
+    field(CALC, "(A<2147483647)?A+1:1")
+    field(SCAN, "1 second")
+    field(INPA, "$(IOC):HEARTBEAT")
+    field(EGU, "s")
+}
+
+record(calcout, "$(IOC):START_CNT") {
+    field(DESC, "Increments at startup")
+    # VAL persists (with autosave)
+    field(CALC, "VAL+1")
+    field(PINI, "YES")
+
+    info(autosaveFields_pass0, "VAL")
+}

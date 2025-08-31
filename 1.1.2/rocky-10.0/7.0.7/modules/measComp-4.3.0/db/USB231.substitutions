@@ -1,0 +1,91 @@
+file "$(MEASCOMP)/db/measCompDevice.template"
+{pattern {} {} }
+
+file "$(MEASCOMP)/db/measCompLongIn.template"
+{
+pattern
+{ R,   MASK,   ADDR}
+{Li1, 0xFFFF,     0}
+}
+
+# This device is a bit confusing.  
+# For input we read 8-bit word data from ADDR=0,1
+# For output we write bit data which must use ADDR=0
+file "$(MEASCOMP)/db/measCompBinaryIn.template"
+{
+pattern
+{ R,   MASK,   ADDR}
+{Bi1,  0x01,      0}
+{Bi2,  0x02,      0}
+{Bi3,  0x04,      0}
+{Bi4,  0x08,      0}
+{Bi5,  0x10,      0}
+{Bi6,  0x20,      0}
+{Bi7,  0x40,      0}
+{Bi8,  0x80,      0}
+}
+
+file "$(MEASCOMP)/db/measCompLongOut.template"
+{
+pattern
+{ R,   MASK,   ADDR}
+{Lo1, 0xFFFF,     0}
+}
+
+file "$(MEASCOMP)/db/measCompBinaryOut.template"
+{
+pattern
+{ R,    MASK,   ADDR}
+{Bo1,    0x1,      0}
+{Bo2,    0x2,      0}
+{Bo3,    0x4,      0}
+{Bo4,    0x8,      0}
+{Bo5,   0x10,      0}
+{Bo6,   0x20,      0}
+{Bo7,   0x40,      0}
+{Bo8,   0x80,      0}
+}
+
+# Direction bits on binary I/O
+#  VAL 0=input, 1=output
+file "$(MEASCOMP)/db/measCompBinaryDir.template"
+{
+pattern
+{ R,   MASK,   VAL,  ADDR}
+{Bd1, 0xFFFF,    0,     0}
+}
+
+file "$(MEASCOMP)/db/measCompCounter.template"
+{
+pattern
+{      R,    ADDR}
+{Counter1,      0}
+}
+
+# Analog input mode
+file "$(MEASCOMP)/db/measCompAnalogInMode.template"
+{
+pattern
+{  R,       ADDR,   MODE}
+{AiMode,       0,      0}
+}
+
+# Analog inputs
+file "$(MEASCOMP)/db/measCompAnalogIn.template"
+{
+pattern
+{ R, ADDR,  EGUL, LOPR, EGUF, HOPR, RANGE,       SCAN, PREC}
+{Ai1,   0,  -10., -10.,  10.,  10.,    3,  "1 second",   4}
+{Ai2,   1,  -10., -10.,  10.,  10.,    3,  "1 second",   4}
+{Ai3,   2,   -5.,  -5.,   5.,   5.,    2,  "1 second",   4}
+{Ai4,   3,   -5.,  -5.,   5.,   5.,    2,  "1 second",   4}
+}
+
+# Analog outputs
+file "$(MEASCOMP)/db/measCompAnalogOut.template"
+{
+pattern
+{ R, VAL,  ADDR,  EGUL, DRVL, LOPR, EGUF, DRVH, HOPR, PREC}
+{Ao1,   0,    0,  -10., -10., -10.,  10.,  10.,  10.,    4}
+{Ao2,   0,    1,  -10., -10., -10.,  10.,  10.,  10.,    4}
+}
