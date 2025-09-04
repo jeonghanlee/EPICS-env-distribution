@@ -1,8 +1,8 @@
-# ALS-U EPICS Environment Binary Distribution
+# EPICS Environment Binary Distribution
 
 This repository provides a pre-built binary distribution of the EPICS environment specifically designed for the Advanced Light Source Upgrade (ALS-U) project.
 
-This distribution simplifies setting up the required EPICS environment for developing and running IOCs  and client applications for ALS-U.
+This distribution simplifies setting up the required EPICS environment for developing and running IOCs and client applications.
 
 ## Source Repositories
 
@@ -21,11 +21,11 @@ For comprehensive instructions on how to use this distribution, set up your deve
 
 These resources cover installation, configuration, and development workflows.
 
-## Get the ALS-U EPICS environment
+## Get the EPICS Environment Binary Distribution
 
-Clone the ALS-U EPICS repository using Git.
+Clone the EPICS environment repository using Git.
 
-### Clone the ALS-U EPICS environment by using `git clone`
+### Clone the EPICS environment by using `git clone`
 
 Please use **`--depth 1`**, which you only need for this distribution.
 
@@ -36,8 +36,8 @@ $ git clone --depth 1 https://github.com/jeonghanlee/EPICS-env-distribution.git
 By cloning the repository, you have the environment at the `${HOME}/epics` folder. In most cases, you are ready to use it.
 
 
-## Configure the ALS-U EPICS enviornment
-The ALS-U EPICS environment supports multiple operating system versions and EPICS versions. **Please note that the pre-built binaries included in this environment currently target the Linux x86_64 architecture exclusively.**
+## Configure the EPICS enviornment
+The EPICS environment supports multiple operating system versions and EPICS versions. **Please note that the pre-built binaries included in this environment currently target the Linux x86_64 architecture exclusively.**
 
 To select and activate a specific environment version in your current terminal session, you need to source the appropriate `setEpicsEnv.bash` script corresponding to your operating system and desired EPICS version:
 
