@@ -50,7 +50,7 @@ declare -g EPICS_BASE_PATH;
 declare -g EPICS_MODS_PATH;
 declare -g VENDOR_LIB_PATH;
 
-declare -g WORKING_FOLDER=${HOME}/.temp_folder
+declare -g WORKING_FOLDER=${HOME}/.temp_folder_github
 declare -g EPICS_ENV_PATH=${WORKING_FOLDER}/EPICS-env
 declare -g EPICS_ENV_SUPPORT_PATH=${WORKING_FOLDER}/EPICS-env-support
 declare -g VENDOR_ULDAQ_SRC=${WORKING_FOLDER}/uldaq-env
