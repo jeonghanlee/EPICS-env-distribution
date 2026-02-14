@@ -1,0 +1,9 @@
+record(bo, "$(P)userCalcGlobalEnable") {
+  field(DESC, "userCalcGlobalEnable")
+  field(ZNAM, "Disable")
+  field(ONAM, "Enable")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}

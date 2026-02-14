@@ -1,0 +1,34 @@
+
+record(bi, "$(P)conn") {
+  field(DTYP, "PSC Ctrl Connected")
+  field(INP , "@test")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(ZSV , "MAJOR")
+}
+
+record(waveform, "$(P)blk1") {
+  field(DTYP, "PSC Block In")
+  field(INP , "@test 1")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "1024")
+}
+
+record(waveform, "$(P)blk2") {
+  field(DTYP, "PSC Block In")
+  field(INP , "@test 2")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "1024")
+}
+
+# 1432*16*4 + 48 = 91648 + 48 = 91698
+# 91776 - 80
+record(longin, "$(P)reg1-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 3 91698")
+  field(SCAN, "I/O Intr")
+}
+
