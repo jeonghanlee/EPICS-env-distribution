@@ -1,0 +1,84 @@
+record(stringin, "$(IOCNAME):PVA_ADDR_LIST") {
+    field(DESC, "EPICS_PVA_ADDR_LIST")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_AUTO_ADDR_LIST") {
+    field(DESC, "EPICS_PVA_AUTO_ADDR_LIST")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_AUTO_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_BEACON_PERIOD") {
+    field(DESC, "EPICS_PVA_BEACON_PERIOD")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_BEACON_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_CONN_TMO") {
+    field(DESC, "EPICS_PVA_CONN_TMO")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_CONN_TMO")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_MAX_ARRAY_BYTES") {
+    field(DESC, "EPICS_PVA_MAX_ARRAY_BYTES")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_MAX_ARRAY_BYTES")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_MAX_SEARCH_PERIOD") {
+    field(DESC, "EPICS_PVA_MAX_SEARCH_PERIOD")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_MAX_SEARCH_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVA_SERVER_PORT") {
+    field(DESC, "EPICS_PVA_SERVER_PORT")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVA_SERVER_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_INTF_ADDR_LIST") {
+    field(DESC, "EPICS_PVAS_INTF_ADDR_LIST")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_INTF_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BEACON_ADDR_LIST") {
+    field(DESC, "EPICS_PVAS_BEACON_ADDR_LIST")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_BEACON_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_AUTO_BEACON_ADDR_LIST") {
+    field(DESC, "EPICS_PVAS_AUTO_BEACON_ADDR_LIST")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_AUTO_BEACON_ADDR_LIST")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BEACON_PERIOD") {
+    field(DESC, "EPICS_PVAS_BEACON_PERIOD")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_BEACON_PERIOD")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_BROADCAST_PORT") {
+    field(DESC, "EPICS_PVAS_BROADCAST_PORT")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_BROADCAST_PORT")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_PROVIDER_NAMES") {
+    field(DESC, "EPICS_PVAS_PROVIDER_NAMES")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_PROVIDER_NAMES")
+    field(PINI, "YES")
+}
+record(stringin, "$(IOCNAME):PVAS_SERVER_PORT") {
+    field(DESC, "EPICS_PVAS_SERVER_PORT")
+    field(DTYP, "IOC env var")
+    field(INP,  "@EPICS_PVAS_SERVER_PORT")
+    field(PINI, "YES")
+}

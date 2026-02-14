@@ -1,0 +1,2 @@
+SNCSEQ=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/modules/seq-2.2.9
+SSCAN=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/modules/sscan-6cf6740
