@@ -50,6 +50,10 @@ declare -g EPICS_BASE_PATH;
 declare -g EPICS_MODS_PATH;
 declare -g VENDOR_LIB_PATH;
 
+declare -g GIT_BASE_SSH="git@github.com:"
+declare -g GIT_BASE_HTTPS="https://github.com/"
+declare -g GIT_OWNER="jeonghanlee"
+
 declare -g WORKING_FOLDER=${HOME}/.temp_folder_github
 declare -g EPICS_ENV_PATH=${WORKING_FOLDER}/EPICS-env
 declare -g EPICS_ENV_SUPPORT_PATH=${WORKING_FOLDER}/EPICS-env-support
@@ -90,20 +94,42 @@ function _setup_working_path
     popdd
 }
 
+# Function: _clone_with_fallback
+# Description: Attempts to clone a repository using SSH, falling back to HTTPS if SSH fails.
+function _clone_with_fallback
+{
+    local repo_name="$1"
+    local ssh_url="${GIT_BASE_SSH}${GIT_OWNER}/${repo_name}.git"
+    local https_url="${GIT_BASE_HTTPS}${GIT_OWNER}/${repo_name}.git"
+    local separator="----------------------------------------"
+
+    printf "%s\n" "${separator}"
+    printf "Attempting to clone via SSH : %s\n" "${ssh_url}"
+
+    if ! git clone "${ssh_url}"; then
+        printf "%s\n" "${separator}"
+        printf "SSH clone failed. Falling back to HTTPS : %s\n" "${https_url}"
+        git clone "${https_url}" || exit
+    fi
+}
+
 # Function: _git_clone_repos
 # Description: Clones all necessary Git repositories from their respective
 #              URLs into the working directory.
 function _git_clone_repos
 {
-    echo "--- Cloning repositories ---"
-    pushdd "${WORKING_FOLDER}";
-    git clone git@github.com:jeonghanlee/EPICS-env.git
-    git clone git@github.com:jeonghanlee/EPICS-env-support.git
-    git clone git@github.com:jeonghanlee/uldaq-env.git
-    git clone git@github.com:jeonghanlee/open62541-env.git
-    popdd;
-}
+    local separator="--- Cloning repositories ---"
+    printf "%s\n" "${separator}"
 
+    pushdd "${WORKING_FOLDER}"
+
+    _clone_with_fallback "EPICS-env"
+    _clone_with_fallback "EPICS-env-support"
+    _clone_with_fallback "uldaq-env"
+    _clone_with_fallback "open62541-env"
+
+    popdd
+}
 # Function: _prep_env
 # Description: Checks out a specific version of the main EPICS environment and
 #              writes the local installation path to its configuration file.
@@ -342,8 +368,8 @@ Commands:
                         epics-env, epics-env-support
 
 Example:
-  # Perform a full build for version 1.1.2
-  bash ${0##*/} all 1.1.2
+  # Perform a full build for version 1.2.0
+  bash ${0##*/} all 1.2.0
 
   # Just clone the repositories
   bash ${0##*/} init
