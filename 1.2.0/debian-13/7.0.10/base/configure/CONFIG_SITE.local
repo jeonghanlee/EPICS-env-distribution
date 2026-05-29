@@ -8,3 +8,4 @@ PROD_LDFLAGS_DEFAULT += -Wl,--enable-new-dtags
 USR_CFLAGS   += -g0 -gz=zlib
 USR_CXXFLAGS += -g0 -gz=zlib
 USR_LDFLAGS  += -g0 -gz=zlib
+PYTHON = python3
