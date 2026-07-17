@@ -43,7 +43,7 @@ To select and activate a specific environment version in your current terminal s
 
 ```shell
 # Example for EPICS 7.0.10 on Debian 13 (x86_64)
-source ~/EPICS-env-distribution/1.2.0/debian-12/7.0.10/setEpicsEnv.bash
+source ~/EPICS-env-distribution/1.2.0/debian-13/7.0.10/setEpicsEnv.bash
 ```
 Sourcing the script sets up necessary environment variables like `EPICS_BASE`, `PATH`, and `LD_LIBRARY_PATH`. The output should resemble this (user and specific paths will vary):
 ```shell
