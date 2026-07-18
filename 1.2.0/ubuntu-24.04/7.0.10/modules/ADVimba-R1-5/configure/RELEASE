@@ -1,4 +1,0 @@
-EPICS_BASE:=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/base
-ASYN:=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/base/../modules/asyn
-ADCORE:=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/base/../modules/ADCore-72593ed
-ADGENICAM:=/home/jeonglee/EPICS-env-distribution/1.2.0/ubuntu-24.04/7.0.10/base/../modules/ADGenICam-ba5b9b8

@@ -1,2 +1,0 @@
-EPICS_BASE:=/home/jeonglee/github-epics/1.2.0/debian-13/7.0.10/base
-ASYN:=/home/jeonglee/github-epics/1.2.0/debian-13/7.0.10/base/../modules/asyn

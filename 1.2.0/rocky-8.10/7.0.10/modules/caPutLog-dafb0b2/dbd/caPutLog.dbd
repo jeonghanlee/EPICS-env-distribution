@@ -1,2 +1,0 @@
-variable(caPutLogDebug,int)
-registrar(caPutLogRegister)
