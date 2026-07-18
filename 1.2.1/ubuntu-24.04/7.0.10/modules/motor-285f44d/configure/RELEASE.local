@@ -1,0 +1,5 @@
+SNCSEQ=/home/vmadmin/EPICS-env-distribution/1.2.1/ubuntu-24.04/7.0.10/modules/seq-2.2.9
+ASYN=/home/vmadmin/EPICS-env-distribution/1.2.1/ubuntu-24.04/7.0.10/modules/asyn-4.45.0
+BUSY=/home/vmadmin/EPICS-env-distribution/1.2.1/ubuntu-24.04/7.0.10/modules/busy-2dfe92d
+LUA=/home/vmadmin/EPICS-env-distribution/1.2.1/ubuntu-24.04/7.0.10/modules/lua-17475b5
+MODBUS=/home/vmadmin/EPICS-env-distribution/1.2.1/ubuntu-24.04/7.0.10/modules/modbus-3.4.0
