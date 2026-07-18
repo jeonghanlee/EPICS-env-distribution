@@ -1,0 +1,244 @@
+
+# output data file is FileDir+FileBase+"-YYYYMMDD-HHMMSS.dat"
+record(lso, "$(P)FileBase-SP") {
+    field(DESC, "Base file name")
+    field(DTYP, "PSCUDPFast filebase")
+    field(OUT , "@$(NAME)")
+    field(SIZV, "128")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(lso, "$(P)FileDir-SP") {
+    field(DESC, "Data directory")
+    field(DTYP, "PSCUDPFast directory")
+    field(OUT , "@$(NAME)")
+    field(SIZV, "128")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(bo, "$(P)Reopen-Cmd") {
+    field(DESC, "Switch to new file")
+    field(DTYP, "PSCUDPFast reopen")
+    field(OUT , "@$(NAME)")
+    field(ZNAM, "Re-open")
+    field(ONAM, "Re-open")
+}
+
+record(bo, "$(P)Record-Sel") {
+    field(DTYP, "PSCUDPFast record")
+    field(OUT , "@$(NAME)")
+    field(ZNAM, "Stop")
+    field(ONAM, "Record")
+}
+
+
+# slow status chain
+
+record(bi, "$(P)Record-I") {
+    field(DTYP, "PSCUDPFast record")
+    field(INP , "@$(NAME)")
+    field(SCAN, "1 second")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Recording")
+    field(FLNK, "$(P)LastFile-I")
+}
+
+record(lsi, "$(P)LastFile-I") {
+    field(DTYP, "PSCUDPFast filename")
+    field(INP , "@$(NAME)")
+    field(SIZV, "512")
+    field(FLNK, "$(P)LastErr-I")
+}
+
+record(lsi, "$(P)LastErr-I") {
+    field(DTYP, "PSCUDPFast last error")
+    field(INP , "@$(NAME)")
+    field(SIZV, "512")
+    field(FLNK, "$(P)SItvl-I_")
+}
+
+record(ai, "$(P)SItvl-I_") {
+    field(DTYP, "PSCUDPFast interval")
+    field(INP , "@")
+    field(EGU , "s")
+    field(FLNK, "$(P)DrpRate-I")
+}
+
+record(calc, "$(P)DrpRate-I") {
+    field(INPA, "$(P)NDrp-I PP MSI")
+    field(INPD, "1")
+    field(INPE, "$(P)SItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "Hz")
+    field(HIGH, "0.1")
+    field(HSV , "MAJOR")
+    field(TSEL, "$(P)SItvl-I_.TIME")
+    field(FLNK, "$(P)IgnRate-I")
+}
+
+record(int64in, "$(P)NDrp-I") {
+    field(DESC, "packets ignored")
+    field(DTYP, "PSCUDPFast #drop")
+    field(INP , "@$(NAME)")
+    field(TSEL, "$(P)SItvl-I_.TIME")
+}
+
+record(calc, "$(P)IgnRate-I") {
+    field(INPA, "$(P)NIgn-I PP MSI")
+    field(INPD, "1")
+    field(INPE, "$(P)SItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "Hz")
+    field(HIGH, "0.1")
+    field(HSV , "MAJOR")
+    field(TSEL, "$(P)SItvl-I_.TIME")
+    field(FLNK, "$(P)TmoRate-I")
+}
+
+record(int64in, "$(P)NIgn-I") {
+    field(DESC, "packets dropped")
+    field(DTYP, "PSCUDPFast #ignore")
+    field(INP , "@$(NAME)")
+    field(TSEL, "$(P)SItvl-I_.TIME")
+}
+
+record(calc, "$(P)TmoRate-I") {
+    field(INPA, "$(P)NTmo-I PP MSI")
+    field(INPD, "1")
+    field(INPE, "$(P)SItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "Hz")
+    field(HIGH, "0.1")
+    field(HSV , "MAJOR")
+    field(TSEL, "$(P)SItvl-I_.TIME")
+}
+
+record(int64in, "$(P)NTmo-I") {
+    field(DESC, "# of timeouts")
+    field(DTYP, "PSCUDPFast #timeout")
+    field(INP , "@$(NAME)")
+}
+
+# fast status chain
+
+record(ai, "$(P)FItvl-I_") {
+    field(DTYP, "PSCUDPFast interval")
+    field(INP , "@")
+    field(SCAN, ".1 second")
+    field(EGU , "s")
+    field(FLNK, "$(P)PFree-I")
+}
+
+record(ai, "$(P)PFree-I") {
+    field(DESC, "buffer free")
+    field(DTYP, "PSCUDPFast free%")
+    field(INP , "@$(NAME)")
+    field(ASLO, "100")
+    field(EGU , "%")
+    field(HOPR, "100")
+    field(MDEL, "1")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)PRXe-I")
+}
+
+record(ai, "$(P)PRXe-I") {
+    field(DESC, "buffer received")
+    field(DTYP, "PSCUDPFast buffer%")
+    field(INP , "@$(NAME)")
+    field(ASLO, "100")
+    field(EGU , "%")
+    field(HOPR, "100")
+    field(MDEL, "1")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)PWrt-I")
+}
+
+record(ai, "$(P)PWrt-I") {
+    field(DESC, "buffer writing")
+    field(DTYP, "PSCUDPFast writing%")
+    field(INP , "@$(NAME)")
+    field(ASLO, "100")
+    field(EGU , "%")
+    field(HOPR, "100")
+    field(MDEL, "1")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)RXBRate-I")
+}
+
+record(calc, "$(P)RXBRate-I") {
+    field(INPA, "$(P)NBRX-I PP MSI")
+    field(INPD, "0x100000") # scale B/s -> MB/s
+    field(INPE, "$(P)FItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "MB/s")
+    field(PREC, "3")
+    field(MDEL, "2")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)RXRate-I")
+}
+
+record(int64in, "$(P)NBRX-I") {
+    field(DESC, "Bytes received")
+    field(DTYP, "PSCUDPFast bytes rx")
+    field(INP , "@$(NAME)")
+    field(EGU , "B")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+}
+
+record(calc, "$(P)RXRate-I") {
+    field(INPA, "$(P)NRX-I PP MSI")
+    field(INPD, "1000")
+    field(INPE, "$(P)FItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "kHz")
+    field(PREC, "3")
+    field(MDEL, "1")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)WrtRate-I")
+}
+
+record(int64in, "$(P)NRX-I") {
+    field(DESC, "Bytes received")
+    field(DTYP, "PSCUDPFast #rx")
+    field(INP , "@$(NAME)")
+    field(EGU , "B")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+}
+
+record(calc, "$(P)WrtRate-I") {
+    field(INPA, "$(P)NWrt-I PP MSI")
+    field(INPD, "0x100000") # scale B/s -> MB/s
+    field(INPE, "$(P)FItvl-I_ NPP")
+    field(CALC, "C:=A-B;B:=A;C/D/E")
+    field(EGU , "MB/s")
+    field(MDEL, "2")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)NooM-I")
+}
+
+record(int64in, "$(P)NWrt-I") {
+    field(DESC, "Bytes written")
+    field(DTYP, "PSCUDPFast bytes wrote")
+    field(INP , "@$(NAME)")
+    field(EGU , "B")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+}
+
+record(int64in, "$(P)NooM-I") {
+    field(DESC, "RX Out of memory events")
+    field(DTYP, "PSCUDPFast #out of memory")
+    field(INP , "@$(NAME)")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(P)LstSz-I")
+}
+
+record(int64in, "$(P)LstSz-I") {
+    field(DESC, "file size")
+    field(DTYP, "PSCUDPFast last file size")
+    field(INP , "@$(NAME)")
+    field(EGU , "MB")
+    field(TSEL, "$(P)FItvl-I_.TIME")
+    field(FLNK, "$(FLNK=)")
+}
