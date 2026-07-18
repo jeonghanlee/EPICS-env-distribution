@@ -1,0 +1,107 @@
+#*************************************************************************
+# Copyright (c) 2002 The University of Chicago, as Operator of Argonne
+#     National Laboratory.
+# Copyright (c) 2002 The Regents of the University of California, as
+#     Operator of Los Alamos National Laboratory.
+# EPICS BASE is distributed subject to a Software License Agreement found
+# in file LICENSE that is included with this distribution.
+#*************************************************************************
+
+#---------------------------------------------------------------
+# EPICS Base directories
+
+EPICS_BASE_HOST_BIN = $(EPICS_BASE)/bin/$(EPICS_HOST_ARCH)
+EPICS_BASE_HOST_LIB = $(EPICS_BASE)/lib/$(EPICS_HOST_ARCH)
+ifdef T_A
+  EPICS_BASE_LIB    = $(EPICS_BASE)/lib/$(T_A)
+  EPICS_BASE_BIN    = $(EPICS_BASE)/bin/$(T_A)
+endif
+
+#---------------------------------------------------------------
+# Version number for base shared libraries (and win32 products)
+
+ifdef BASE_TOP
+  # Unix lib.so.<v.r.m>  Darwin lib.<v.r.m>.dylib
+  SHRLIB_VERSION = $(EPICS_VERSION).$(EPICS_REVISION).$(EPICS_MODIFICATION)
+  # Windows only allows 2 levels of version numbering
+  PROD_VERSION = $(EPICS_VERSION).$(EPICS_REVISION)
+endif # BASE_TOP
+
+#---------------------------------------------------------------
+# Where to find the installed build tools
+#   Windows does not like commands with relative paths starting ../
+#   so TOOLS must be an absolute path, although Perl scripts are OK.
+#   FIND_TOOL is for scripts run before the build reaches src/tools
+#   and must also work in submodules when EPICS_BASE is not built.
+
+TOOLS = $(abspath $(EPICS_BASE_HOST_BIN))
+FIND_TOOL = $(firstword $(wildcard $(TOOLS)/$(1) \
+    $(TOP)/src/tools/$(1)) $(EPICS_BASE)/src/tools/$(1))
+
+#---------------------------------------------------------------
+# Find Perl modules for dependencies
+FIND_PM = $(wildcard $(EPICS_BASE)/lib/perl/$(1))
+
+#---------------------------------------------------------------
+# EPICS Base build tools and tool flags
+
+PODTOMD_pl       = $(TOOLS)/podToMD.pl
+PODTOMD          = $(PERL) $(PODTOMD_pl)
+PODTOHTML_pl     = $(TOOLS)/podToHtml.pl
+PODTOHTML_dep    = $(PODTOHTML_pl) $(call FIND_PM,EPICS/PodHtml.pm)
+PODTOHTML        = $(PERL) $(PODTOHTML_pl)
+CONVERTRELEASE   = $(PERL) $(call FIND_TOOL,convertRelease.pl)
+FILTERMAKEFLAGS  = $(PERL) $(call FIND_TOOL,filterMakeflags.pl)
+FULLPATHNAME     = $(PERL) $(TOOLS)/fullPathName.pl
+GENVERSIONHEADER = $(PERL) $(TOOLS)/genVersionHeader.pl $(QUIET_FLAG) $(QUESTION_FLAG)
+
+MAKERPATH = $(PYTHON) $(TOOLS)/makeRPath.py
+
+#---------------------------------------------------------------
+# tools for installing libraries and products
+INSTALL = $(PERL) $(TOOLS)/installEpics.pl $(QUIET_FLAG)
+INSTALL_PRODUCT = $(INSTALL)
+INSTALL_LIBRARY = $(INSTALL)
+
+#---------------------------------------------------------------
+# tools for making header dependencies and variable replacement
+MKMF       = $(PERL) $(TOOLS)/mkmf.pl
+REPLACEVAR = $(PERL) $(TOOLS)/replaceVAR.pl
+
+#---------------------------------------------------------------
+# How to portably check the flags to make
+# GNUmake versions before 4.0 gave different values
+makeflags := $(shell $(FILTERMAKEFLAGS) $(MAKEFLAGS))
+define checkflags
+  make-$1 := $(findstring $1,$(makeflags))
+endef
+# This is extensible to most single letter flags:
+$(foreach flag,s q, $(eval $(call checkflags,$(flag))))
+
+# Silent builds - suppress messages during 'make -s'
+NOP = :
+ECHO = @$(if $(make-s),$(NOP),echo)
+QUIET_FLAG := $(if $(make-s),-q,)
+
+# Convert 'make -q' flag into '-i' for genVersionHeader.pl
+QUESTION_FLAG := $(if $(make-q),-i,)
+
+#---------------------------------------------------------------
+# tools for cleaning out unwanted files
+CVSCLEAN = $(call FIND_TOOL,cvsclean.pl)
+DEPCLEAN = $(call FIND_TOOL,depclean.pl)
+
+#---------------------------------------------------------------
+# Tools for testing
+TAPS_FAILED_LOG       = .taps-failed.log
+TESTS_FAILED_LOG      = .tests-failed.log
+TESTS_FAILED_PATH     = $(abspath $(TOP)/$(TESTS_FAILED_LOG))
+
+TAPTOJUNIT            = $(PERL) $(TOOLS)/tap-to-junit-xml.pl
+PROVE                 = $(PERL) $(TOOLS)/epicsProve.pl --failures --color
+PROVE.tap             = $(PROVE) --ext .tap --exec "$(CAT)"
+TESTFAILURES          = $(PERL) $(TOOLS)/testFailures.pl
+SHOWTESTFAILURES      = $(TESTFAILURES) $(TESTS_FAILED_PATH) $(TAPS_FAILED_LOG)
+
+PROVE_FAILURE         = echo $(abspath .)>> $(TESTS_FAILED_PATH)
+TAPFILE_FAILURE       = echo $@>> $(TAPS_FAILED_LOG)
