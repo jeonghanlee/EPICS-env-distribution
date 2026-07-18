@@ -1,0 +1,38 @@
+record(ai,"$(P)$(R)")
+{
+    field(SCAN, "$(SCAN)")
+    field(DTYP, "asynInt32Average")
+    field(INP,  "@asyn($(PORT),$(ADDR))ANALOG_IN_VALUE")
+    field(LINR, "LINEAR")
+    field(EGUF, "$(EGUF)")
+    field(EGUL, "$(EGUL)")
+    field(HOPR, "$(HOPR)")
+    field(LOPR, "$(LOPR)")
+    field(PREC, "$(PREC)")
+}
+
+# Note: the driver constructs these enum fields based on model.
+record(mbbo,"$(P)$(R)Range")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_IN_RANGE")
+    field(VAL,  "$(RANGE)")
+}
+
+# Note: the driver constructs these enum fields based on model.
+record(mbbo,"$(P)$(R)Type")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_IN_TYPE")
+}
+
+record(ao,"$(P)$(R)Rate")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR))ANALOG_IN_RATE")
+    field(VAL,  "60")
+}
+
