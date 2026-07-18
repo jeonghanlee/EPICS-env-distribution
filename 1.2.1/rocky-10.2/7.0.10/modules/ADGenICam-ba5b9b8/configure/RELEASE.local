@@ -1,0 +1,3 @@
+EPICS_BASE:=/home/vmadmin/EPICS-env-distribution/1.2.1/rocky-10.2/7.0.10/base
+ASYN:=/home/vmadmin/EPICS-env-distribution/1.2.1/rocky-10.2/7.0.10/base/../modules/asyn
+ADCORE:=/home/vmadmin/EPICS-env-distribution/1.2.1/rocky-10.2/7.0.10/base/../modules/ADCore-72593ed

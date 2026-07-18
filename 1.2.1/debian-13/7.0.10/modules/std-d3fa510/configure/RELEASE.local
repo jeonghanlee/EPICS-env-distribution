@@ -1,0 +1,2 @@
+SNCSEQ=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/seq-2.2.9
+ASYN=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/asyn-4.45.0

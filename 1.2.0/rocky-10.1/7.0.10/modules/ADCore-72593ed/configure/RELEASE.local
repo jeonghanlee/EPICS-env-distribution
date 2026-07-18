@@ -1,2 +1,0 @@
-EPICS_BASE:=/home/jeonglee/EPICS-env-distribution/1.2.0/rocky-10.1/7.0.10/base
-ASYN:=/home/jeonglee/EPICS-env-distribution/1.2.0/rocky-10.1/7.0.10/base/../modules/asyn

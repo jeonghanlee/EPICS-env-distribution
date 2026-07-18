@@ -1,0 +1,9 @@
+SNCSEQ=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/seq-2.2.9
+SSCAN=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/sscan-6cf6740
+CALC=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/calc-f6a39b6
+ASYN=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/asyn-4.45.0
+AUTOSAVE=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/autosave-6.0.0
+BUSY=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/busy-2dfe92d
+SCALER=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/scaler-beb5521
+STD=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/std-d3fa510
+MCA=/home/vmadmin/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/mca-687d563
