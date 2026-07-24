@@ -1,0 +1,2 @@
+SNCSEQ=/opt/epics/1.2.2/rocky-8.10/7.0.10/modules/seq-2.2.9
+ASYN=/opt/epics/1.2.2/rocky-8.10/7.0.10/modules/asyn-4.45.0

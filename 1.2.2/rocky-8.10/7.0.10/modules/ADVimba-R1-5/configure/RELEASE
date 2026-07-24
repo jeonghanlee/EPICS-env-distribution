@@ -1,0 +1,4 @@
+EPICS_BASE:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base
+ASYN:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base/../modules/asyn
+ADCORE:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base/../modules/ADCore-72593ed
+ADGENICAM:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base/../modules/ADGenICam-ba5b9b8
