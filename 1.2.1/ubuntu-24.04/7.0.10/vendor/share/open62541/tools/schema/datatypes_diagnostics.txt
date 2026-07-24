@@ -1,4 +1,0 @@
-ServiceCounterDataType
-SubscriptionDiagnosticsDataType
-SessionDiagnosticsDataType
-SessionSecurityDiagnosticsDataType
