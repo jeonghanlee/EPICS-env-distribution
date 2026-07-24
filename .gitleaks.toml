@@ -1,0 +1,11 @@
+# Repository-local gitleaks configuration, picked up automatically by the
+# pre-commit hook (gitleaks reads .gitleaks.toml at the scanned repo root).
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Vendor-shipped OPC UA nodeset generated schema code (open62541). Its base64-encoded schema name blobs trip entropy-based token rules (e.g. square-access-token on 'AccessHistoryDataCapability'); the same files ship in every released tree."
+paths = [
+  '''vendor/share/open62541/tools/ua-nodeset/''',
+]

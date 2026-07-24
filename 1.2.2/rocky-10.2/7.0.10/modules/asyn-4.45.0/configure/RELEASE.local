@@ -1,0 +1,3 @@
+SNCSEQ=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/seq-2.2.9
+SSCAN=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/sscan-6cf6740
+CALC=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/calc-f6a39b6

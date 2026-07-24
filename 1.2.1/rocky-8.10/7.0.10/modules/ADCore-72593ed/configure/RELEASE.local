@@ -1,2 +1,0 @@
-EPICS_BASE:=/home/vmadmin/EPICS-env-distribution/1.2.1/rocky-8.10/7.0.10/base
-ASYN:=/home/vmadmin/EPICS-env-distribution/1.2.1/rocky-8.10/7.0.10/base/../modules/asyn

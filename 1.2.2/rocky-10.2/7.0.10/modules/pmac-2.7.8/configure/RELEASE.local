@@ -1,0 +1,5 @@
+ASYN=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/asyn-4.45.0
+BUSY=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/busy-2dfe92d
+CALC=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/calc-f6a39b6
+MOTOR=/opt/epics/1.2.2/rocky-10.2/7.0.10/modules/motor-285f44d
+EPICS_BASE:=/opt/epics/1.2.2/rocky-10.2/7.0.10/base

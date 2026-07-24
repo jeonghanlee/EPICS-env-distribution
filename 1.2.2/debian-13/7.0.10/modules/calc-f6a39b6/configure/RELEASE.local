@@ -1,0 +1,2 @@
+SNCSEQ=/opt/epics/1.2.2/debian-13/7.0.10/modules/seq-2.2.9
+SSCAN=/opt/epics/1.2.2/debian-13/7.0.10/modules/sscan-6cf6740

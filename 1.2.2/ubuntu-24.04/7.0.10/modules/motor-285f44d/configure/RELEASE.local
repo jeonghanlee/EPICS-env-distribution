@@ -1,0 +1,5 @@
+SNCSEQ=/opt/epics/1.2.2/ubuntu-24.04/7.0.10/modules/seq-2.2.9
+ASYN=/opt/epics/1.2.2/ubuntu-24.04/7.0.10/modules/asyn-4.45.0
+BUSY=/opt/epics/1.2.2/ubuntu-24.04/7.0.10/modules/busy-2dfe92d
+LUA=/opt/epics/1.2.2/ubuntu-24.04/7.0.10/modules/lua-17475b5
+MODBUS=/opt/epics/1.2.2/ubuntu-24.04/7.0.10/modules/modbus-3.4.0

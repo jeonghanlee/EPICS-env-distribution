@@ -1,0 +1,2 @@
+EPICS_BASE:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base
+ASYN:=/opt/epics/1.2.2/rocky-8.10/7.0.10/base/../modules/asyn
