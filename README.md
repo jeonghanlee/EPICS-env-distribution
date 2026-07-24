@@ -43,18 +43,18 @@ To select and activate a specific environment version in your current terminal s
 
 ```shell
 # Example for EPICS 7.0.10 on Debian 13 (x86_64)
-source ~/EPICS-env-distribution/1.2.1/debian-13/7.0.10/setEpicsEnv.bash
+source ~/EPICS-env-distribution/1.2.2/debian-13/7.0.10/setEpicsEnv.bash
 ```
 Sourcing the script sets up necessary environment variables like `EPICS_BASE`, `PATH`, and `LD_LIBRARY_PATH`. The output should resemble this (user and specific paths will vary):
 ```shell
 Set the EPICS Environment as follows:
 THIS Source NAME    : setEpicsEnv.bash
-THIS Source PATH    : /home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10
-EPICS_BASE          : /home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/base
+THIS Source PATH    : /home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10
+EPICS_BASE          : /home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/base
 EPICS_HOST_ARCH     : linux-x86_64
-EPICS_MODULES       : /home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules
-PATH                : /home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/pmac/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/modules/pvxs/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/base/bin/linux-x86_64:/home/jeonglee/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-LD_LIBRARY_PATH     : /home/jeonglee/EPICS-env-distribution/1.2.1/debian-13/7.0.10/base/lib/linux-x86_64
+EPICS_MODULES       : /home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/modules
+PATH                : /home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/modules/pmac/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/modules/pvxs/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/base/bin/linux-x86_64:/home/jeonglee/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+LD_LIBRARY_PATH     : /home/jeonglee/EPICS-env-distribution/1.2.2/debian-13/7.0.10/base/lib/linux-x86_64
 
 Enjoy Everlasting EPICS!
 
