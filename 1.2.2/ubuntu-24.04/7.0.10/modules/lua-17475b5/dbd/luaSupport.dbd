@@ -1,0 +1,20 @@
+include "luascriptRecord.dbd"
+
+device(luascript, CONSTANT, devLuaSoft, "Soft Channel")
+device(ai, INST_IO, devLuaAi, "lua")
+device(ao, INST_IO, devLuaAo, "lua")
+device(bi, INST_IO, devLuaBi, "lua")
+device(bo, INST_IO, devLuaBo, "lua")
+device(mbbi, INST_IO, devLuaMbbi, "lua")
+device(mbbo, INST_IO, devLuaMbbo, "lua")
+device(longin,  INST_IO, devLuaLongin,  "lua")
+device(longout, INST_IO, devLuaLongout, "lua")
+device(stringin,  INST_IO, devLuaStringin,  "lua")
+device(stringout, INST_IO, devLuaStringout, "lua")
+
+registrar(luashRegister)
+registrar(libosiRegister)
+registrar(libasynRegister)
+registrar(libepicsRegister)
+registrar(libdatabaseRegister)
+registrar(portDriverRegister)
