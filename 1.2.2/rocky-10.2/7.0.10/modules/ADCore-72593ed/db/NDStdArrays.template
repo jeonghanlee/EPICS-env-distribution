@@ -1,0 +1,19 @@
+#=================================================================#
+# Template file: NDStdArrays.template
+# Database for NDStdArrays asyn driver and standard asyn device support
+# Mark Rivers
+# April 14, 2008
+
+include "NDPluginBase.template"
+
+###################################################################
+#  This record is the array waveform data                         #
+###################################################################
+record(waveform, "$(P)$(R)ArrayData")
+{
+    field(DTYP, "asyn$(TYPE)ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))STD_ARRAY_DATA")
+    field(FTVL, "$(FTVL)")
+    field(NELM, "$(NELEMENTS)")
+    field(SCAN, "I/O Intr")
+}
