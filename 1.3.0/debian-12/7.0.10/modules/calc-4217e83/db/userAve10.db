@@ -1,0 +1,648 @@
+record(bo, "$(P)userAveEnable") {
+  field(DESC, "userAve Enable")
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "Disable")
+  field(ONAM, "Enable")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+}
+record(bo, "$(P)EnableUserAves") {
+  field(DTYP, "Soft Channel")
+  field(OUT, "$(P)userAveEnable.VAL  PP MS")
+  field(OMSL, "closed_loop")
+  field(DOL, "1")
+}
+record(bo, "$(P)DisableUserAves") {
+  field(DTYP, "Soft Channel")
+  field(OMSL, "closed_loop")
+  field(OUT, "$(P)userAveEnable.VAL  PP MS")
+  field(DOL, "0")
+}
+
+record(bo, "$(P)userAve1Enable") {
+  field(DESC, "userAve 1 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve1EnableCalc") {
+	field(INPA, "$(P)userAve1Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve1") {
+  field(DESC, "User Average 1")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve1EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve1_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve1_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve2Enable") {
+  field(DESC, "userAve 2 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve2EnableCalc") {
+	field(INPA, "$(P)userAve2Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve2") {
+  field(DESC, "User Average 2")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve2EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve2_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve2_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve3Enable") {
+  field(DESC, "userAve 3 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve3EnableCalc") {
+	field(INPA, "$(P)userAve3Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve3") {
+  field(DESC, "User Average 3")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve3EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve3_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve3_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve4Enable") {
+  field(DESC, "userAve 4 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve4EnableCalc") {
+	field(INPA, "$(P)userAve4Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve4") {
+  field(DESC, "User Average 4")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve4EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve4_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve4_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve5Enable") {
+  field(DESC, "userAve 5 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve5EnableCalc") {
+	field(INPA, "$(P)userAve5Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve5") {
+  field(DESC, "User Average 5")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve5EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve5_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve5_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve6Enable") {
+  field(DESC, "userAve 6 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve6EnableCalc") {
+	field(INPA, "$(P)userAve6Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve6") {
+  field(DESC, "User Average 6")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve6EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve6_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve6_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve7Enable") {
+  field(DESC, "userAve 7 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve7EnableCalc") {
+	field(INPA, "$(P)userAve7Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve7") {
+  field(DESC, "User Average 7")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve7EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve7_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve7_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve8Enable") {
+  field(DESC, "userAve 8 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve8EnableCalc") {
+	field(INPA, "$(P)userAve8Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve8") {
+  field(DESC, "User Average 8")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve8EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve8_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve8_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve9Enable") {
+  field(DESC, "userAve 9 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve9EnableCalc") {
+	field(INPA, "$(P)userAve9Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve9") {
+  field(DESC, "User Average 9")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve9EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve9_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve9_algorithm.VAL  NPP NMS")
+}
+
+record(bo, "$(P)userAve10Enable") {
+  field(DESC, "userAve 10 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userAve10EnableCalc") {
+	field(INPA, "$(P)userAve10Enable CP")
+	field(INPB, "$(P)userAveEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sub, "$(P)userAve10") {
+  field(DESC, "User Average 10")
+  field(DISV, "0")
+  field(SDIS, "$(P)userAve10EnableCalc  CA NMS")
+  field(INAM, "initSubAve")
+  field(SNAM, "SubAve")
+  field(INPD, "$(P)userAve10_mode.VAL  NPP NMS")
+  field(INPF, "$(P)userAve10_algorithm.VAL  NPP NMS")
+}
+
+#########################################################################
+record(bo, "$(P)userAve10_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve9_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve8_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve7_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve6_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve5_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve4_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve3_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve2_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(bo, "$(P)userAve1_mode") {
+  field(DTYP, "Soft Channel")
+  field(ZNAM, "CONTINUOUS")
+  field(ONAM, "ONE-SHOT")
+}
+
+record(mbbo, "$(P)userAve10_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve9_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve8_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve7_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve6_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve5_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve4_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve3_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve2_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+record(mbbo, "$(P)userAve1_algorithm") {
+  field(DTYP, "Soft Channel")
+  field(ZRST, "AVERAGE")
+  field(ONST, "FIT-LINE")
+  field(TWST, "AUTO")
+}
+
+
+
+
+# We want to behave correctly when driven by a putCallback to either
+# $(P)userAve1_busy or $(P)userAve1_acquire.  When user writes 1 to _busy,
+# he's checking whether a previously commanded measurement has finished.  We
+# want to say "done" immediately if sub record has a valid result (sub.G==1),
+# otherwise, we'll say "done" when sub.G transitions to 1.  However, if user
+# has issued a "clear" command to the sub record, and the sub record hasn't
+# acted on it yet (sub.C==1; note that sub record may be periodically scanned,
+# in which case it won't see the "clear" command until it processes), then we
+# decline to clear the busy record, even though the sub record may appear to
+# be done.
+# When user processes _acquire, he wants us to issue a "clear" command and
+# set the busy record.  When the measurement completes, we'll clear the busy
+# record.
+record(seq, "$(P)userAve1_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve1.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve1_busy PP")
+}
+record(busy, "$(P)userAve1_busy") {
+	field(ONAM, "Done?")
+}
+# Calc fields:
+# A: "done" indicator from sub record (==1 if done)
+# B: value of busy record.  If zero, calc is disabled by SDIS, so we don't need
+#    to use the value, it's only linked so we'll process when it changes to 1.
+# C: "clear" command stored in sub record.  If 1, user has issued a clear
+#    command that has not yet been acted on by the sub record.  In this case,
+#    calc yields zero, and we do nothing.
+# So, if busy==1, and there is no outstanding "clear" command, and sub record is
+# done, we write a zero to the busy record.
+record(calcout, "$(P)userAve1_doneCalc") {
+	field(SDIS, "$(P)userAve1_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve1.G CP")
+	field(INPB, "$(P)userAve1_busy CP")
+	field(INPC, "$(P)userAve1.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve1_busy.VAL CA")
+}
+
+
+record(seq, "$(P)userAve2_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve2.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve2_busy PP")
+}
+record(busy, "$(P)userAve2_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve2_doneCalc") {
+	field(SDIS, "$(P)userAve2_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve2.G CP")
+	field(INPB, "$(P)userAve2_busy CP")
+	field(INPC, "$(P)userAve2.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve2_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve3_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve3.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve3_busy PP")
+}
+record(busy, "$(P)userAve3_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve3_doneCalc") {
+	field(SDIS, "$(P)userAve3_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve3.G CP")
+	field(INPB, "$(P)userAve3_busy CP")
+	field(INPC, "$(P)userAve3.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve3_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve4_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve4.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve4_busy PP")
+}
+record(busy, "$(P)userAve4_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve4_doneCalc") {
+	field(SDIS, "$(P)userAve4_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve4.G CP")
+	field(INPB, "$(P)userAve4_busy CP")
+	field(INPC, "$(P)userAve4.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve4_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve5_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve5.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve5_busy PP")
+}
+record(busy, "$(P)userAve5_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve5_doneCalc") {
+	field(SDIS, "$(P)userAve5_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve5.G CP")
+	field(INPB, "$(P)userAve5_busy CP")
+	field(INPC, "$(P)userAve5.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve5_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve6_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve6.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve6_busy PP")
+}
+record(busy, "$(P)userAve6_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve6_doneCalc") {
+	field(SDIS, "$(P)userAve6_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve6.G CP")
+	field(INPB, "$(P)userAve6_busy CP")
+	field(INPC, "$(P)userAve6.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve6_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve7_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve7.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve7_busy PP")
+}
+record(busy, "$(P)userAve7_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve7_doneCalc") {
+	field(SDIS, "$(P)userAve7_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve7.G CP")
+	field(INPB, "$(P)userAve7_busy CP")
+	field(INPC, "$(P)userAve7.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve7_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve8_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve8.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve8_busy PP")
+}
+record(busy, "$(P)userAve8_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve8_doneCalc") {
+	field(SDIS, "$(P)userAve8_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve8.G CP")
+	field(INPB, "$(P)userAve8_busy CP")
+	field(INPC, "$(P)userAve8.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve8_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve9_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve9.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve9_busy PP")
+}
+record(busy, "$(P)userAve9_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve9_doneCalc") {
+	field(SDIS, "$(P)userAve9_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve9.G CP")
+	field(INPB, "$(P)userAve9_busy CP")
+	field(INPC, "$(P)userAve9.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve9_busy.VAL CA")
+}
+
+record(seq, "$(P)userAve10_acquire") {
+	field(DO1, "1")
+	field(LNK1, "$(P)userAve10.C PP")
+	field(DO2, "1")
+	field(LNK2, "$(P)userAve10_busy PP")
+}
+record(busy, "$(P)userAve10_busy") {
+	field(ONAM, "Done?")
+}
+record(calcout, "$(P)userAve10_doneCalc") {
+	field(SDIS, "$(P)userAve10_busy NPP")
+	field(DISV, "0")
+	field(INPA, "$(P)userAve10.G CP")
+	field(INPB, "$(P)userAve10_busy CP")
+	field(INPC, "$(P)userAve10.C NPP")
+	field(CALC, "c?0:a")
+	field(OOPT, "When Non-zero")
+	field(DOPT, "Use OCAL")
+	field(OCAL, "!a")
+	field(OUT, "$(P)userAve10_busy.VAL CA")
+}

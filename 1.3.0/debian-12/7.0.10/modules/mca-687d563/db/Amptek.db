@@ -1,0 +1,708 @@
+# Database for Amptek MCAs
+#   Mark Rivers
+#   August 8, 2017
+
+record(bo,"$(P)$(R)InputPolarity") {
+    field(DESC,"Polarity control")
+    field(PINI,"YES")
+    field(ZNAM,"Pos")
+    field(ONAM,"Neg")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_INPUT_POLARITY")
+}
+
+record(bi,"$(P)$(R)InputPolarity_RBV") {
+    field(DESC,"Polarity control")
+    field(ZNAM,"Pos")
+    field(ONAM,"Neg")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_INPUT_POLARITY")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)Clock") {
+    field(DESC,"FPGA clock")
+    field(PINI,"YES")
+    field(ZRST,"Auto")
+    field(ZRVL,"0")
+    field(ONST,"20 MHz")
+    field(ONVL,"1")
+    field(TWST,"80 MHz")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_CLOCK")
+}
+
+record(mbbi,"$(P)$(R)Clock_RBV") {
+    field(DESC,"FPGA clock")
+    field(ZRST,"Auto")
+    field(ZRVL,"0")
+    field(ONST,"20 MHz")
+    field(ONVL,"1")
+    field(TWST,"80 MHz")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_CLOCK")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)Gain") {
+    field(DESC,"Gain")
+    field(PINI,"YES")
+    field(PREC,"2")
+    field(DRVL, "0.75")
+    field(DRVH, "516")
+    field(VAL,"1")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT))AMPTEK_GAIN")
+}
+
+record(ai,"$(P)$(R)Gain_RBV") {
+    field(DESC,"Gain")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_GAIN")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)Gate") {
+    field(DESC,"FPGA clock")
+    field(PINI,"YES")
+    field(ZRST,"Off")
+    field(ZRVL,"0")
+    field(ONST,"High")
+    field(ONVL,"1")
+    field(TWST,"Low")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_GATE")
+}
+
+record(mbbi,"$(P)$(R)Gate_RBV") {
+    field(DESC,"FPGA clock")
+    field(ZRST,"Off")
+    field(ZRVL,"0")
+    field(ONST,"High")
+    field(ONVL,"1")
+    field(TWST,"Low")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_GATE")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)PeakingTime") {
+    field(DESC,"Peaking time")
+    field(PINI,"YES")
+    field(PREC,"2")
+    field(DRVL, "0.05")
+    field(DRVH, "102.4")
+    field(VAL,"10")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT))AMPTEK_PEAKING_TIME")
+}
+
+record(ai,"$(P)$(R)PeakingTime_RBV") {
+    field(DESC,"PeakingTime")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_PEAKING_TIME")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)FastPeakingTime") {
+    field(DESC,"Fast peaking time")
+    field(PINI,"YES")
+    field(ZRST,"50")
+    field(ZRVL,"0")
+    field(ONST,"100")
+    field(ONVL,"1")
+    field(TWST,"200")
+    field(TWVL,"2")
+    field(THST,"400")
+    field(THVL,"3")
+    field(FRST,"800")
+    field(FRVL,"4")
+    field(FVST,"1600")
+    field(FVVL,"5")
+    field(SXST,"3200")
+    field(SXVL,"6")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_FAST_PEAKING_TIME")
+}
+
+record(mbbi,"$(P)$(R)FastPeakingTime_RBV") {
+    field(DESC,"Fast peaking time")
+    field(ZRST,"50")
+    field(ZRVL,"0")
+    field(ONST,"100")
+    field(ONVL,"1")
+    field(TWST,"200")
+    field(TWVL,"2")
+    field(THST,"400")
+    field(THVL,"3")
+    field(FRST,"800")
+    field(FRVL,"4")
+    field(FVST,"1600")
+    field(FVVL,"5")
+    field(SXST,"3200")
+    field(SXVL,"6")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_FAST_PEAKING_TIME")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)FlatTopTime") {
+    field(DESC,"Flat top time")
+    field(PINI,"YES")
+    field(PREC,"2")
+    field(DRVL, "0.0125")
+    field(DRVH, "50.4")
+    field(VAL,"0")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT))AMPTEK_FLAT_TOP_TIME")
+}
+
+record(ai,"$(P)$(R)FlatTopTime_RBV") {
+    field(DESC,"Flat top time")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_FLAT_TOP_TIME")
+    field(SCAN, "I/O Intr")
+}
+
+
+record(ao,"$(P)$(R)SlowThreshold") {
+    field(DESC,"Slow threshold")
+    field(PINI,"YES")
+    field(PREC,"2")
+    field(DRVL, "0.0")
+    field(DRVH, "24.9")
+    field(VAL,"0")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT))AMPTEK_SLOW_THRESHOLD")
+}
+
+record(ai,"$(P)$(R)SlowThreshold_RBV") {
+    field(DESC,"Slow threshold")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_SLOW_THRESHOLD")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)FastThreshold") {
+    field(DESC,"Fast threshold")
+    field(PINI,"YES")
+    field(PREC,"2")
+    field(DRVL, "0.0")
+    field(DRVH, "511.93")
+    field(VAL,"0")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT))AMPTEK_FAST_THRESHOLD")
+}
+
+record(ai,"$(P)$(R)FastThreshold_RBV") {
+    field(DESC,"Fast threshold")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_FAST_THRESHOLD")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)PUREnable") {
+    field(DESC,"PUR enable")
+    field(PINI,"YES")
+    field(ZRST,"On")
+    field(ZRVL,"0")
+    field(ONST,"Off")
+    field(ONVL,"1")
+    field(TWST,"Max")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_PUR_ENABLE")
+}
+
+record(mbbi,"$(P)$(R)PUREnable_RBV") {
+    field(DESC,"PUR enable")
+    field(ZRST,"On")
+    field(ZRVL,"0")
+    field(ONST,"Off")
+    field(ONVL,"1")
+    field(TWST,"Max")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_PUR_ENABLE")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)MCASource") {
+    field(DESC,"MCA source")
+    field(PINI,"YES")
+    field(ZRST,"MCA")
+    field(ZRVL,"0")
+    field(ONST,"MCS")
+    field(ONVL,"1")
+    field(TWST,"FAST")
+    field(TWVL,"2")
+    field(THST,"PUR")
+    field(THVL,"3")
+    field(FRST,"RTD")
+    field(FRVL,"4")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_MCA_SOURCE")
+}
+
+record(mbbi,"$(P)$(R)MCASource_RBV") {
+    field(DESC,"MCA source")
+    field(ZRST,"MCA")
+    field(ZRVL,"0")
+    field(ONST,"MCS")
+    field(ONVL,"1")
+    field(TWST,"FAST")
+    field(TWVL,"2")
+    field(THST,"PUR")
+    field(THVL,"3")
+    field(FRST,"RTD")
+    field(FRVL,"4")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_MCA_SOURCE")
+    field(SCAN, "I/O Intr")
+}
+
+record(longout,"$(P)$(R)MCSLowChannel") {
+    field(DESC,"MCS low channel")
+    field(PINI,"YES")
+    field(DRVL, "0")
+    field(DRVH, "16383")
+    field(VAL,"0")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT))AMPTEK_MCS_LOW_CHANNEL")
+}
+
+record(longin,"$(P)$(R)MCSLowChannel_RBV") {
+    field(DESC,"MCS low channel")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT))AMPTEK_MCS_LOW_CHANNEL")
+    field(SCAN, "I/O Intr")
+}
+
+record(longout,"$(P)$(R)MCSHighChannel") {
+    field(DESC,"MCS high channel")
+    field(PINI,"YES")
+    field(DRVL, "0")
+    field(DRVH, "16383")
+    field(VAL,"100")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT))AMPTEK_MCS_HIGH_CHANNEL")
+}
+
+record(longin,"$(P)$(R)MCSHighChannel_RBV") {
+    field(DESC,"MCS high channel")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT))AMPTEK_MCS_HIGH_CHANNEL")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai,"$(P)$(R)MCSDwellTime_RBV") {
+    field(DESC,"MCS dwell time")
+    field(PREC,"2")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))MCA_DWELL_TIME")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin,"$(P)$(R)MCANumChannels_RBV") {
+    field(DESC,"Number of MCA channels")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT))MCA_NUM_CHANNELS")
+    field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)$(R)ConfigFileName")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),0)AMPTEK_CONFIG_FILE")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(bo, "$(P)$(R)LoadConfigFile")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)AMPTEK_LOAD_CONFIG_FILE")
+    field(ZNAM, "Done")
+    field(ONAM, "Load")
+}
+
+record(bo, "$(P)$(R)SaveConfigFile")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)AMPTEK_SAVE_CONFIG_FILE")
+    field(ZNAM, "Done")
+    field(ONAM, "Save")
+}
+
+# This record will read the Amptek status even when the MCA is not acquiring
+record(bo, "$(P)$(R)ReadStatus")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)MCA_READ_STATUS")
+    field(ZNAM, "Done")
+    field(ONAM, "Read")
+    field(SCAN, "1 second")
+}
+
+record(ai,"$(P)$(R)SlowCounts") {
+    field(DESC,"Slow counts")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT))AMPTEK_SLOW_COUNTS")
+    field(PREC, "0")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai,"$(P)$(R)FastCounts") {
+    field(DESC,"Fast counts")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT))AMPTEK_FAST_COUNTS")
+    field(PREC, "0")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai,"$(P)$(R)DetTemp") {
+    field(DESC,"Detector temperature")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT))AMPTEK_DET_TEMP")
+    field(PREC, "1")
+    field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)SetDetTemp") {
+    field(DESC,"Set detector temperature")
+    field(PINI,"YES")
+    field(DTYP, "asynFloat64")
+    field(OUT, "@asyn($(PORT))AMPTEK_SET_DET_TEMP")
+    field(PREC, "1")
+}
+
+record(ai,"$(P)$(R)SetDetTemp_RBV") {
+    field(DESC,"Set detector temperature")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT))AMPTEK_SET_DET_TEMP")
+    field(PREC, "1")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai,"$(P)$(R)BoardTemp") {
+    field(DESC,"Board temperature")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT))AMPTEK_BOARD_TEMP")
+    field(PREC, "1")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai,"$(P)$(R)HighVoltage") {
+    field(DESC,"High voltage")
+    field(DTYP, "asynFloat64")
+    field(INP, "@asyn($(PORT))AMPTEK_HIGH_VOLTAGE")
+    field(PREC, "0")
+    field(SCAN, "I/O Intr")
+}
+
+record(longout,"$(P)$(R)SetHighVoltage") {
+    field(DESC,"Set high voltage")
+    field(PINI,"YES")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT))AMPTEK_SET_HIGH_VOLTAGE")
+}
+
+record(longin,"$(P)$(R)SetHighVoltage_RBV") {
+    field(DESC,"Set high voltage")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT))AMPTEK_SET_HIGH_VOLTAGE")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin,"$(P)$(R)Model") {
+    field(DESC,"Amptek model")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT))AMPTEK_MODEL")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin,"$(P)$(R)Firmware") {
+    field(DESC,"Amptek firmware")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT))AMPTEK_FIRMWARE")
+    field(SCAN, "I/O Intr")
+}
+
+record(stringin,"$(P)$(R)FPGA") {
+    field(DESC,"Amptek FPGA")
+    field(DTYP, "asynOctetRead")
+    field(INP, "@asyn($(PORT))AMPTEK_FPGA")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin,"$(P)$(R)Build") {
+    field(DESC,"Amptek build")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT))AMPTEK_BUILD")
+    field(SCAN, "I/O Intr")
+}
+
+record(longin,"$(P)$(R)SerialNumber") {
+    field(DESC,"Amptek serial number")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT))AMPTEK_SERIAL_NUMBER")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)AuxOut1") {
+    field(DESC,"Aux out 1")
+    field(PINI,"YES")
+    field(ZRST,"OFF")
+    field(ZRVL,"0")
+    field(ONST,"ICR")
+    field(ONVL,"1")
+    field(TWST,"PILEUP")
+    field(TWVL,"2")
+    field(THST,"MCSTB")
+    field(THVL,"3")
+    field(FRST,"ONESH")
+    field(FRVL,"4")
+    field(FVST,"DETRES")
+    field(FVVL,"5")
+    field(SXST,"MCAEN")
+    field(SXVL,"6")
+    field(SVST,"PEAKH")
+    field(SVVL,"7")
+    field(EIST,"SCA8")
+    field(EIVL,"8")
+    field(NIST,"RTOS")
+    field(NIVL,"9")
+    field(TEST,"RTDREJ")
+    field(TEVL,"10")
+    field(ELST,"VETO")
+    field(ELVL,"11")
+    field(TVST,"LIVE")
+    field(TVVL,"12")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_AUX_OUT1")
+}
+
+record(mbbi,"$(P)$(R)AuxOut1_RBV") {
+    field(DESC,"Aux out 1")
+    field(ZRST,"OFF")
+    field(ZRVL,"0")
+    field(ONST,"ICR")
+    field(ONVL,"1")
+    field(TWST,"PILEUP")
+    field(TWVL,"2")
+    field(THST,"MCSTB")
+    field(THVL,"3")
+    field(FRST,"ONESH")
+    field(FRVL,"4")
+    field(FVST,"DETRES")
+    field(FVVL,"5")
+    field(SXST,"MCAEN")
+    field(SXVL,"6")
+    field(SVST,"PEAKH")
+    field(SVVL,"7")
+    field(EIST,"SCA8")
+    field(EIVL,"8")
+    field(NIST,"RTOS")
+    field(NIVL,"9")
+    field(TEST,"RTDREJ")
+    field(TEVL,"10")
+    field(ELST,"VETO")
+    field(ELVL,"11")
+    field(TVST,"LIVE")
+    field(TVVL,"12")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_AUX_OUT1")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)AuxOut2") {
+    field(DESC,"Aux out 2")
+    field(PINI,"YES")
+    field(ZRST,"OFF")
+    field(ZRVL,"0")
+    field(ONST,"ICR")
+    field(ONVL,"1")
+    field(TWST,"PILEUP")
+    field(TWVL,"2")
+    field(THST,"MCSTB")
+    field(THVL,"3")
+    field(FRST,"ONESH")
+    field(FRVL,"4")
+    field(FVST,"DETRES")
+    field(FVVL,"5")
+    field(SXST,"MCAEN")
+    field(SXVL,"6")
+    field(SVST,"PEAKH")
+    field(SVVL,"7")
+    field(EIST,"SCA8")
+    field(EIVL,"8")
+    field(NIST,"RTOS")
+    field(NIVL,"9")
+    field(TEST,"RTDREJ")
+    field(TEVL,"10")
+    field(ELST,"VETO")
+    field(ELVL,"11")
+    field(TVST,"LIVE")
+    field(TVVL,"12")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_AUX_OUT2")
+}
+
+record(mbbi,"$(P)$(R)AuxOut2_RBV") {
+    field(DESC,"Aux out 2")
+    field(ZRST,"OFF")
+    field(ZRVL,"0")
+    field(ONST,"ICR")
+    field(ONVL,"1")
+    field(TWST,"PILEUP")
+    field(TWVL,"2")
+    field(THST,"MCSTB")
+    field(THVL,"3")
+    field(FRST,"ONESH")
+    field(FRVL,"4")
+    field(FVST,"DETRES")
+    field(FVVL,"5")
+    field(SXST,"MCAEN")
+    field(SXVL,"6")
+    field(SVST,"PEAKH")
+    field(SVVL,"7")
+    field(EIST,"SCA8")
+    field(EIVL,"8")
+    field(NIST,"RTOS")
+    field(NIVL,"9")
+    field(TEST,"RTDREJ")
+    field(TEVL,"10")
+    field(ELST,"VETO")
+    field(ELVL,"11")
+    field(TVST,"LIVE")
+    field(TVVL,"12")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_AUX_OUT2")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)AuxOut34") {
+    field(DESC,"Aux out 34")
+    field(PINI,"YES")
+    field(ZRST,"1")
+    field(ZRVL,"1")
+    field(ONST,"2")
+    field(ONVL,"2")
+    field(TWST,"3")
+    field(TWVL,"3")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_AUX_OUT34")
+}
+
+record(mbbi,"$(P)$(R)AuxOut34_RBV") {
+    field(DESC,"Aux out 34")
+    field(ZRST,"1")
+    field(ZRVL,"1")
+    field(ONST,"2")
+    field(ONVL,"2")
+    field(TWST,"3")
+    field(TWVL,"3")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_AUX_OUT34")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)Connector1") {
+    field(DESC,"Connector 1")
+    field(PINI,"YES")
+    field(ZRST,"DAC")
+    field(ZRVL,"0")
+    field(ONST,"AUXOUT1")
+    field(ONVL,"1")
+    field(TWST,"AUXIN1")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_CONNECT1")
+}
+
+record(mbbi,"$(P)$(R)Connector1_RBV") {
+    field(DESC,"Connector 1")
+    field(ZRST,"DAC")
+    field(ZRVL,"0")
+    field(ONST,"AUXOUT1")
+    field(ONVL,"1")
+    field(TWST,"AUXIN1")
+    field(TWVL,"2")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_CONNECT1")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)Connector2") {
+    field(DESC,"Connector 2")
+    field(PINI,"YES")
+    field(ZRST,"AUXOUT2")
+    field(ZRVL,"0")
+    field(ONST,"AUXIN2")
+    field(ONVL,"1")
+    field(TWST,"GATEH")
+    field(TWVL,"2")
+    field(THST,"GATEL")
+    field(THVL,"3")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_CONNECT2")
+}
+
+record(mbbi,"$(P)$(R)Connector2_RBV") {
+    field(DESC,"Connector 2")
+    field(ZRST,"AUXOUT2")
+    field(ZRVL,"0")
+    field(ONST,"AUXIN2")
+    field(ONVL,"1")
+    field(TWST,"GATEH")
+    field(TWVL,"2")
+    field(THST,"GATEL")
+    field(THVL,"3")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_CONNECT2")
+    field(SCAN, "I/O Intr")
+}
+
+record(mbbo,"$(P)$(R)SCAOutputWidth") {
+    field(DESC,"SCA Output Width")
+    field(PINI,"YES")
+    field(ZRST,"100 ns")
+    field(ZRVL,"0")
+    field(ONST,"1000 ns")
+    field(ONVL,"1")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),0)AMPTEK_SCA_OUTPUT_WIDTH")
+}
+
+record(mbbi,"$(P)$(R)SCAOutputWidth_RBV") {
+    field(DESC,"SCA Output Width")
+    field(ZRST,"100 ns")
+    field(ZRVL,"0")
+    field(ONST,"1000 ns")
+    field(ONVL,"1")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),0)AMPTEK_SCA_OUTPUT_WIDTH")
+    field(SCAN, "I/O Intr")
+}
+
+record(seq, "$(P)$(R)CopyROIsSCAs") {
+    field(LNK1, "$(P)$(R)SCA0CopyROI.PROC PP")
+    field(LNK2, "$(P)$(R)SCA1CopyROI.PROC PP")
+    field(LNK3, "$(P)$(R)SCA2CopyROI.PROC PP")
+    field(LNK4, "$(P)$(R)SCA3CopyROI.PROC PP")
+    field(LNK5, "$(P)$(R)SCA4CopyROI.PROC PP")
+    field(LNK6, "$(P)$(R)SCA5CopyROI.PROC PP")
+    field(LNK7, "$(P)$(R)SCA6CopyROI.PROC PP")
+    field(LNK8, "$(P)$(R)SCA7CopyROI.PROC PP")
+}
+
