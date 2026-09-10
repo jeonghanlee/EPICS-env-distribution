@@ -1,3 +1,0 @@
-registrar(drvMultiFunctionRegister)
-registrar(drvUSBCTRRegister)
-registrar(USBCTR_SNLRegistrar)

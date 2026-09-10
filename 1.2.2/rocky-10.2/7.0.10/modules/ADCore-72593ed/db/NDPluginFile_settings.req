@@ -1,2 +1,0 @@
-file "NDFile_settings.req",       P=$(P), R=$(R)
-file "NDPluginBase_settings.req", P=$(P), R=$(R)
