@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+     'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+
+<html>
+<head>
+<title>menuPriority</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel='stylesheet' href='style.css' type='text/css'>
+</head>
+<body>
+
+
+<div class="pod">
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+<hr>
+
+<h1 id="Menu-menuPriority">Menu menuPriority  <a class='sect' href="#Menu-menuPriority">&sect;</a></h1>
+
+<p>This menu is used for the <code>PRIO</code> field of all record types. It controls the relative priority of records scheduled with <code>SCAN=Event</code> or <code>SCAN=I/O Intr</code>, and also of records that use asynchronous completion.</p>
+
+<blockquote><table border="1"><tr>
+<th>Index</th><th>Identifier</th><th>Choice String</th></tr>
+<tr>
+<td class='cell DBD_Menu index'>0</td>
+<td class='cell DBD_Menu identifier'>menuPriorityLOW</td>
+<td class='cell DBD_Menu choice'>LOW</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>1</td>
+<td class='cell DBD_Menu identifier'>menuPriorityMEDIUM</td>
+<td class='cell DBD_Menu choice'>MEDIUM</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>2</td>
+<td class='cell DBD_Menu identifier'>menuPriorityHIGH</td>
+<td class='cell DBD_Menu choice'>HIGH</td>
+</tr>
+</table></blockquote>
+
+<p>The number of priorities is set in various other places in the code too, so adding new entries to this menu will probably break the IOC build.</p>
+
+</div><hr>
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+</body>
+</html>
+

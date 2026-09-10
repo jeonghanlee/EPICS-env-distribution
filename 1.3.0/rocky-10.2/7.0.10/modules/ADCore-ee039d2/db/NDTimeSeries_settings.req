@@ -1,0 +1,6 @@
+$(P)$(R)TSNumPoints
+$(P)$(R)TSTimePerPointLink.DOL
+$(P)$(R)TSAveragingTime
+$(P)$(R)TSRead.SCAN
+$(P)$(R)TSAcquireMode
+file "NDPluginBase_settings.req", P=$(P), R=$(R)
