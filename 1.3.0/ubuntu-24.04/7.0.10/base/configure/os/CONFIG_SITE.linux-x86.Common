@@ -1,0 +1,7 @@
+# CONFIG_SITE.linux-x86.Common
+#
+# Site override definitions for linux-x86 host builds
+#-------------------------------------------------------
+
+#CROSS_COMPILER_TARGET_ARCHS = vxWorks-ppc32
+#CROSS_COMPILER_TARGET_ARCHS = RTEMS-mvme2100 RTEMS-pc386-qemu

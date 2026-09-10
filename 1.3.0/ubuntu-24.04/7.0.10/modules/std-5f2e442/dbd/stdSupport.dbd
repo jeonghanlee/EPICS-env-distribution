@@ -1,0 +1,34 @@
+################
+# RECORD SUPPORT
+################
+include "epidRecord.dbd"
+include "timestampRecord.dbd"
+include "throttleRecord.dbd"
+
+################
+# DEVICE SUPPORT
+################
+
+# EPID record
+device(epid,CONSTANT,devEpidSoft,"Soft Channel")
+device(epid,CONSTANT,devEpidSoftCB,"Async Soft Channel")
+device(epid,INST_IO,devEpidFast,"Fast Epid")
+
+# devTimeOfDay
+device(stringin, CONSTANT, devSiTodString, "Time of Day")
+device(ai, CONSTANT, devAiTodSeconds, "Sec Past Epoch")
+
+################
+# DRIVER SUPPORT
+################
+
+
+################
+# OTHER SUPPORT
+################
+
+variable("pvHistoryDebug", int)
+registrar(pvHistoryRegister)
+registrar(femtoRegistrar)
+registrar(doAfterIocInitRegistrar)
+include "delayDo.dbd"

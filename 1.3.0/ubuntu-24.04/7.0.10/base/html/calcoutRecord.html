@@ -1,0 +1,865 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+     'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+
+<html>
+<head>
+<title>Calculation Output Record (calcout)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel='stylesheet' href='style.css' type='text/css'>
+</head>
+<body>
+
+
+<div class="pod">
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+<hr>
+
+<h1 id="EPICS-Reference:-Calculation-Output-Record-calcout">EPICS Reference: Calculation Output Record (calcout)  <a class='sect' href="#EPICS-Reference:-Calculation-Output-Record-calcout">&sect;</a></h1>
+
+<p>The Calculation Output or &quot;Calcout&quot; record is similar to the Calc record with the added feature of having outputs (an &quot;output link&quot; and an &quot;output event&quot;) which are conditionally executed based on the result of the calculation. This feature allows conditional branching to be implemented within an EPICS database (e.g. process Record_A only if Record_B has a value of 0). The Calcout record is also similar to the Wait record (with additional features) but uses EPICS standard INLINK and OUTLINK fields rather than the DBF_STRING fields used in the Wait record. For new databases, it is recommended that the Calcout record be used instead of the Wait record.</p>
+
+<p>Since 7.0.10 the number of inputs has been increased from 12 to 21.</p>
+
+<h2 id="Parameter-Fields">Parameter Fields  <a class='sect' href="#Parameter-Fields">&sect;</a></h2>
+
+<p>The record-specific fields are described below, grouped by functionality.</p>
+
+<h3 id="Scan-Parameters">Scan Parameters  <a class='sect' href="#Scan-Parameters">&sect;</a></h3>
+
+<p>The Calcout record has the standard fields for specifying under what circumstances the record will be processed. These fields are listed in <a href="dbCommonRecord.html#Scan-Fields">Scan Fields</a>.</p>
+
+<h3 id="Read-Parameters">Read Parameters  <a class='sect' href="#Read-Parameters">&sect;</a></h3>
+
+<p>The read parameters for the Calcout record consists of 21 input links INPA - INPU. The fields can be database links, channel access links, or constants. If they are links, they must specify another record&#39;s field. If they are constants, they will be initialized with the value they are configured with and can be changed via <code>dbPuts</code>. These fields cannot be hardware addresses. In addition, the Calcout record contains the INAV - INUV fields which indicate the status of the link fields, for example, whether or not the specified PV was found and a link to it established. See <a href="#Operator-Display-Parameters">&quot;Operator Display Parameters&quot;</a> for an explanation of these fields.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">INPA</td><td class="cell">Input A</td><td class="cell">INLINK</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell" colspan=8>&vellip;</td></tr>
+
+<tr><td class="cell">INPU</td><td class="cell">Input U</td><td class="cell">INLINK</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Expressions">Expressions  <a class='sect' href="#Expressions">&sect;</a></h3>
+
+<p>Like the Calc record, the Calcout record&#39;s CALC field holds an infix expression to be evaluated whenever the record is processed. The resulting value is placed in the VAL field.</p>
+
+<p>The OOPT field condition is applied to VAL (see <a href="#Output-Parameters">&quot;Output Parameters&quot;</a>) and controls whether to write to the output link (or post a named event), and the DOPT field selects whether VAL should be written, or another expression from the OCAL field should be evaluated and used instead.</p>
+
+<p>The CALC and OCAL expressions get compiled into streams of Reverse Polish Notation (RPN) opcodes for a stack-based machine, and stored in the RPCL and ORPC fields respectively.</p>
+
+<p>The RPN opcodes are used to calculate VAL at run-time, and are more efficient than evaluating the infix expression. The CALC and OCAL expressions can be replaced at run-time, triggering a special record routine to compile the new expression into Reverse Polish Notation.</p>
+
+<p>The infix expressions that can be used are very similar to the C expression syntax, but with some additions and subtle differences in operator meaning and precedence. The string may contain a series of expressions separated by a semi-colon character <code>;</code>, any one of which may provide the calculation result. All other expressions included in the string must assign their result to a variable. All alphabetic elements described below are case independent, so upper and lower case letters may be used and mixed in the variable and function names as desired. Spaces may be used anywhere within an expression except between characters that make up a single expression element.</p>
+
+<p>The range of expressions supported by the calculation record are separated into literals, constants, operands, algebraic operators, trigonometric operators, relational operators, logical operators, the assignment operator, parentheses and commas, and the question mark colon or <code>?:</code> operator.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">CALC</td><td class="cell">Calculation</td><td class="cell">STRING [160]</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">VAL</td><td class="cell">Result</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OVAL</td><td class="cell">Output Value</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">RPCL</td><td class="cell">Reverse Polish Calc</td><td class="cell">NOACCESS</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">No</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">ORPC</td><td class="cell">Reverse Polish OCalc</td><td class="cell">NOACCESS</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">No</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Literals">Literals  <a class='sect' href="#Literals">&sect;</a></h3>
+
+<ul>
+
+<li><p>Standard double precision floating point numbers</p>
+
+</li>
+<li><p><code>Inf</code>: Infinity</p>
+
+</li>
+<li><p><code>NaN</code>: Not a Number</p>
+
+</li>
+</ul>
+
+<h3 id="Constants">Constants  <a class='sect' href="#Constants">&sect;</a></h3>
+
+<ul>
+
+<li><p><code>PI</code>: returns the mathematical constant π</p>
+
+</li>
+<li><p><code>D2R</code>: evaluates to π/180 which, when used as a multiplier, converts an angle from degrees to radians</p>
+
+</li>
+<li><p><code>R2D</code>: evaluates to 180/π which, when used as a multiplier, converts an angle from radians to degrees</p>
+
+</li>
+</ul>
+
+<h3 id="Operands">Operands  <a class='sect' href="#Operands">&sect;</a></h3>
+
+<p>The expression can use the values retrieved from the INPx links as operands, though constants can be used as operands too. These values retrieved from the input links are stored in the A-U fields. The values to be used in the expression are simple references by the field letter. For instance, the value obtained from the INPA link is stored in field A, and the values obtained from the INPB link is stored in the field B. The names can be included in the expression will operate on their respective values, as in A+B.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">A</td><td class="cell">Value of Input A</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell" colspan=8>&vellip;</td></tr>
+
+<tr><td class="cell">U</td><td class="cell">Value of Input U</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+</table></blockquote>
+
+<p>The keyword VAL returns the current contents of the expression&#39;s result field, i.e. the VAL field for the CALC expression and the OVAL field for the OCAL expression. (These fields can be written to by CA put, so it might <i>not</i> be the result from the last time the expression was evaluated).</p>
+
+<h3 id="Arithmetic-Operators">Arithmetic Operators  <a class='sect' href="#Arithmetic-Operators">&sect;</a></h3>
+
+<p>Except for unary minus these are infix binary operators.</p>
+
+<ul>
+
+<li><p><code>+</code> : Addition</p>
+
+</li>
+<li><p><code>-</code> : Subtraction</p>
+
+</li>
+<li><p><code>-</code> : Minus (unary)</p>
+
+</li>
+<li><p><code>*</code> : Multiplication</p>
+
+</li>
+<li><p><code>/</code> : Division</p>
+
+</li>
+<li><p><code>%</code> : Modulo</p>
+
+</li>
+<li><p><code>^</code> : Exponential</p>
+
+</li>
+<li><p><code>**</code> : Exponential</p>
+
+</li>
+</ul>
+
+<h3 id="Algebraic-Functions">Algebraic Functions  <a class='sect' href="#Algebraic-Functions">&sect;</a></h3>
+
+<p>When functions take more than one argument, a comma separator must appear between them.</p>
+
+<ul>
+
+<li><p><code>ABS (arg)</code> : Absolute value</p>
+
+</li>
+<li><p><code>EXP (arg)</code> : Exponential function</p>
+
+</li>
+<li><p><code>FMOD (num, den)</code> : Floating point modulo. Added in 7.0.8</p>
+
+</li>
+<li><p><code>LN (arg)</code> : Natural log</p>
+
+</li>
+<li><p><code>LOG (arg)</code> : Log base 10</p>
+
+</li>
+<li><p><code>LOGE (arg)</code> : Natural log</p>
+
+</li>
+<li><p><code>MIN (any number of args)</code> : Minimum</p>
+
+</li>
+<li><p><code>MAX (any number of args)</code> : Maximum</p>
+
+</li>
+<li><p><code>SQR (arg)</code> : Square root</p>
+
+</li>
+<li><p><code>SQRT (arg)</code> : Square root</p>
+
+</li>
+</ul>
+
+<h3 id="Trigonometric-Functions">Trigonometric Functions  <a class='sect' href="#Trigonometric-Functions">&sect;</a></h3>
+
+<ul>
+
+<li><p><code>SIN (arg)</code> : Sine</p>
+
+</li>
+<li><p><code>ASIN (arg)</code> : Arc sine</p>
+
+</li>
+<li><p><code>COS (arg)</code> : Cosine</p>
+
+</li>
+<li><p><code>ACOS (arg)</code> : Arc cosine</p>
+
+</li>
+<li><p><code>TAN (arg)</code> : Tangent</p>
+
+</li>
+<li><p><code>ATAN (arg)</code> : Arc tangent</p>
+
+</li>
+<li><p><code>ATAN2 (den, num)</code> : 2-parameter Arc tangent. Arg&#39;s are reversed to ANSI C</p>
+
+</li>
+</ul>
+
+<h3 id="Hyperbolic-Trigonometry-Functions">Hyperbolic Trigonometry Functions  <a class='sect' href="#Hyperbolic-Trigonometry-Functions">&sect;</a></h3>
+
+<ul>
+
+<li><p><code>SINH (arg)</code> : Hyperbolic sine</p>
+
+</li>
+<li><p><code>COSH (arg)</code> : Hyperbolic cosine</p>
+
+</li>
+<li><p><code>TANH (arg)</code> : Hyperbolic tangent</p>
+
+</li>
+</ul>
+
+<h3 id="Numeric-Functions">Numeric Functions  <a class='sect' href="#Numeric-Functions">&sect;</a></h3>
+
+<ul>
+
+<li><p><code>CEIL (arg)</code> : Ceiling</p>
+
+</li>
+<li><p><code>FLOOR (arg)</code> : Floor</p>
+
+</li>
+<li><p><code>NINT (arg)</code> : Round to nearest integer</p>
+
+</li>
+<li><p><code>ISINF (arg)</code> : returns non-zero if any argument is Inf</p>
+
+</li>
+<li><p><code>ISNAN (any number of args)</code> : returns non-zero (true) if any argument is NaN or Inf</p>
+
+</li>
+<li><p><code>FINITE (any number of args)</code> : returns non-zero (true) if none of the arguments are NaN or Inf</p>
+
+</li>
+</ul>
+
+<h3 id="Boolean-Logical-Operators">Boolean/Logical Operators  <a class='sect' href="#Boolean-Logical-Operators">&sect;</a></h3>
+
+<p>These operators use their arguments as a true (non-zero) or false (zero) value.</p>
+
+<ul>
+
+<li><p><code>&amp;&amp;</code> : And, infix binary</p>
+
+</li>
+<li><p><code>||</code> : Or, infix binary</p>
+
+</li>
+<li><p><code>!</code> : Not, unary prefix</p>
+
+</li>
+</ul>
+
+<h3 id="Bitwise-Operators">Bitwise Operators  <a class='sect' href="#Bitwise-Operators">&sect;</a></h3>
+
+<p>Mostly infix binary, the arguments are converted to a 32-bit integer, the operator is applied, and the result converted back into a double.</p>
+
+<ul>
+
+<li><p><code>&amp;</code> : Bitwise and</p>
+
+</li>
+<li><p><code>|</code> : Bitwise or</p>
+
+</li>
+<li><p><code>~</code> : Bitwise not or one&#39;s complement, unary prefix</p>
+
+</li>
+<li><p><code>&lt;&lt;</code> : Arithmetic shift left</p>
+
+</li>
+<li><p><code>&gt;&gt;</code> : Arithmetic shift right</p>
+
+</li>
+<li><p><code>&gt;&gt;&gt;</code> : Logical shift right</p>
+
+</li>
+<li><p><code>AND</code> : Bitwise and</p>
+
+</li>
+<li><p><code>OR</code> : Bitwise or</p>
+
+</li>
+<li><p><code>XOR</code> : Bitwise exclusive or</p>
+
+</li>
+<li><p><code>NOT</code> : Bitwise not or one&#39;s complement, unary prefix</p>
+
+</li>
+</ul>
+
+<h3 id="Relational-Operators">Relational Operators  <a class='sect' href="#Relational-Operators">&sect;</a></h3>
+
+<p>These are all infix binary operators.</p>
+
+<ul>
+
+<li><p><code>&gt;=</code> : Greater than or equal to</p>
+
+</li>
+<li><p><code>&gt;</code> : Greater than</p>
+
+</li>
+<li><p><code>&lt;=</code> : Less than or equal to</p>
+
+</li>
+<li><p><code>&lt;</code> : Less than</p>
+
+</li>
+<li><p><code>!=</code> : Not equal to</p>
+
+</li>
+<li><p><code>#</code> : Not equal to</p>
+
+</li>
+<li><p><code>==</code> : Equal to</p>
+
+</li>
+<li><p><code>=</code> : Equal to (not assignment)</p>
+
+</li>
+</ul>
+
+<h3 id="Assignment-Operator">Assignment Operator  <a class='sect' href="#Assignment-Operator">&sect;</a></h3>
+
+<ul>
+
+<li><p><code>:=</code> : assigns a value (right hand side) to a variable (i.e. field)</p>
+
+</li>
+</ul>
+
+<h3 id="Parentheses-Comma-and-Semicolon">Parentheses, Comma, and Semicolon  <a class='sect' href="#Parentheses-Comma-and-Semicolon">&sect;</a></h3>
+
+<p>The open <code>(</code> and close parentheses <code>)</code> are supported to override precedence rules in a sub-expression. Nested parentheses are supported to significant depth.</p>
+
+<p>The comma <code>,</code> is required to separate the arguments of a function.</p>
+
+<p>The semicolon <code>;</code> is used to value separate expressions. Exactly one value expression must be present, but multiple assignment expressions may be included before and/or after the value expression.</p>
+
+<h3 id="Conditional-Operator">Conditional Operator  <a class='sect' href="#Conditional-Operator">&sect;</a></h3>
+
+<p>The C language&#39;s question mark colon <code>?:</code> ternary operator is supported. The format is:</p>
+
+<p><i>condition</i> <code>?</code> <i>true-expression</i> <code>:</code> <i>false-expression</i></p>
+
+<h2 id="Expression-Examples">Expression Examples  <a class='sect' href="#Expression-Examples">&sect;</a></h2>
+
+<h3 id="Algebraic">Algebraic  <a class='sect' href="#Algebraic">&sect;</a></h3>
+
+<p><code>A + B + 10</code></p>
+
+<ul>
+
+<li><p>Result is <code>A + B + 10</code></p>
+
+</li>
+</ul>
+
+<h3 id="Relational">Relational  <a class='sect' href="#Relational">&sect;</a></h3>
+
+<p><code>(A + B) &lt; (C + D)</code></p>
+
+<ul>
+
+<li><p>Result is 1 if <code>(A + B) &lt; (C + D)</code></p>
+
+</li>
+<li><p>Result is 0 if <code>(A + B) &gt;= (C + D)</code></p>
+
+</li>
+</ul>
+
+<h3 id="Question-Mark">Question Mark  <a class='sect' href="#Question-Mark">&sect;</a></h3>
+
+<p><code>(A + B) &lt; (C + D) ? E : F + L + 10</code></p>
+
+<ul>
+
+<li><p>Result is <code>E</code> if <code>(A + B) &lt; (C + D)</code></p>
+
+</li>
+<li><p>Result is <code>F + L + 10</code> if <code>(A + B) &gt;= (C + D)</code></p>
+
+</li>
+</ul>
+
+<p>Prior to Base 3.14.9 it was legal to omit the colon <code>:</code> and the second (else) part of the conditional, like this:</p>
+
+<p><code>(A + B)&lt;(C + D) ? E</code></p>
+
+<ul>
+
+<li><p>Result is E if <code>(A + B)&lt;(C + D)</code></p>
+
+</li>
+<li><p>Result is unchanged if <code>(A + B)&gt;=(C + D)</code></p>
+
+<p>From 3.14.9 onwards, this expression must be written as <code>(A + B) &lt; (C + D) ? E : VAL</code></p>
+
+</li>
+</ul>
+
+<h3 id="Logical">Logical  <a class='sect' href="#Logical">&sect;</a></h3>
+
+<p><code>A &amp; B</code></p>
+
+<ul>
+
+<li><p>Causes the following to occur:</p>
+
+<ul>
+
+<li><p>Convert A to integer</p>
+
+</li>
+<li><p>Convert B to integer</p>
+
+</li>
+<li><p>Bitwise A <code>and</code> B</p>
+
+</li>
+<li><p>Convert result to floating point</p>
+
+</li>
+</ul>
+
+</li>
+</ul>
+
+<h3 id="Assignment">Assignment  <a class='sect' href="#Assignment">&sect;</a></h3>
+
+<p><code>sin(a); a:=a+D2R</code></p>
+
+<ul>
+
+<li><p>Causes the Calc record to output the successive values of a sine curve in 1 degree intervals.</p>
+
+</li>
+</ul>
+
+<h3 id="Output-Parameters">Output Parameters  <a class='sect' href="#Output-Parameters">&sect;</a></h3>
+
+<p>These parameters specify and control the output capabilities of the Calcout record. They determine when to write the output, where to write it, and what the output will be. The OUT link specifies the Process Variable to which the result will be written.</p>
+
+<h4 id="Menu-calcoutOOPT">Menu calcoutOOPT  <a class='sect' href="#Menu-calcoutOOPT">&sect;</a></h4>
+
+<p>The OOPT field determines the condition that causes the output link to be written to. It&#39;s a menu field that has six choices:</p>
+
+<blockquote><table border="1"><tr>
+<th>Index</th><th>Identifier</th><th>Choice String</th></tr>
+<tr>
+<td class='cell DBD_Menu index'>0</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_Every_Time</td>
+<td class='cell DBD_Menu choice'>Every Time</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>1</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_On_Change</td>
+<td class='cell DBD_Menu choice'>On Change</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>2</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_When_Zero</td>
+<td class='cell DBD_Menu choice'>When Zero</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>3</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_When_Non_zero</td>
+<td class='cell DBD_Menu choice'>When Non-zero</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>4</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_Transition_To_Zero</td>
+<td class='cell DBD_Menu choice'>Transition To Zero</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>5</td>
+<td class='cell DBD_Menu identifier'>calcoutOOPT_Transition_To_Non_zero</td>
+<td class='cell DBD_Menu choice'>Transition To Non-zero</td>
+</tr>
+</table></blockquote>
+
+<ul>
+
+<li><p><code>Every Time</code> -- write output every time record is processed.</p>
+
+</li>
+<li><p><code>On Change</code> -- write output every time VAL changes, i.e., every time the result of the expression changes.</p>
+
+</li>
+<li><p><code>When Zero</code> -- when record is processed, write output if VAL is zero.</p>
+
+</li>
+<li><p><code>When Non-zero</code> -- when record is processed, write output if VAL is non-zero.</p>
+
+</li>
+<li><p><code>Transition To Zero</code> -- when record is processed, write output only if VAL is zero and the last value was non-zero.</p>
+
+</li>
+<li><p><code>Transition To Non-zero</code> -- when record is processed, write output only if VAL is non-zero and last value was zero.</p>
+
+</li>
+</ul>
+
+<h4 id="Menu-calcoutDOPT">Menu calcoutDOPT  <a class='sect' href="#Menu-calcoutDOPT">&sect;</a></h4>
+
+<p>The DOPT field determines what data is written to the output link when the output is executed. The field is a menu field with two options:</p>
+
+<blockquote><table border="1"><tr>
+<th>Index</th><th>Identifier</th><th>Choice String</th></tr>
+<tr>
+<td class='cell DBD_Menu index'>0</td>
+<td class='cell DBD_Menu identifier'>calcoutDOPT_Use_VAL</td>
+<td class='cell DBD_Menu choice'>Use CALC</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>1</td>
+<td class='cell DBD_Menu identifier'>calcoutDOPT_Use_OVAL</td>
+<td class='cell DBD_Menu choice'>Use OCAL</td>
+</tr>
+</table></blockquote>
+
+<p>If <code>Use CALC</code> is specified, when the record writes its output it will write the result of the expression in the CALC field, that is, it will write the value of the VAL field. If <code>Use OCAL</code> is specified, the record will instead write the result of the expression in the OCAL field, which is contained in the OVAL field. The OCAL field is exactly like the CALC field and has the same functionality it can contain the string representation of an expression which is evaluated at run-time. Thus, if necessary, the record can use the result of the CALC expression to determine if data should be written and can use the result of the OCAL expression as the data to write.</p>
+
+<p>If the OEVT field isn&#39;t empty and the condition in the OOPT field is met, the record will post the corresponding named event. If the ODLY field is non-zero, the record pauses for the specified number of seconds before executing the OUT link or posting the output event. During this waiting period the record is &quot;active&quot; and will not be processed again until the wait is over. The field DLYA is equal to 1 during the delay period. The resolution of the delay entry system dependent.</p>
+
+<p>The IVOA field specifies what action to take with the OUT link if the Calcout record enters an INVALID alarm status. The options are <code>Continue normally</code>, <code>Don&#39;t drive outputs</code>, and <code>Set output to IVOV</code>. If the IVOA field is <code>Set output to IVOV</code>, the data entered into the IVOV field is written to the OUT link if the record alarm severity is INVALID.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">OUT</td><td class="cell">Output Specification</td><td class="cell">OUTLINK</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OOPT</td><td class="cell">Output Execute Opt</td><td class="cell">MENU (<a href='#Menu-calcoutOOPT'>calcoutOOPT</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">DOPT</td><td class="cell">Output Data Opt</td><td class="cell">MENU (<a href='#Menu-calcoutDOPT'>calcoutDOPT</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OCAL</td><td class="cell">Output Calculation</td><td class="cell">STRING [160]</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">OVAL</td><td class="cell">Output Value</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OEVT</td><td class="cell">Event To Issue</td><td class="cell">STRING [40]</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">ODLY</td><td class="cell">Output Execute Delay</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">IVOA</td><td class="cell">INVALID output action</td><td class="cell">MENU (<a href='menuIvoa.html'>menuIvoa</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">IVOV</td><td class="cell">INVALID output value</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Operator-Display-Parameter">Operator Display Parameter  <a class='sect' href="#Operator-Display-Parameter">&sect;</a></h3>
+
+<p>These parameters are used to present meaningful data to the operator. Some are also meant to represent the status of the record at run-time.</p>
+
+<p>The EGU field contains a string of up to 16 characters which is supplied by the user and which describes the values being operated upon. The string is retrieved whenever the routine <code>get_units()</code> is called. The EGU string is solely for an operator&#39;s sake and does not have to be used.</p>
+
+<p>The HOPR and LOPR fields only refer to the limits of the VAL, HIHI, HIGH, LOW, and LOLO fields. PREC controls the precision of the VAL field.</p>
+
+<h4 id="Menu-calcoutINAV">Menu calcoutINAV  <a class='sect' href="#Menu-calcoutINAV">&sect;</a></h4>
+
+<p>The INAV-INUV fields indicate the status of the link to the PVs specified in the INPA-INPU fields respectively. These fields can have four possible values:</p>
+
+<blockquote><table border="1"><tr>
+<th>Index</th><th>Identifier</th><th>Choice String</th></tr>
+<tr>
+<td class='cell DBD_Menu index'>0</td>
+<td class='cell DBD_Menu identifier'>calcoutINAV_EXT_NC</td>
+<td class='cell DBD_Menu choice'>Ext PV NC</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>1</td>
+<td class='cell DBD_Menu identifier'>calcoutINAV_EXT</td>
+<td class='cell DBD_Menu choice'>Ext PV OK</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>2</td>
+<td class='cell DBD_Menu identifier'>calcoutINAV_LOC</td>
+<td class='cell DBD_Menu choice'>Local PV</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>3</td>
+<td class='cell DBD_Menu identifier'>calcoutINAV_CON</td>
+<td class='cell DBD_Menu choice'>Constant</td>
+</tr>
+</table></blockquote>
+
+<ul>
+
+<li><p><code>Ext PV NC</code> -- the PV wasn&#39;t found on this IOC and a Channel Access link hasn&#39;t been established.</p>
+
+</li>
+<li><p><code>Ext PV OK</code> -- the PV wasn&#39;t found on this IOC and a Channel Access link has been established.</p>
+
+</li>
+<li><p><code>Local PV</code> -- the PV was found on this IOC.</p>
+
+</li>
+<li><p><code>Constant</code> -- the corresponding link field is a constant.</p>
+
+</li>
+</ul>
+
+<p>The OUTV field indicates the status of the OUT link. If has the same possible values as the INAV-INUV fields.</p>
+
+<p>The CLCV and OLCV fields indicate the validity of the expression in the CALC and OCAL fields respectively. If the expression in invalid, the field is set to one.</p>
+
+<p>The DLYA field is set to one during the delay specified in ODLY.</p>
+
+<p>See <a href="dbCommonRecord.html#Operator-Display-Parameters">Fields Common to All Record Types</a> for more on the record name (NAME) and description (DESC) fields.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">EGU</td><td class="cell">Engineering Units</td><td class="cell">STRING [16]</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">PREC</td><td class="cell">Display Precision</td><td class="cell">SHORT</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">HOPR</td><td class="cell">High Operating Rng</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">LOPR</td><td class="cell">Low Operating Range</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">INAV</td><td class="cell">INPA PV Status</td><td class="cell">MENU (<a href='#Menu-calcoutINAV'>calcoutINAV</a>)</td><td class="cell">No</td><td class="cell">1</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell" colspan=8>&vellip;</td></tr>
+
+<tr><td class="cell">INUV</td><td class="cell">INPU PV Status</td><td class="cell">MENU (<a href='#Menu-calcoutINAV'>calcoutINAV</a>)</td><td class="cell">No</td><td class="cell">1</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OUTV</td><td class="cell">OUT PV Status</td><td class="cell">MENU (<a href='#Menu-calcoutINAV'>calcoutINAV</a>)</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">CLCV</td><td class="cell">CALC Valid</td><td class="cell">LONG</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">OCLV</td><td class="cell">OCAL Valid</td><td class="cell">LONG</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">DLYA</td><td class="cell">Output Delay Active</td><td class="cell">USHORT</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">NAME</td><td class="cell">Record Name</td><td class="cell">STRING [61]</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">DESC</td><td class="cell">Descriptor</td><td class="cell">STRING [41]</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Alarm-Parameters">Alarm Parameters  <a class='sect' href="#Alarm-Parameters">&sect;</a></h3>
+
+<p>The possible alarm conditions for the Calcout record are the SCAN, READ, Calculation, and limit alarms. The SCAN and READ alarms are called by the record support routines. The Calculation alarm is called by the record processing routine when the CALC expression is an invalid one, upon which an error message is generated.</p>
+
+<p>The following alarm parameters, which are configured by the user, define the limit alarms for the VAL field and the severity corresponding to those conditions.</p>
+
+<p>The HYST field defines an alarm deadband for each limit.</p>
+
+<p>See <a href="https://docs.epics-controls.org/en/latest/process-database/EPICS_Process_Database_Concepts.html#alarm-specification">Alarm Specification</a> for a complete explanation of record alarms and of the standard fields. <a href="dbCommonRecord.html#Alarm-Fields">Alarm Fields</a> lists other fields related to alarms that are common to all record types.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">HIHI</td><td class="cell">Hihi Alarm Limit</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">HIGH</td><td class="cell">High Alarm Limit</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">LOW</td><td class="cell">Low Alarm Limit</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">LOLO</td><td class="cell">Lolo Alarm Limit</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">HHSV</td><td class="cell">Hihi Severity</td><td class="cell">MENU (<a href='menuAlarmSevr.html'>menuAlarmSevr</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">HSV</td><td class="cell">High Severity</td><td class="cell">MENU (<a href='menuAlarmSevr.html'>menuAlarmSevr</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">LSV</td><td class="cell">Low Severity</td><td class="cell">MENU (<a href='menuAlarmSevr.html'>menuAlarmSevr</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">LLSV</td><td class="cell">Lolo Severity</td><td class="cell">MENU (<a href='menuAlarmSevr.html'>menuAlarmSevr</a>)</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">Yes</td></tr>
+
+<tr><td class="cell">HYST</td><td class="cell">Alarm Deadband</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Monitor-Parameters">Monitor Parameters  <a class='sect' href="#Monitor-Parameters">&sect;</a></h3>
+
+<p>These parameters are used to determine when to send monitors for the value fields. These monitors are sent when the value field exceeds the last monitored field by the appropriate deadband, the ADEL for archiver monitors and the MDEL field for all other types of monitors. If these fields have a value of zero, every time the value changes, monitors are triggered; if they have a value of -1, every time the record is scanned, monitors are triggered. See <a href="#Monitor-Specification">&quot;Monitor Specification&quot;</a> for a complete explanation of monitors.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">ADEL</td><td class="cell">Archive Deadband</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">MDEL</td><td class="cell">Monitor Deadband</td><td class="cell">DOUBLE</td><td class="cell">Yes</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">Yes</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h3 id="Run-time-Parameters">Run-time Parameters  <a class='sect' href="#Run-time-Parameters">&sect;</a></h3>
+
+<p>These fields are not configurable using a configuration tool and none are modifiable at run-time. They are used to process the record.</p>
+
+<p>The LALM field is used to implement the hysteresis factor for the alarm limits.</p>
+
+<p>The LA-LU fields are used to decide when to trigger monitors for the corresponding fields. For instance, if LA does not equal the value for A, monitors for A are triggered. The MLST and ALST fields are used in the same manner for the VAL field.</p>
+
+<blockquote><table border="1"><tr>
+<th>Field</th><th>Summary</th><th>Type</th><th>DCT</th>
+<th>Default</th><th>Read</th><th>Write</th><th>CA PP</th>
+</tr>
+<tr><td class="cell">LALM</td><td class="cell">Last Value Alarmed</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">ALST</td><td class="cell">Last Value Archived</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">MLST</td><td class="cell">Last Val Monitored</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell">LA</td><td class="cell">Prev Value of A</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+<tr><td class="cell" colspan=8>&vellip;</td></tr>
+
+<tr><td class="cell">LU</td><td class="cell">Prev Value of U</td><td class="cell">DOUBLE</td><td class="cell">No</td><td class="cell">&nbsp;</td><td class="cell">Yes</td><td class="cell">No</td><td class="cell">No</td></tr>
+
+</table></blockquote>
+
+<h2 id="Record-Support">Record Support  <a class='sect' href="#Record-Support">&sect;</a></h2>
+
+<h3 id="Record-Support-Routines">Record Support Routines  <a class='sect' href="#Record-Support-Routines">&sect;</a></h3>
+
+<h2 id="init_record"><code>init_record</code>  <a class='sect' href="#init_record">&sect;</a></h2>
+
+<p>For each constant input link, the corresponding value field is initialized with the constant value if the input link is CONSTANT or a channel access link is created if the input link is PV_LINK.</p>
+
+<p>A routine postfix is called to convert the infix expression in CALC and OCAL to Reverse Polish Notation. The result is stored in RPCL and ORPC, respectively.</p>
+
+<h2 id="process"><code>process</code>  <a class='sect' href="#process">&sect;</a></h2>
+
+<p>See next section.</p>
+
+<h2 id="special"><code>special</code>  <a class='sect' href="#special">&sect;</a></h2>
+
+<p>This is called if CALC or OCAL is changed. <code>special</code> calls postfix.</p>
+
+<h2 id="get_units"><code>get_units</code>  <a class='sect' href="#get_units">&sect;</a></h2>
+
+<p>Retrieves EGU.</p>
+
+<h2 id="get_precision"><code>get_precision</code>  <a class='sect' href="#get_precision">&sect;</a></h2>
+
+<p>Retrieves PREC.</p>
+
+<h2 id="get_graphic_double"><code>get_graphic_double</code>  <a class='sect' href="#get_graphic_double">&sect;</a></h2>
+
+<p>Sets the upper display and lower display limits for a field. If the field is VAL, HIHI, HIGH, LOW, or LOLO, the limits are set to HOPR and LOPR, else if the field has upper and lower limits defined they will be used, else the upper and lower maximum values for the field type will be used.</p>
+
+<h2 id="get_control_double"><code>get_control_double</code>  <a class='sect' href="#get_control_double">&sect;</a></h2>
+
+<p>Sets the upper control and lower control limits for a field. If the VAL, HIHI, HIGH, LOW, or LOLO, the limits are set to HOPR and LOPR, else if the field has upper and lower limits defined they will be used, else the upper and lower maximum values for the field will be used.</p>
+
+<h2 id="get_alarm_double"><code>get_alarm_double</code>  <a class='sect' href="#get_alarm_double">&sect;</a></h2>
+
+<p>Sets the following values:</p>
+
+<ul>
+
+<p>upper_alarm_limit = HIHI</p>
+
+<p>upper_warning_limit = HIGH</p>
+
+<p>lower warning_limit = LOW</p>
+
+<p>lower_alarm_limit = LOLO</p>
+
+</ul>
+
+<h3 id="Record-Processing">Record Processing  <a class='sect' href="#Record-Processing">&sect;</a></h3>
+
+<h2 id="process1"><code>process()</code>  <a class='sect' href="#process1">&sect;</a></h2>
+
+<p>The <code>process()</code> routine implements the following algorithm:</p>
+
+<ol>
+
+<li><p>Fetch all arguments.</p>
+
+</li>
+<li><p>Call routine <code>calcPerform()</code>, which calculates VAL from the prefix version of the expression given in CALC. If <code>calcPerform()</code> returns success, UDF is set to FALSE.</p>
+
+</li>
+<li><p>Check alarms. This routine checks to see if the new VAL causes the alarm status and severity to change. If so, NSEV, NSTA and LALM are set. If also honors the alarm hysteresis factor (HYST). Thus the value must change by at least HYST before the alarm status and severity changes.</p>
+
+</li>
+<li><p>Determine if the Output Execution Option (OOPT) is met. If met, either execute the output link (and output event) immediately (if ODLY = 0), or schedule a callback after the specified interval. See the explanation for the <code>execOutput()</code> routine below.</p>
+
+</li>
+<li><p>Check to see if monitors should be invoked.</p>
+
+<ul>
+
+<li><p>Alarm monitors are invoked if the alarm status or severity has changed.</p>
+
+</li>
+<li><p>Archive and value change monitors are invoked if ADEL and MDEL conditions are met.</p>
+
+</li>
+<li><p>Monitors for A-U are checked whenever other monitors are invoked.</p>
+
+</li>
+<li><p>NSEV and NSTA are reset to 0</p>
+
+</li>
+</ul>
+
+</li>
+<li><p>If no output delay was specified, scan forward link if necessary, set PACT FALSE, and return.</p>
+
+</li>
+</ol>
+
+<h2 id="execOutput"><code>execOutput()</code>  <a class='sect' href="#execOutput">&sect;</a></h2>
+
+<ol>
+
+<li><p>If DOPT field specifies the use of OCAL, call the routine <code>calcPerform()</code> for the postfix version of the expression in OCAL. Otherwise, use VAL.</p>
+
+</li>
+<li><p>If the Alarm Severity is INVALID, follow the option as designated by the field IVOA.</p>
+
+</li>
+<li><p>The Alarm Severity is not INVALID or IVOA specifies &quot;Continue Normally&quot;, put the value of OVAL to the OUT link and post the event named in OEVT (if not empty).</p>
+
+</li>
+<li><p>If an output delay was implemented, process the forward link.</p>
+
+</li>
+</ol>
+
+</div><hr>
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+</body>
+</html>
+
