@@ -1,0 +1,134 @@
+# feed_logic_pair.template
+# BASE="$(BASE)", SIZE="$(SIZE)",
+# IBASE="$(IBASE)", "QBASE="$(QBASE)",
+# FLNK="$(FLNK)"
+
+# use I time base as our own
+alias("$(IBASE)TWF", "$(BASE)TWF")
+
+alias("$(IBASE)WF", "$(BASE)IWF")
+alias("$(QBASE)WF", "$(BASE)QWF")
+alias("$(IBASE)SCALE", "$(BASE)ISCALE")
+alias("$(QBASE)SCALE", "$(BASE)QSCALE")
+alias("$(IBASE)NORD", "$(BASE)NORD")
+
+# start processing with FLNK from $(QBASE)
+
+# scaling factor from amplitude squared to power
+#  (use I/Q scaling to determine amplitude scaling)
+record(ao, "$(BASE)PWRSCALE") {
+    field(VAL , "1.0")
+    field(PREC, "9")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# Arbitrary offset added to phase (zero angle)
+record(ao, "$(BASE)ZRANGLE") {
+    field(VAL , "0.0")
+    field(PREC, "2")
+    field(EGU , "deg")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# Rotate I/Q for display purposes
+# Used for IWFDISP, QWFDISP
+record(ao, "$(BASE)DISPANGLE") {
+    field(VAL , "0.0")
+    field(PREC, "2")
+    field(EGU , "deg")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# FLNK'd from _signal.template
+record(aSub, "$(BASE)AP_CALC_") {
+  field(SNAM, "IQ2AP")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(FTVC ,"DOUBLE")
+  field(FTVD ,"DOUBLE")
+  field(FTVE ,"DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(NOVB, "$(SIZE)")
+  field(NOVC, "$(SIZE)")
+  field(NOVD, "$(SIZE)")
+  field(NOVE, "$(SIZE)")
+  field(INPA, "$(IBASE)WF MSI NPP")
+  field(INPB, "$(QBASE)WF MSI NPP")
+  field(INPD, "$(BASE)ZRANGLE MSI NPP")
+  field(INPE, "$(BASE)DISPANGLE MSI NPP")
+  field(INPF, "$(PWRCONV=0)")
+  field(OUTA, "$(BASE)AWF MSI PP")
+  field(OUTB, "$(BASE)PWF MSI PP")
+  field(OUTC, "$(BASE)PWRWF MSI PP")
+  field(OUTD, "$(BASE)IWFDISP MSI PP")
+  field(OUTE, "$(BASE)QWFDISP MSI PP")
+  field(FLNK, "$(FLNK=)") # to external logic, eg. waveform stats
+  field(TSEL, "$(IBASE)WF.TIME")
+  alias("$(BASE)E_")
+}
+
+record(aai, "$(BASE)AWF") {
+  field(DESC, "Amplitude")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)PWF") {
+  field(DESC, "Phase")
+  field(EGU , "deg.")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(FLNK, "$(BASE)PWF_CALC_")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)PWRWF") {
+  field(DESC, "Power")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)IWF.TIME")
+}
+
+record(aSub, "$(BASE)PWF_CALC_") {
+  field(SNAM, "Phase Unwrap")
+  field(FTA , "DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(INPA, "$(BASE)PWF MS NPP")
+  field(INPB, "160")
+  field(OUTA, "$(BASE)UPWF MS PP")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)UPWF") {
+  field(DESC, "Unwrapped Phase")
+  field(EGU , "deg.")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)IWFDISP") {
+  field(DESC, "Rotated I")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)IWF.TIME")
+}
+
+record(aai, "$(BASE)QWFDISP") {
+  field(DESC, "Rotated Q")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)IWF.TIME")
+}
+

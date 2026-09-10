@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2000 Argonne National Laboratory
+#
+# SPDX-License-Identifier: EPICS
+
+# extensions/configure/RULES_TOP
+
+include $(CONFIG)/RULES_TOP
+

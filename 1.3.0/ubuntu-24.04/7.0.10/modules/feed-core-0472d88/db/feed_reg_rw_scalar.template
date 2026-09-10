@@ -1,0 +1,14 @@
+record(longout, "$(PREF)") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=$(REG) meta=true")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+    info(feed:info:output, "$(PREF)")
+}
+record(longin, "$(PREF)_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=$(REG) meta=true")
+    field(SCAN, "$(REGSCAN)")
+    field(TSE , "-2")
+    info(feed:info:input, "$(PREF)_RBV")
+}

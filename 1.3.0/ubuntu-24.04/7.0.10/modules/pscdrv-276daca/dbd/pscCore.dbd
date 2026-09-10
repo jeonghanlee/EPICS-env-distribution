@@ -1,0 +1,89 @@
+#function(subCopyWaveform)
+#function(bpmWfm_fft_Sup)
+registrar(PSCRegister)
+driver(drvPSC)
+
+variable(PSCDebug, int)
+variable(PSCInactivityTime, int)
+variable(PSCMaxSendBuffer, int)
+
+# PSC wide operations
+#  Link: "@pscname"
+device(bi, INST_IO, devPSCConnectedBi, "PSC Ctrl Connected")
+device(bi, INST_IO, devPSCOnConnectBi, "PSC On Connect")
+device(stringin, INST_IO, devPSCMessageSI, "PSC Ctrl Message")
+device(bo, INST_IO, devPSCSendAllBo,   "PSC Ctrl Send All")
+device(bo, INST_IO, devPSCForceReConn,   "PSC Ctrl Reconnect")
+device(longout, INST_IO, devPSCSendLo, "PSC Ctrl Send")
+device(longin, INST_IO, devPSCUknCountLi, "PSC Unknown Msg Count")
+device(longin, INST_IO, devPSCConnCountLi, "PSC Conn Count")
+
+# Operations on entire blocks
+#  Link: "@pscname block#"
+#  Link: "@pscname block# offset" (string* records)
+#  Link: "@pscname block# offset step"  (Only "* In" DTYPs)
+#   (offset and step in byte)
+device(stringin,  INST_IO, devPSCBlockSi, "PSC Block")
+device(stringout, INST_IO, devPSCBlockSo, "PSC Block")
+device(waveform, INST_IO, devPSCBlockInWf8,  "PSC Block I8 In")
+device(waveform, INST_IO, devPSCBlockOutWf8, "PSC Block I8 Out")
+device(waveform, INST_IO, devPSCBlockInWf16,  "PSC Block I16 In")
+device(waveform, INST_IO, devPSCBlockOutWf16, "PSC Block I16 Out")
+device(waveform, INST_IO, devPSCBlockInWf24,  "PSC Block I24 In")
+device(waveform, INST_IO, devPSCBlockInWf32,  "PSC Block I32 In")
+device(waveform, INST_IO, devPSCBlockOutWf32, "PSC Block I32 Out")
+device(waveform, INST_IO, devPSCBlockInWfF32,  "PSC Block F32 In")
+device(waveform, INST_IO, devPSCBlockOutWfF32, "PSC Block F32 Out")
+device(waveform, INST_IO, devPSCBlockInWfF64,  "PSC Block F64 In")
+device(waveform, INST_IO, devPSCBlockOutWfF64, "PSC Block F64 Out")
+#  Link: "@pscname block# tx|rx"
+device(longin, INST_IO, devPSCBlockCountLi, "PSC Block Msg Count")
+
+# Operations on register blocks
+#  Link: "@pscname block# regoffset"
+#   (offset in bytes)
+# Take data from block received from a PSC
+device(bi,  INST_IO, devPSCRegBi, "PSC Reg")
+device(mbbi,  INST_IO, devPSCRegMbbi, "PSC Reg")
+device(mbbiDirect,  INST_IO, devPSCRegMbbiDirect, "PSC Reg")
+device(longin,  INST_IO, devPSCRegLi, "PSC Reg")
+device(int64in,  INST_IO, devPSCRegI64i, "PSC Reg")
+device(ai,  INST_IO, devPSCRegAi, "PSC Reg")
+device(ai,  INST_IO, devPSCRegF32Ai, "PSC Reg F32")
+device(ai,  INST_IO, devPSCRegF64Ai, "PSC Reg F64")
+
+# Put data into a block to be sent (later) to a PSC
+#  Link: "@pscname block# regoffset"
+#   (offset in bytes)
+device(bo,  INST_IO, devPSCRegBo, "PSC Reg")
+device(mbbo,  INST_IO, devPSCRegMbbo, "PSC Reg")
+device(mbboDirect,  INST_IO, devPSCRegMbboDirect, "PSC Reg")
+device(longout,  INST_IO, devPSCRegLo, "PSC Reg")
+device(int64out,  INST_IO, devPSCRegI64o, "PSC Reg")
+device(ao,  INST_IO, devPSCRegAo, "PSC Reg")
+device(ao,  INST_IO, devPSCRegF32Ao, "PSC Reg F32")
+device(ao,  INST_IO, devPSCRegF64Ao, "PSC Reg F64")
+
+# Echo back data placed in a send block
+#  Link: "@pscname block# regoffset"
+#   (offset in bytes)
+device(bi,  INST_IO, devPSCRegRBBi, "PSC RB Reg")
+device(mbbi,  INST_IO, devPSCRegRBMbbi, "PSC RB Reg")
+device(mbbiDirect,  INST_IO, devPSCRegRBMbbiDirect, "PSC RB Reg")
+device(longin,  INST_IO, devPSCRegRBLi, "PSC RB Reg")
+device(int64in,  INST_IO, devPSCRegRBI64i, "PSC RB Reg")
+device(ai,  INST_IO, devPSCRegRBAi, "PSC RB Reg")
+device(ai,  INST_IO, devPSCRegRBF32Ai, "PSC RB Reg F32")
+device(ai,  INST_IO, devPSCRegRBF64Ai, "PSC RB Reg F64")
+
+# Single register writes
+#  Link: "@pscname block# regoffset"
+#   (offset in bytes)
+device(bo, INST_IO, devPSCSingleU32Bo, "PSC Single U32")
+device(mbbo, INST_IO, devPSCSingleU32Mbbo, "PSC Single U32")
+device(mbboDirect, INST_IO, devPSCSingleU32MbboDirect, "PSC Single U32")
+device(longout, INST_IO, devPSCSingleS32Lo, "PSC Single I32")
+device(int64out, INST_IO, devPSCSingleS64I64o, "PSC Single I64")
+device(ao, INST_IO, devPSCSingleS32Ao, "PSC Single I32")
+device(ao, INST_IO, devPSCSingleF32Ao, "PSC Single F32")
+device(ao, INST_IO, devPSCSingleF64Ao, "PSC Single F64")

@@ -1,0 +1,9 @@
+SNCSEQ=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/seq-2.2.9
+SSCAN=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/sscan-e13699e
+CALC=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/calc-4217e83
+ASYN=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/asyn-4.46.0
+AUTOSAVE=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/autosave-6.0.0
+BUSY=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/busy-2dfe92d
+SCALER=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/scaler-beb5521
+STD=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/std-5f2e442
+MCA=/opt/epics/1.3.0/rocky-8.10/7.0.10/modules/mca-687d563

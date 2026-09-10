@@ -1,0 +1,94 @@
+record(busy, "$(P)STRT") {
+    field(ZNAM, "Start")
+    field(ONAM, "Start")
+    field(OUT , "$(P)STRT_.PROC PP")
+    field(TPRO, "$(TPRO=)")
+    field(ASG,  "$(ASG=)")
+}
+
+# use counter to ensure than momentary command results in a subscription update
+# to trigger the script
+record(calc, "$(P)STRT_") {
+    field(INPA, "$(P)STRT_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(bo, "$(P)STOP") {
+    field(ZNAM, "Stop")
+    field(ONAM, "Stop")
+    field(OUT , "$(P)STOP_.PROC PP")
+    field(ASG,  "$(ASG=)")
+    field(TPRO, "$(TPRO=)")
+}
+
+record(calc, "$(P)STOP_") {
+    field(INPA, "$(P)STOP_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(bo, "$(P)ABRT") {
+    field(ZNAM, "Abort")
+    field(ONAM, "Abort")
+    field(OUT , "$(P)ABRT_.PROC PP")
+    field(ASG,  "$(ASG=)")
+    field(TPRO, "$(TPRO=)")
+}
+
+record(calc, "$(P)ABRT_") {
+    field(INPA, "$(P)ABRT_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(mbbi, "$(P)STS") {
+    field(ZRST, "Crash")
+    field(ONST, "Complete")
+    field(TWST, "Running")
+    field(TWSV, "MINOR")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(TPRO, "$(TPRO=)")
+  info(autosaveFields, "VAL SEVR")
+}
+
+# The following are records to support
+# the higher-level interface for the 
+# launched commands. It is optional to use them.
+
+record(stringin, "$(P)MSG") {
+  field(DESC, "Status message")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)LOGDIR1") {
+  field(DESC, "Log file location")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)LOGDIR2") {
+  field(DESC, "Log file location")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)LOG") {
+  field(DESC, "Log file name")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")
+}
+
+record(stringin, "$(P)TS") {
+  field(DESC, "Timestamp")
+  field(SCAN, "Passive")
+  field(PINI, "YES")
+  info(autosaveFields, "VAL")
+}

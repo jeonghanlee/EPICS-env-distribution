@@ -1,0 +1,52 @@
+# This database is for a single QPC Controller
+#
+# QPC    - QPC Controller PV part name
+
+
+record(stringin, "$(QPC):MODEL")
+    {
+	field(DESC, "Reads Device Model")
+	field(PINI, "YES")
+	field(DTYP, "stream")
+	field(SCAN, "10 second")
+	field(INP, "@digitelQpc$(QPCBUS=).proto getModel($(unit=01)) $(port)")
+    }
+
+record(stringin, "$(QPC):FIRMWARE")
+    {
+	field(DESC, "Reads Device Firmware")
+	field(PINI, "YES")
+	field(DTYP, "stream")
+	field(SCAN, "10 second")
+	field(INP, "@digitelQpc$(QPCBUS=).proto getFirmware($(unit=01)) $(port)")
+    }
+
+record(mbbo,"$(QPC):SETPUNITS")
+    {
+	field(DESC,"Set Pressure Units controller")
+	field(NOBT,"2")
+ 	field(DTYP, "stream")
+	field(OUT,"@digitelQpc$(QPCBUS=).proto setPressUnit($(unit=01)) $(port)")
+	field(ZRVL,"0")
+	field(ONVL,"1")
+	field(TWVL,"2")
+	field(ZRST,"TORR")
+	field(ONST,"MBAR")
+	field(TWST,"PASCAL")
+	field(FLNK,"$(QPC):PUNITS")
+    }
+
+record(mbbi,"$(QPC):PUNITS")
+    {
+    	field(DESC, "Pressure Units Readback")
+ 	field(DTYP, "stream")
+	field(SCAN, "10 second")
+    	field(PINI, "YES")
+	field(INP,"@digitelQpc$(QPCBUS=).proto getPressureUnit($(unit=01)) $(port)")
+	field(ZRVL,"0")
+	field(ONVL,"1")
+	field(TWVL,"2")
+	field(ZRST,"TORR")
+	field(ONST,"MBAR")
+	field(TWST,"PASCAL")
+    }

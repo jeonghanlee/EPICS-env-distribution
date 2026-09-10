@@ -1,0 +1,222 @@
+.. productionlist::
+   program: "program" `identifier` `program_param` `initial_defns` `entry` `state_sets` `exit` `final_defns`
+   program_param: "(" `string` ")"
+   program_param: 
+   initial_defns: `initial_defns` `initial_defn`
+   initial_defns: 
+   initial_defn: `assign`
+   initial_defn: `monitor`
+   initial_defn: `sync`
+   initial_defn: `syncq`
+   initial_defn: `declaration`
+   initial_defn: `option`
+   initial_defn: `c_code`
+   initial_defn: `funcdef`
+   initial_defn: `structdef`
+   final_defns: `final_defns` `final_defn`
+   final_defns: 
+   final_defn: `c_code`
+   final_defn: `funcdef`
+   final_defn: `structdef`
+   assign: "assign" `variable` `to` `string` ";"
+   assign: "assign" `variable` `subscript` `to` `string` ";"
+   assign: "assign" `variable` `to` "{" `strings` "}" ";"
+   assign: "assign" `variable` ";"
+   strings: `strings` "," `string`
+   strings: `string`
+   strings: 
+   monitor: "monitor" `variable` `opt_subscript` ";"
+   sync: "sync" `variable` `opt_subscript` `to` `event_flag` ";"
+   syncq: "syncq" `variable` `opt_subscript` `to` `event_flag` `syncq_size` ";"
+   syncq: "syncq" `variable` `opt_subscript` `syncq_size` ";"
+   event_flag: `identifier`
+   variable: `identifier`
+   syncq_size: `integer_literal`
+   syncq_size: 
+   opt_subscript: `subscript`
+   opt_subscript: 
+   subscript: "[" `integer_literal` "]"
+   declaration: `basetype` `init_declarators` ";"
+   init_declarators: `init_declarator`
+   init_declarators: `init_declarators` "," `init_declarator`
+   init_declarator: `declarator`
+   init_declarator: `declarator` "=" `init_expr`
+   declarator: `variable`
+   declarator: `declarator` `subscript`
+   declarator: `declarator` "(" `param_decls` ")"
+   declarator: "(" `declarator` ")"
+   declarator: "*" `declarator`
+   declarator: "const" `declarator`
+   param_decls: 
+   param_decls: `param_decl`
+   param_decls: `param_decls` "," `param_decl`
+   param_decl: `basetype` `declarator`
+   param_decl: `type_expr`
+   declaration: "foreign" `variables` ";"
+   variables: `variable`
+   variables: `variables` "," `variable`
+   init_expr: "(" `type_expr` ")" "{" `init_exprs` "}"
+   init_expr: "{" `init_exprs` "}"
+   init_expr: `expr`
+   init_exprs: `init_exprs` "," `init_expr`
+   init_exprs: `init_expr`
+   init_exprs: 
+   prim_type: "char"
+   prim_type: "short"
+   prim_type: "int"
+   prim_type: "long"
+   prim_type: "unsigned" "char"
+   prim_type: "unsigned" "short"
+   prim_type: "unsigned" "int"
+   prim_type: "unsigned" "long"
+   prim_type: "int8_t"
+   prim_type: "uint8_t"
+   prim_type: "int16_t"
+   prim_type: "uint16_t"
+   prim_type: "int32_t"
+   prim_type: "uint32_t"
+   prim_type: "float"
+   prim_type: "double"
+   prim_type: "string"
+   basetype: `prim_type`
+   basetype: "evflag"
+   basetype: "void"
+   basetype: "enum" `identifier`
+   basetype: "struct" `identifier`
+   basetype: "union" `identifier`
+   basetype: "typename" `identifier`
+   type_expr: `basetype`
+   type_expr: `basetype` `abs_decl`
+   abs_decl: "(" `abs_decl` ")"
+   abs_decl: "*"
+   abs_decl: "*" `abs_decl`
+   abs_decl: "const"
+   abs_decl: "const" `abs_decl`
+   abs_decl: `subscript`
+   abs_decl: `abs_decl` `subscript`
+   abs_decl: "(" `param_decls` ")"
+   abs_decl: `abs_decl` "(" `param_decls` ")"
+   option: "option" `option_value` `identifier` ";"
+   option_value: "+"
+   option_value: "-"
+   state_sets: `state_sets` `state_set`
+   state_sets: `state_set`
+   state_set: "ss" `identifier` "{" `ss_defns` `states` "}"
+   ss_defns: `ss_defns` `ss_defn`
+   ss_defns: 
+   ss_defn: `assign`
+   ss_defn: `monitor`
+   ss_defn: `sync`
+   ss_defn: `syncq`
+   ss_defn: `declaration`
+   states: `states` `state`
+   states: `state`
+   state: "state" `identifier` "{" `state_defns` `entry` `transitions` `exit` "}"
+   state_defns: `state_defns` `state_defn`
+   state_defns: 
+   state_defn: `assign`
+   state_defn: `monitor`
+   state_defn: `sync`
+   state_defn: `syncq`
+   state_defn: `declaration`
+   state_defn: `option`
+   entry: "entry" `block`
+   entry: 
+   exit: "exit" `block`
+   exit: 
+   transitions: `transitions` `transition`
+   transitions: `transition`
+   transition: "when" "(" `condition` ")" `block` "state" `identifier`
+   transition: "when" "(" `condition` ")" `block` "exit"
+   condition: `opt_expr`
+   block: "{" `block_defns` `statements` "}"
+   block_defns: `block_defns` `block_defn`
+   block_defns: 
+   block_defn: `declaration`
+   block_defn: `c_code`
+   statements: `statements` `statement`
+   statements: 
+   statement: "break" ";"
+   statement: "continue" ";"
+   statement: "return" `opt_expr` ";"
+   statement: "state" `identifier` ";"
+   statement: `c_code`
+   statement: `block`
+   statement: "if" "(" `comma_expr` ")" `statement`
+   statement: "if" "(" `comma_expr` ")" `statement` "else" `statement`
+   statement: "while" "(" `comma_expr` ")" `statement`
+   statement: `for_statement`
+   statement: `opt_expr` ";"
+   for_statement: "for" "(" `opt_expr` ";" `opt_expr` ";" `opt_expr` ")" `statement`
+   expr: `integer_literal`
+   expr: `floating_point_literal`
+   expr: `string`
+   expr: `variable`
+   expr: "(" `comma_expr` ")"
+   expr: `expr` "(" `args` ")"
+   expr: "exit" "(" `args` ")"
+   expr: "sizeof" "(" `type_expr` ")"
+   expr: `expr` "[" `expr` "]"
+   expr: `expr` "." `member`
+   expr: `expr` "->" `member`
+   expr: `expr` "++"
+   expr: `expr` "--"
+   expr: "+" `expr`
+   expr: "-" `expr`
+   expr: "*" `expr`
+   expr: "&" `expr`
+   expr: "!" `expr`
+   expr: "~" `expr`
+   expr: "++" `expr`
+   expr: "--" `expr`
+   expr: "sizeof" `expr`
+   expr: "(" `type_expr` ")" `expr`
+   expr: `expr` "-" `expr`
+   expr: `expr` "+" `expr`
+   expr: `expr` "*" `expr`
+   expr: `expr` "/" `expr`
+   expr: `expr` ">" `expr`
+   expr: `expr` ">=" `expr`
+   expr: `expr` "==" `expr`
+   expr: `expr` "!=" `expr`
+   expr: `expr` "<=" `expr`
+   expr: `expr` "<" `expr`
+   expr: `expr` "||" `expr`
+   expr: `expr` "&&" `expr`
+   expr: `expr` "<<" `expr`
+   expr: `expr` ">>" `expr`
+   expr: `expr` "|" `expr`
+   expr: `expr` "^" `expr`
+   expr: `expr` "&" `expr`
+   expr: `expr` "%" `expr`
+   expr: `expr` "?" `expr` ":" `expr`
+   expr: `expr` "=" `expr`
+   expr: `expr` "+=" `expr`
+   expr: `expr` "-=" `expr`
+   expr: `expr` "&=" `expr`
+   expr: `expr` "|=" `expr`
+   expr: `expr` "/=" `expr`
+   expr: `expr` "*=" `expr`
+   expr: `expr` "%=" `expr`
+   expr: `expr` "<<=" `expr`
+   expr: `expr` ">>=" `expr`
+   expr: `expr` "^=" `expr`
+   comma_expr: `comma_expr` "," `expr`
+   comma_expr: `expr`
+   opt_expr: `comma_expr`
+   opt_expr: 
+   args: `args` "," `expr`
+   args: `expr`
+   args: 
+   string: `string_literal`
+   member: `identifier`
+   funcdef: `basetype` `declarator` `block`
+   structdef: "struct" `identifier` `members` ";"
+   members: "{" `member_decls` "}"
+   member_decls: `member_decl`
+   member_decls: `member_decls` `member_decl`
+   member_decl: `basetype` `declarator` ";"
+   member_decl: `c_code`
+   c_code: `embedded_c_code`
+   to: "to"
+   to: 

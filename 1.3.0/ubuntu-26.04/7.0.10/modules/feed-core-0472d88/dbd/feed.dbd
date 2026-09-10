@@ -1,0 +1,62 @@
+# device-wide settings
+device(longout, INST_IO, devSoFEEDDebug, "FEED Debug")
+device(stringout, INST_IO, devSoFEEDAddress, "FEED Set Address")
+device(stringout, INST_IO, devSoFEEDForceErr, "FEED Force Error")
+device(bo, INST_IO, devBoFEEDCommit, "FEED Commit")
+
+# device-wide status
+device(mbbi, INST_IO, devMbbiFEEDDevState, "FEED State")
+device(aai, INST_IO, devAaiFEEDInfo, "FEED ROM Info")
+device(longin, INST_IO, devLiFEEDCounter, "FEED Counter")
+device(ai, INST_IO, devAiFEEDrtt, "FEED RTT")
+device(aai, INST_IO, devAaiFEEDError, "FEED Error")
+device(aai, INST_IO, devAaiFEEDJBlob, "FEED JBlob")
+device(longin, INST_IO, devLiFEEDConnect, "FEED On Connect")
+
+# device-wide special
+device(longin, INST_IO, devLiFEEDSync, "FEED Sync")
+
+# JSON __metadata__ info
+device(longin, INST_IO, devLiFEEDMetadata, "FEED __metadata__")
+
+# register status
+device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")
+
+# register writes
+device(longout, INST_IO, devLoFEEDWriteReg, "FEED Register Write")
+device(ao, INST_IO, devAoFEEDWriteReg, "FEED Register Write")
+device(mbbo, INST_IO, devMbboFEEDWriteReg, "FEED Register Write")
+device(aao, INST_IO, devAaoFEEDWriteReg, "FEED Register Write")
+
+# register reads
+device(longin, INST_IO, devLiFEEDWriteReg, "FEED Register Read")
+device(ai, INST_IO, devAiFEEDWriteReg, "FEED Register Read")
+device(mbbi, INST_IO, devMbbiFEEDWriteReg, "FEED Register Read")
+device(aai, INST_IO, devAaiFEEDWriteReg, "FEED Register Read")
+
+# register special
+device(bo, INST_IO, devBoFEEDWatchReg, "FEED Register Watch")
+
+# signal special
+device(longout, INST_IO, devLoFEEDSigOffset, "FEED Signal Offset")
+device(longout, INST_IO, devLoFEEDSigStep, "FEED Signal Step")
+device(ao, INST_IO, devAoFEEDSigScale, "FEED Signal Scale")
+device(longout, INST_IO, devLoFEEDSigSize, "FEED Signal Size")
+
+# hack lp:1745039
+device(longout, CONSTANT, devLoFEEDHack, "FEED Hack lp:1745039")
+
+driver(drvFEED)
+registrar(feedRegistrar)
+variable(feedTimeout, double)
+variable(feedNumInFlight, int)
+variable(feedUDPHeaderSize, int)
+variable(feedUDPPortNum, int)
+
+# utilities
+registrar(asubFEEDRegistrar)
+registrar(rfcalcRegister)
+
+# Waveform FFT
+registrar(asubFFTRegister)
+registrar(fftRegistrar)

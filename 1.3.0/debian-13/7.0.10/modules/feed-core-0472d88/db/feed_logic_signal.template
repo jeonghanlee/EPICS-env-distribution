@@ -1,0 +1,123 @@
+# feed_logic_signal.template
+# BASE="$(BASE)", NAME="$(NAME)", REG="$(REG)", SIZE="$(SIZE)"
+# IDX="$(IDX=default)", MASK="$(MASK=default)"
+
+# One logical signal (or many?) in an array register
+#
+# Entry point: "$(BASE)E_"
+#
+# Required Macros:
+#   BASE - common record prefix
+#   NAME - FEED device instance name
+#   REG  - register name
+#   SIZE - max. register size (in elements)
+#
+# Optional Macros:
+#   IDX - index of this signal in mask register, or index of first sample if no mask register.
+#   MASK - Link (including 'CP MS') to signal selection mask.
+#   FLNK - Next record in chain after waveform update
+
+# calculate de-mux offset and step
+
+record(longin, "$(BASE)MASK_") {
+    field(INP , "$(MASK=1)")
+    field(PINI, "YES")
+    field(FLNK, "$(BASE)CALCOFF_")
+}
+
+# calculate offset of first sample
+record(sub, "$(BASE)CALCOFF_") {
+    field(SNAM, "sub_feed_nset_bits")
+    field(INPA, "$(IDX=0)")
+    field(INPB, "$(BASE)MASK_ NPP MSI")
+    field(FLNK, "$(BASE)CALCSTP_")
+}
+
+# calculate total number of selected signals
+record(sub, "$(BASE)CALCSTP_") {
+    field(SNAM, "sub_count_bits")
+    field(INPA, "$(BASE)MASK_ NPP MSI")
+    field(FLNK, "$(BASE)OFFSET")
+}
+
+record(longout, "$(BASE)OFFSET") {
+    field(DTYP, "FEED Signal Offset")
+    field(OUT , "@signal=$(BASE)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)CALCOFF_ NPP MSI")
+    field(FLNK, "$(BASE)STEP")
+}
+
+record(longout, "$(BASE)STEP") {
+    field(DTYP, "FEED Signal Step")
+    field(OUT , "@signal=$(BASE)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)CALCSTP_ NPP MSI")
+}
+
+# scaling factor
+
+record(ao, "$(BASE)SCALE") {
+    field(DTYP, "FEED Signal Scale")
+    field(OUT , "@signal=$(BASE)")
+    field(PINI, "YES")
+    field(VAL , "$(SCALE=1.0)")
+    field(PREC, "9")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# Signal readout
+
+record(aai, "$(BASE)WF") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(BASE)OFFSET")
+    field(DISV, "-1")
+
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+
+    # wait=false uses cached value
+    field(INP , "@name=$(NAME) reg=$(REG) signal=$(BASE) wait=false")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSE , "-2")
+
+    alias("$(BASE)E_")
+
+    field(FLNK, "$(BASE)NORD")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(BASE)NORD") {
+    field(INP , "$(BASE)WF.NORD")
+
+    field(FLNK, "$(FLNK=)")
+}
+
+# timebase
+
+record(aSub, "$(BASE)TWF_") {
+    field(SNAM, "asub_feed_timebase")
+    # first value
+    field(FTA , "DOUBLE")
+    field(INPA, "0.0")
+    # step size
+    field(FTB , "DOUBLE")
+    field(INPB, "$(TBREF=1.0)")
+    # element count
+    field(FTC , "ULONG")
+    field(INPC, "$(BASE)NORD CP MSI")
+    # step size divider
+    field(FTD , "DOUBLE")
+    field(INPD, "$(TBDIV=1.0)")
+    # output array
+    field(FTVA, "DOUBLE")
+    field(NOVA, "$(SIZE)")
+    field(OUTA, "$(BASE)TWF PP MSI")
+}
+
+record(aai, "$(BASE)TWF") {
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSEL, "$(BASE)TWF_.TIME")
+}

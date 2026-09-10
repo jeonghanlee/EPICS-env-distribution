@@ -1,0 +1,27 @@
+# CONFIG_SITE.Common.linux-microblaze
+#
+# Site-specific settings for the linux-microblaze target
+
+# The gnu tools for cross compiling for MicroBlaze (little endian)
+# on Linux can be downloaded from the Xilinx git server:
+#   git clone git://git.xilinx.com/xldk/microblaze_v2.0_le.git
+#
+# The result contains a .tgz file with the tool-chain in it.
+# Set GNU_DIR to point to the un-tarred tool-chain:
+
+GNU_DIR = /usr/local/vw/microblaze-2.0/microblazeel-unknown-linux-gnu
+
+
+# If libreadline needs additional libraries to be linked with it, try
+# uncommenting each of the lines below in turn, starting with the top
+# one and working downwards, until the build succeeds. Do a 'make rebuild'
+# from the top of the Base tree after changing this setting.
+
+# Needs -lncurses:
+#COMMANDLINE_LIBRARY = READLINE_NCURSES
+
+# Needs -lcurses:
+#COMMANDLINE_LIBRARY = READLINE_CURSES
+
+# Readline is broken or you don't want use it:
+#COMMANDLINE_LIBRARY = EPICS

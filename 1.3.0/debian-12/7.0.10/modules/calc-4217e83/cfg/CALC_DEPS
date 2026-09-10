@@ -1,0 +1,6 @@
+# CALC_DEPS
+# Automated IOC dependency declarations for the calc module.
+# calcSupport.dbd is auto-generated from fragments at build time
+# and already contains the correct content for this build.
+CALC_IOC_DBDS = calcSupport.dbd
+CALC_IOC_LIBS = calc

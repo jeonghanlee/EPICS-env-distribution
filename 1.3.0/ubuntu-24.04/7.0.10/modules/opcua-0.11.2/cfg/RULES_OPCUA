@@ -1,0 +1,27 @@
+# OPC UA Configuration for user application
+#==================================================
+# Open62541 client libraries
+
+# include guard
+ifeq (,$(_RULES_OPCUA_INCLUDED))
+_RULES_OPCUA_INCLUDED := YES
+
+ifneq ($(_CONFIG_OPCUA_INCLUDED),YES)
+$(error CONFIG_OPCUA was not loaded)
+endif
+
+_OPCUA_CHECK_VARS := PROD TESTPROD $(PROD) $(TESTPROD) $(LIBRARY)
+
+# $(1) is PROD or LIBRARY name
+define _OPEN62541_ADD_SDKLIBS
+ifeq ($(OPEN62541_DEPLOY_MODE),PROVIDED)
+$(1)_LIBS := $$($(1)_LIBS) $$(if $$(filter opcua,$$($(1)_LIBS)),$$(OPEN62541_LIBS))
+endif
+ifeq ($(OPEN62541_DEPLOY_MODE),SYSTEM)
+$(1)_SYS_LIBS := $$($(1)_SYS_LIBS) $$(if $$(filter opcua,$$($(1)_LIBS)),$$(OPEN62541_LIBS))
+endif
+endef
+
+$(foreach loc,$(_OPCUA_CHECK_VARS),$(eval $(call _OPEN62541_ADD_SDKLIBS,$(loc))))
+
+endif # _RULES_OPCUA_INCLUDED
