@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+     'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+
+<html>
+<head>
+<title>menuYesNo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel='stylesheet' href='style.css' type='text/css'>
+</head>
+<body>
+
+
+<div class="pod">
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+<hr>
+
+<h1 id="Menu-menuYesNo">Menu menuYesNo  <a class='sect' href="#Menu-menuYesNo">&sect;</a></h1>
+
+<p>This menu is used by many record types to specify simple <code>NO</code> or <code>YES</code> options for record-specific purposes.</p>
+
+<p>Note that no other values for a field that uses menuYesNo are possible, e.g. <code>MAYBE</code> or <code>NO WAY</code> would not be accepted as choices for the field. Also, the choices <code>yes</code>, <code>No</code>, and <code>Yes</code> are not valid choices since they don&#39;t match the case of <code>NO</code> or <code>YES</code>. The integer values <code>0</code> and <code>1</code> may often be used instead however, they are used as an index into the choices so <code>0</code> becomes <code>NO</code> and <code>1</code> becomes <code>YES</code>.</p>
+
+<blockquote><table border="1"><tr>
+<th>Index</th><th>Identifier</th><th>Choice String</th></tr>
+<tr>
+<td class='cell DBD_Menu index'>0</td>
+<td class='cell DBD_Menu identifier'>menuYesNoNO</td>
+<td class='cell DBD_Menu choice'>NO</td>
+</tr>
+<tr>
+<td class='cell DBD_Menu index'>1</td>
+<td class='cell DBD_Menu identifier'>menuYesNoYES</td>
+<td class='cell DBD_Menu choice'>YES</td>
+</tr>
+</table></blockquote>
+
+</div><hr>
+
+<p><a href="ComponentReference.html">EPICS Component Reference Manual</a></p>
+
+</body>
+</html>
+

@@ -1,0 +1,163 @@
+# feed_logic_trigger.template
+# BASE="$(BASE)", NAME="$(NAME)", ARM_REG="$(ARM_REG)", ARM_MASK="$(ARM_MASK)", RDY_REG="$(RDY_REG)"
+# NEXT="$(NEXT=default)"
+
+# acquisition trigger logic
+#
+# Follow protocol of write 1 to arm, then wait for ready by polling for bit set.
+#
+# Required Macros:
+#   BASE - common record prefix
+#   NAME - FEED device instance name
+#   ARM_REG - Register name to use for arming
+#   ARM_MASK - Write this value to arm
+#   RDY_REG - Register name to poll
+#   RDY_MASK - Continue when this bit mask is set (all bits if more than one)
+#
+# Optional Macros:
+#   NEXT - Next record to scan (by FLNK) after ready.
+#          Default "$(BASE)DLY_", which must eventually be processed to re-arm.
+
+# Select single/one-short or Normal/auto re-arm of trigger.
+record(bo, "$(BASE)MODE") {
+    field(DESC, "Trigger mode")
+    field(ZNAM, "Single")
+    field(ONAM, "Normal")
+    field(VAL , "0")
+    field(FLNK, "$(BASE)CMD")
+    # No PINI
+    info(autosaveFields_pass0, "VAL")
+}
+
+# after trigger.  Time to wait before re-arming (throttles acquisition rate)
+record(ao, "$(BASE)HLDOFF") {
+    field(DESC, "re-arm holdoff time")
+    field(OUT , "$(BASE)DLY_.ODLY NPP")
+    field(PINI, "YES")
+    field(DRVH, "5.0")
+    field(DRVL, "0.00001")
+    field(VAL , "1.0")
+    field(EGU , "s")
+    field(PREC, "2")
+    info(autosaveFields_pass0, "VAL DRVH DRVL")
+}
+
+record(bo, "$(BASE)CMD") {
+    field(DESC, "Start aquisition")
+    field(ZNAM, "Acquire")
+    field(ONAM, "Acquire")
+    field(FLNK, "$(BASE)CMDY_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)CMDY_") {
+    field(VAL , "1")
+    field(OUT , "$(BASE)BUSY PP")
+    field(FLNK, "$(BASE)CMDX_")
+}
+
+record(longout, "$(BASE)CMDX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK, "$(BASE)CMD_ PP")
+}
+
+# Write $(ARM_MASK) to $(ARM_REG)
+record(longout, "$(BASE)CMD_") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=$(ARM_REG)")
+    field(VAL , "$(ARM_MASK)")
+    field(FLNK, "$(BASE)RDY_RBVX_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)RDY_RBVX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK , "$(BASE)RDY_RBV_")
+}
+
+# wait for value & $(RDY_MASK) == $(RDY_MASK) for reg $(RDY_REG)
+record(bo, "$(BASE)RDY_RBV_") {
+    field(DTYP, "FEED Register Watch")
+    field(OUT , "@name=$(NAME) retry=$(RETRY=0.1) reg=$(RDY_REG) mask=$(RDY_MASK) value=$(RDY_MASK)")
+    # jump out to readout
+    field(FLNK, "$(NEXT=$(BASE)FINISH)")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(calc, "$(BASE)CNT") {
+    field(SDIS, "$(BASE)RDY_RBV_ MSI")
+    field(DISV, "-42")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "A+1")
+    field(FLNK, "$(BASE)DLYX_")
+    field(TPRO, "$(TPRO=0)")
+
+    # jump back from readout
+    alias("$(BASE)REARM")
+}
+
+record(longout, "$(BASE)DLYX_") {
+    field(VAL , "0")
+    field(OUT , "$(BASE)BUSY PP")
+    field(FLNK, "$(BASE)DLY_")
+}
+
+record(calcout, "$(BASE)DLY_") {
+    field(SDIS, "$(BASE)MODE")
+    field(DISV, "0") # disable when Single
+    field(CALC, "0")
+    field(ODLY, "1.0") # overwritten by $(BASE)HLDOFF
+    field(OUT , "$(BASE)CMD PP")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(calc, "$(BASE)RATE") {
+    field(SCAN, "10 second")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "C:=A-B;B:=A;C/10")
+    field(EGU , "Hz")
+    field(PREC, "2")
+}
+
+record(bi, "$(BASE)BUSY") {
+    field(DESC, "In progress")
+    field(ZNAM, "Idle")
+    field(ONAM, "Armed")
+}
+
+# time base reference period
+
+record(ao, "$(BASE)PERIOD") {
+    field(VAL , "$(PERIOD=1.0)")
+    field(PREC, "9")
+    field(EGU , "s")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# common window for all waveform stats
+
+record(ao, "$(BASE)STAT_START") {
+    field(PREC, "6")
+    field(EGU , "s")
+    field(PINI, "YES")
+    field(FLNK, "$(BASE)STAT_STOP")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(BASE)STAT_WIDTH") {
+    field(PREC, "6")
+    field(EGU , "s")
+    field(VAL , "1")
+    field(PINI, "YES")
+    field(FLNK, "$(BASE)STAT_STOP")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(calcout, "$(BASE)STAT_STOP") {
+    field(INPA, "$(BASE)STAT_START")
+    field(INPB, "$(BASE)STAT_WIDTH")
+    field(CALC, "A+B")
+    field(PREC, "6")
+    field(EGU , "s")
+}

@@ -1,0 +1,41 @@
+record(bo, "$(P)Acquire") {
+   field(ZNAM, "Done")
+   field(ONAM, "Acquire")
+   field(OUT,  "$(P)Acquire_RBV PP")
+   field(FLNK, "$(P)SetBusy")
+}
+
+record(bi, "$(P)Acquire_RBV") {
+   field(ZNAM, "Done")
+   field(ONAM, "Acquire")
+}
+
+record(calcout, "$(P)SetBusy")
+{
+   field(INPA, "$(P)Acquire NPP")
+   field(CALC, "A")
+   field(OOPT, "Transition To Non-zero")
+   field(OUT,  "$(P)Busy PP")
+   field(FLNK, "$(P)Reset")
+}
+
+record(busy, "$(P)Busy") {
+   field(ZNAM, "Done")
+   field(ONAM, "Busy")
+}
+
+record(seq, "$(P)Reset") {
+   field(SDIS, "$(P)Busy")
+   field(DISV, "0")
+   field(DLY0, "1")
+   field(LNK0, "$(P)Acquire_RBV PP")
+   field(DOL0, "0")
+}
+
+record(calcout, "$(P)ClearBusy")
+{
+   field(INPA, "$(P)Acquire_RBV CP")
+   field(CALC, "A")
+   field(OOPT, "Transition To Zero")
+   field(OUT,  "$(P)Busy PP")
+}

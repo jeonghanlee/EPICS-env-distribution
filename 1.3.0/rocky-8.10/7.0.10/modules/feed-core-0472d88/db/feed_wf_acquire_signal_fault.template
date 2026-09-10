@@ -1,0 +1,115 @@
+# fault waveform buffers
+#
+# Macros
+#  PREF - Record name prefix, should be distinct from PREF in feed_wf_acquire_signal.template
+#         to avoid collision. Recommend indicating 'fault' in name
+#  NAME - FEED Device name
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  SIZE - Max signal length (eg. 16384)
+#  SRC  - Prefix of source waveform records
+
+# fault waveform update logic
+
+# FLNK'd from external database, eg. _signal.template
+
+record(fanout, "$(PREF)WF_FO_") {
+# only process 'normal' wf
+    field(LNK1, "$(SRC)WF_LAST PP")
+# only process 'fault' wf
+    field(LNK2, "$(PREF)WF_CALC_")
+    field(FLNK, "$(FLNK=)") # connect to external (eg. _pair.template)
+}
+
+record(aai, "$(SRC)WF_LAST") {
+    field(SDIS, "$(BASE)STATUS.BF")
+    field(DISV, "0")
+    field(INP,  "$(SRC)WF NPP")
+    field(DESC, "Last Amplitude")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSEL, "$(SRC)WF.TIME")
+}
+
+record(aSub, "$(PREF)WF_CALC_") {
+    field(SDIS, "$(BASE)STATUS.BF")
+    field(DISV, "1")
+    field(SNAM, "Fault Unwrap")
+    field(FTA , "DOUBLE")
+    field(FTB , "USHORT")
+    field(FTC , "USHORT")
+    field(FTD , "DOUBLE")
+    field(NOA , "$(SIZE)")
+    field(NOD , "$(SIZE)")
+    field(NOVA, "$(SIZE)")
+    field(INPA, "$(SRC)WF MS NPP")
+    field(INPB, "$(BASE)CIRC_START")
+    field(INPC, "$(BASE)STATUS.BE")
+    field(INPD, "$(SRC)WF_LAST MS NPP")
+    field(OUTA, "$(PREF)WF PP")
+}
+
+record(aai, "$(PREF)WF") {
+    field(NELM, "$(SIZE)")
+    field(FTVL, "DOUBLE")
+    field(TSEL, "$(SRC)WF.TIME")
+    field(FLNK, "$(PREF)NORD")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)NORD") {
+    field(INP , "$(PREF)WF.NORD")
+    field(TPRO, "$(TPRO=0)")
+    field(FLNK, "$(PREF)TWF_CALC_")
+}
+
+# re-create time waveform if time base has changed 
+record(calcout, "$(PREF)TWF_CALC_") {
+    field(CALC, "(A#B)|(C#D)|(E#F)?1:0")
+    field(INPA, "$(BASE)SAMP_PERIOD MSI")
+    field(INPB, "$(PREF)TWF_.B")
+    field(INPC, "$(PREF)NORD")
+    field(INPD, "$(PREF)TWF_.C")
+    field(INPE, "$(TSHFT=0.0)")
+    field(INPF, "$(PREF)TWF_.A")
+    field(OOPT, "When Non-zero") 
+    field(OUT, "$(PREF)TWF_.PROC")
+# store current scale factor
+    field(FLNK, "$(PREF)SCALE")
+}
+
+record(aSub, "$(PREF)TWF_") {
+    field(SNAM, "asub_feed_timebase")
+    # first value
+    field(FTA , "DOUBLE")
+    field(INPA, "$(TSHFT=0.0)")
+    # step size
+    field(FTB , "DOUBLE")
+    field(INPB, "$(BASE)SAMP_PERIOD MSI")
+    # max element count limit
+    # TODO: calulate real step size
+    field(FTC , "ULONG")
+    field(INPC, "$(PREF)NORD MSI")
+    # output array
+    field(FTVA, "DOUBLE")
+    field(NOVA, "$(SIZE)")
+    field(OUTA, "$(PREF)TWF PP MSI")
+    field(TPRO, "$(TPRO=0)")
+    field(TSEL, "$(PREF)WF.TIME")
+}
+
+record(aai, "$(PREF)TWF") {
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSEL, "$(PREF)WF.TIME")
+}
+
+# Scale setting when fault waveform populated
+# For user's information--not actively used in scaling
+record(ao, "$(PREF)SCALE") {
+    field(VAL , "1.0")
+    field(PREC, "9")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(SRC)SCALE")
+    field(FLNK, "$(FLTFLNK=)")
+    info(autosaveFields_pass0, "VAL")
+}

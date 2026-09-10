@@ -1,0 +1,60 @@
+record(bo, "$(P)Busy") {
+   field(DTYP, "asynInt32")
+   field(OUT, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))BUSY_VALUE")
+   field(ZNAM, "Zero")
+   field(ONAM, "One")
+   field(FLNK, "$(P)SetBusy")
+   info(asyn:READBACK, "1")
+}
+
+record(bi, "$(P)Bi") {
+   field(DTYP, "asynInt32")
+   field(INP, "@asyn($(PORT),$(ADDR=0),$(TIMEOUT=1))BUSY_VALUE")
+   field(ZNAM, "Zero")
+   field(ONAM, "One")
+   field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(P)SetBusy")
+{
+    field(INPA, "$(P)Busy NPP")
+    field(CALC, "A")
+    field(OOPT, "Transition To Non-zero")
+    field(OUT,  "$(P)ActualBusy PP")
+}
+
+record(busy, "$(P)ActualBusy") {
+   field(ZNAM, "Zero")
+   field(ONAM, "One")
+}
+
+record(calcout, "$(P)ClearBusy")
+{
+    field(INPA, "$(P)Bi CP")
+    field(CALC, "A")
+    field(OOPT, "Transition To Zero")
+    field(OUT,  "$(P)ActualBusy PP")
+}
+
+record(longout, "$(P)NumCallbacks")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))NUM_CALLBACKS")
+   field(VAL,  "1")
+}
+
+record(ao, "$(P)SleepTime")
+{
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SLEEP_TIME")
+   field(PREC, "3")
+   field(VAL,  "0.")
+   field(PINI, "YES")
+}
+
+record(bo, "$(P)TriggerCallbacks")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))TRIGGER_CALLBACKS")
+   field(VAL,  "1")
+}
