@@ -1,0 +1,20 @@
+# IOC startup script snippet for Gamma ion pump controllers (MPCq, QPCe)
+#
+# Macros:
+# PORT: asyn port name for pump controller
+# IP_ADDR: IP address for pump controller
+# PREFIX: PV name prefix
+
+drvAsynIPPortConfigure("$(PORT)", "$(IP_ADDR):$(TCP_PORT)", 0, 0, 0)
+
+# Main controller records
+dbLoadRecords("$(PCTRL)/db/digitelQPCController.template","QPCBUS=Ethernet,QPC=$(PREFIX),port=$(PORT)")
+
+# 4x channels of this controller
+dbLoadRecords("$(PCTRL)/db/digitelQpcIonp.template", "QPCBUS=Ethernet,device=$(PREFIX):IP1,port=$(PORT),unit=01,SPLY=1,SIZE=500,HV=3000,spon=1.0E-8,spoff=2.0E-8")
+dbLoadRecords("$(PCTRL)/db/digitelQpcIonp.template", "QPCBUS=Ethernet,device=$(PREFIX):IP2,port=$(PORT),unit=02,SPLY=2,SIZE=500,HV=3000,spon=1.0E-8,spoff=2.0E-8")
+dbLoadRecords("$(PCTRL)/db/digitelQpcIonp.template", "QPCBUS=Ethernet,device=$(PREFIX):IP3,port=$(PORT),unit=03,SPLY=3,SIZE=500,HV=3000,spon=1.0E-8,spoff=2.0E-8")
+dbLoadRecords("$(PCTRL)/db/digitelQpcIonp.template", "QPCBUS=Ethernet,device=$(PREFIX):IP4,port=$(PORT),unit=04,SPLY=4,SIZE=500,HV=3000,spon=1.0E-8,spoff=2.0E-8")
+
+# Asyn record for low-level access to pump controller communications
+dbLoadRecords("$(ASYN)/db/asynRecord.db","P=$(PREFIX):,R=asyn,PORT=$(PORT),ADDR=0,OMAX=80,IMAX=80")

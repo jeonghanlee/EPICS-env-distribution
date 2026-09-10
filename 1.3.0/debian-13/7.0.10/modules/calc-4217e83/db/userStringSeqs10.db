@@ -1,0 +1,240 @@
+record(bo, "$(P)userStringSeqEnable") {
+  field(DESC, "userSSeq enable")
+  field(ZNAM, "Disable")
+  field(ONAM, "Enable")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+}
+record(bo, "$(P)EnableStringSeqs") {
+  field(OMSL, "closed_loop")
+  field(DOL, "1")
+  field(OUT, "$(P)userStringSeqEnable.VAL  PP MS")
+}
+
+record(bo, "$(P)DisableStringSeqs") {
+  field(OMSL, "closed_loop")
+  field(OUT, "$(P)userStringSeqEnable.VAL  PP MS")
+  field(DOL, "0")
+}
+
+record(bo, "$(P)userStringSeq1Enable") {
+  field(DESC, "userStringSeq 1 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq1EnableCalc") {
+	field(INPA, "$(P)userStringSeq1Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq1") {
+  field(DESC, "userStringSeq 1")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq1EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq2Enable") {
+  field(DESC, "userStringSeq 2 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq2EnableCalc") {
+	field(INPA, "$(P)userStringSeq2Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq2") {
+  field(DESC, "userStringSeq2")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq2EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq3Enable") {
+  field(DESC, "userStringSeq 3 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq3EnableCalc") {
+	field(INPA, "$(P)userStringSeq3Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq3") {
+  field(DESC, "userStringSeq3")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq3EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq4Enable") {
+  field(DESC, "userStringSeq 4 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq4EnableCalc") {
+	field(INPA, "$(P)userStringSeq4Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq4") {
+  field(DESC, "userStringSeq4")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq4EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq5Enable") {
+  field(DESC, "userStringSeq 5 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq5EnableCalc") {
+	field(INPA, "$(P)userStringSeq5Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq5") {
+  field(DESC, "userStringSeq5")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq5EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq6Enable") {
+  field(DESC, "userStringSeq 6 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq6EnableCalc") {
+	field(INPA, "$(P)userStringSeq6Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq6") {
+  field(DESC, "userStringSeq6")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq6EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq7Enable") {
+  field(DESC, "userStringSeq 7 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq7EnableCalc") {
+	field(INPA, "$(P)userStringSeq7Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq7") {
+  field(DESC, "userStringSeq7")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq7EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq8Enable") {
+  field(DESC, "userStringSeq 8 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq8EnableCalc") {
+	field(INPA, "$(P)userStringSeq8Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq8") {
+  field(DESC, "userStringSeq8")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq8EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq9Enable") {
+  field(DESC, "userStringSeq 9 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq9EnableCalc") {
+	field(INPA, "$(P)userStringSeq9Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq9") {
+  field(DESC, "userStringSeq9")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq9EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+
+record(bo, "$(P)userStringSeq10Enable") {
+  field(DESC, "userStringSeq 10 Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userStringSeq10EnableCalc") {
+	field(INPA, "$(P)userStringSeq10Enable CP")
+	field(INPB, "$(P)userStringSeqEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(sseq, "$(P)userStringSeq10") {
+  field(DESC, "userStringSeq10")
+  field(DISV, "0")
+  field(SDIS, "$(P)userStringSeq10EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+}
+

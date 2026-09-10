@@ -1,0 +1,129 @@
+# waveform buffer signal handling
+#
+# Write channel select mask to shell_#_dsp_chan_keep
+#
+# Write one to bit N in circle_buf_flip to enable acquisition of channel N
+#
+# Wait for bit N in llrf_circle_ready to be set
+#
+# Macros
+#  PREF - Record name prefix
+#  NAME - FEED Device name
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  REG  - array register name
+#  LETTER - letter of mask field (B -> M)
+#  SIZE - Max signal length (eg. 16384)
+
+# configuration logic
+
+record(longin, "$(PREF)CONFIG_") {
+    # monitor offset computed in feed_wf_acquire_base.template
+    field(INP , "$(BASE)MASK3_.VAL$(LETTER) CP")
+    field(TPRO, "$(TPRO=0)")
+    field(FLNK, "$(PREF)OFFSET")
+}
+
+record(longout, "$(PREF)OFFSET") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(PREF)CONFIG_")
+    field(DISV, "-1")
+
+    field(DTYP, "FEED Signal Offset")
+    field(OUT , "@signal=$(PREF)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)MASK3_.VAL$(LETTER)")
+    field(FLNK, "$(PREF)STEP")
+}
+
+record(longout, "$(PREF)STEP") {
+    field(DTYP, "FEED Signal Step")
+    field(OUT , "@signal=$(PREF)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)MASK3_.VALA MSI")
+    field(FLNK, "")
+}
+
+# User scaling factor, applied along with full scale
+# computed for decimation (wave_samp_per)
+# Scale from ARB [0, 1) -> EGU
+record(ao, "$(PREF)SCALE") {
+    field(VAL , "1.0")
+    field(PREC, "9")
+    field(FLNK, "$(PREF)SCALE_CALC_")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(calcout, "$(PREF)SCALE_CALC_") {
+    field(INPA, "$(PREF)SCALE NPP MSI")
+    field(INPB, "$(BASE)AMPCALC.VALB CP MSI")
+    # take the full scale value and compute our scaling factor
+    field(CALC, "A/B")
+    # if for some reason we get a junk (INVALID) scaling factor, default to 1.0
+    field(IVOA, "Set output to IVOV")
+    field(IVOV, "1.0")
+    field(OUT , "$(PREF)SCALE_RBV PP")
+}
+
+# readback of actual scaling factor used
+# from ADC -> EGU
+record(ao, "$(PREF)SCALE_RBV") {
+    field(DTYP, "FEED Signal Scale")
+    field(OUT , "@signal=$(PREF)")
+    field(VAL , "1.0")
+    field(PREC, "9")
+}
+
+# waveform update logic
+
+# FLNK'd from feed_wf_acquire_base.template
+record(aai, "$(PREF)WF") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(PREF)CONFIG_")
+    field(DISV, "-1")
+
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    # wait=false uses values previously readback in feed_wf_acquire_base.template
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data signal=$(PREF) wait=false")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSE , "-2")
+    field(FLNK, "$(PREF)NORD")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:input$(CHAN), "$(PREF)WF")
+    info(feed:info:time$(CHAN), "$(PREF)TWF")
+    info(feed:info:scale$(CHAN), "$(PREF)SCALE")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)NORD") {
+    field(INP , "$(PREF)WF.NORD")
+    field(FLNK, "$(FLNK=)") # connect to external (eg. _pair.template)
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aSub, "$(PREF)TWF_") {
+    field(SNAM, "asub_feed_timebase")
+    # first value
+    field(FTA , "DOUBLE")
+    field(INPA, "0.0")
+    # step size
+    field(FTB , "DOUBLE")
+    field(INPB, "$(BASE)SAMP_PERIOD CP MSI")
+    # max element count limit
+    # TODO: calulate real step size
+    field(FTC , "ULONG")
+    field(INPC, "$(PREF)NORD CP MSI")
+    # output array
+    field(FTVA, "DOUBLE")
+    field(NOVA, "$(SIZE)")
+    field(OUTA, "$(PREF)TWF PP MSI")
+    field(TPRO, "$(TPRO=0)")
+    field(TSEL, "$(BASE)SAMP_PERIOD.TIME CA")
+}
+
+record(aai, "$(PREF)TWF") {
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+    field(TSEL, "$(PREF)TWF_.TIME")
+}

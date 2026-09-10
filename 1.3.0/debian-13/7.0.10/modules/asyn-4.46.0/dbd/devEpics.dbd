@@ -1,0 +1,15 @@
+# Generated file devEpics.dbd
+
+include "devAsynOctet.dbd"
+include "devAsynInt32.dbd"
+include "devAsynXXXArray.dbd"
+include "devAsynInt32TimeSeries.dbd"
+include "devAsynUInt32Digital.dbd"
+include "devAsynFloat64.dbd"
+include "devAsynFloat64TimeSeries.dbd"
+include "devAsynRecord.dbd"
+include "devAsynOctetLs.dbd"
+include "devAsynInt64.dbd"
+include "devAsynInt64Array.dbd"
+include "devAsynInt64TimeSeries.dbd"
+include "devAsynInt64Misc.dbd"

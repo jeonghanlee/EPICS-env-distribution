@@ -1,0 +1,2 @@
+$(P)$(R)ColorModeOut
+file "NDPluginBase_settings.req", P=$(P), R=$(R)

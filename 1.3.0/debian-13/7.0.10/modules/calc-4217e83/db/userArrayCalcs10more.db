@@ -1,0 +1,239 @@
+record(bo, "$(P)userArrayCalc$(N1)Enable") {
+  field(DESC, "userArrayCalc $(N1) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N1)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N1)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N1)") {
+  field(DESC, "userArrayCalc$(N1)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N1)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N2)Enable") {
+  field(DESC, "userArrayCalc $(N2) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N2)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N2)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N2)") {
+  field(DESC, "userArrayCalc$(N2)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N2)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N3)Enable") {
+  field(DESC, "userArrayCalc $(N3) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N3)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N3)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N3)") {
+  field(DESC, "userArrayCalc$(N3)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N3)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N4)Enable") {
+  field(DESC, "userArrayCalc $(N4) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N4)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N4)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N4)") {
+  field(DESC, "userArrayCalc$(N4)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N4)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N5)Enable") {
+  field(DESC, "userArrayCalc $(N5) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N5)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N5)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N5)") {
+  field(DESC, "userArrayCalc$(N5)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N5)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N6)Enable") {
+  field(DESC, "userArrayCalc $(N6) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N6)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N6)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N6)") {
+  field(DESC, "userArrayCalc$(N6)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N6)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N7)Enable") {
+  field(DESC, "userArrayCalc $(N7) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N7)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N7)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N7)") {
+  field(DESC, "userArrayCalc$(N7)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N7)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N8)Enable") {
+  field(DESC, "userArrayCalc $(N8) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N8)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N8)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N8)") {
+  field(DESC, "userArrayCalc$(N8)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N8)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N9)Enable") {
+  field(DESC, "userArrayCalc $(N9) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N9)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N9)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N9)") {
+  field(DESC, "userArrayCalc$(N9)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N9)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
+
+record(bo, "$(P)userArrayCalc$(N10)Enable") {
+  field(DESC, "userArrayCalc $(N10) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userArrayCalc$(N10)EnableCalc") {
+	field(INPA, "$(P)userArrayCalc$(N10)Enable CP")
+	field(INPB, "$(P)userArrayCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(acalcout, "$(P)userArrayCalc$(N10)") {
+  field(DESC, "userArrayCalc 10")
+  field(DISV, "0")
+  field(SDIS, "$(P)userArrayCalc$(N10)EnableCalc.VAL  CA MS")
+  field(PREC, "5")
+  field(NELM, "$(N)")
+  field(NUSE, "$(N)")
+}
