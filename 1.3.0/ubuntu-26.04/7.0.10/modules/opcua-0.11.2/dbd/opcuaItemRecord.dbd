@@ -1,0 +1,87 @@
+#*************************************************************************
+# Copyright (c) 2018-2021 ITER Organization.
+# This module is distributed subject to a Software License Agreement found
+# in file LICENSE that is included with this distribution.
+#*************************************************************************
+
+# Menu for 'bini' parameter/field
+menu(menuBini) {
+        choice(menuBiniREAD, "read")
+        choice(menuBiniIGNORE, "ignore")
+        choice(menuBiniWRITE, "write")
+}
+
+# Menu for 'woc' parameter/field
+menu(menuWoc) {
+        choice(menuWocMANUAL, "manual")
+        choice(menuWocIMMEDIATE, "immediate")
+}
+
+recordtype(opcuaItem) {
+    include "dbCommon.dbd"
+    field(VAL,DBF_ULONG) {
+        prompt("Dummy Value")
+        asl(ASL0)
+        pp(TRUE)
+    }
+    field(INP,DBF_INLINK) {
+        prompt("NodeId Specification")
+        promptgroup("40 - I/O Address")
+        interest(1)
+    }
+    field(SESS,DBF_STRING) {
+        prompt("Session Specification")
+        promptgroup("40 - I/O Address")
+        interest(1)
+        size(41)
+    }
+    field(SUBS,DBF_STRING) {
+        prompt("Subscription Specification")
+        promptgroup("40 - I/O Address")
+        interest(1)
+        size(41)
+    }
+    field(DEFACTN,DBF_MENU) {
+        prompt("Default Action")
+        promptgroup("30 - Action")
+        interest(1)
+        menu(menuDefAction)
+    }
+    field(BINI,DBF_MENU) {
+        prompt("Behavior at Initialization")
+        promptgroup("20 - Scan")
+        interest(1)
+        menu(menuBini)
+    }
+    field(READ,DBF_UCHAR) {
+        prompt("Force Read Processing")
+        pp(TRUE)
+        special(SPC_MOD)
+        interest(3)
+    }
+    field(WRITE,DBF_UCHAR) {
+        prompt("Force Write Processing")
+        pp(TRUE)
+        special(SPC_MOD)
+        interest(3)
+    }
+    field(STATCODE,DBF_ULONG) {
+        prompt("OPC UA status code")
+        base(HEX)
+    }
+    field(OSTATCODE,DBF_ULONG) {
+        prompt("Old status code")
+        base(HEX)
+    }
+    field(STATTEXT,DBF_STRING) {
+        prompt("OPC UA status string")
+        size(41)
+    }
+    field(WOC,DBF_MENU) {
+        prompt("Write-on-change mode")
+        promptgroup("30 - Action")
+        interest(1)
+        menu(menuWoc)
+        special(SPC_MOD)
+    }
+}
