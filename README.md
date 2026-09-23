@@ -27,34 +27,46 @@ Clone the EPICS environment repository using Git.
 
 ### Clone the EPICS environment by using `git clone`
 
-Please use **`--depth 1`**, which you only need for this distribution.
+Please use **`--depth 1`**. Using the environment needs only the latest snapshot, not the history.
 
 ```shell
-$ git clone --depth 1 https://github.com/jeonghanlee/EPICS-env-distribution.git 
+git clone --depth 1 https://github.com/jeonghanlee/EPICS-env-distribution.git ~/epics
 ```
 
-By cloning the repository, you have the environment at the `${HOME}/epics` folder. In most cases, you are ready to use it.
+The command places the environment in the `${HOME}/epics` folder. In most cases, you are ready to use it.
 
 
-## Configure the EPICS enviornment
-The EPICS environment supports multiple operating system versions and EPICS versions. **Please note that the pre-built binaries included in this environment currently target the Linux x86_64 architecture exclusively.**
+## Configure the EPICS environment
+The EPICS environment supports multiple operating system versions. **Please note that the pre-built binaries included in this environment currently target the Linux x86_64 architecture exclusively.**
 
-To select and activate a specific environment version in your current terminal session, you need to source the appropriate `setEpicsEnv.bash` script corresponding to your operating system and desired EPICS version:
+The `setEpicsEnv.bash` script requires `bash` and `perl`.
+
+The distribution provides one tree per operating system, named `<os>-<version>`: `debian-12`, `debian-13`, `rocky-8.10`, `rocky-10.2`, `ubuntu-24.04`, and `ubuntu-26.04`. Print the name for your system and list the trees in the clone:
+
+```shell
+(. /etc/os-release && echo "${ID}-${VERSION_ID}")
+ls ~/epics/1.3.0/
+```
+
+To activate the environment in your current terminal session, source the `setEpicsEnv.bash` script for your operating system:
 
 ```shell
 # Example for EPICS 7.0.10 on Debian 13 (x86_64)
-source ~/EPICS-env-distribution/1.3.0/debian-13/7.0.10/setEpicsEnv.bash
+source ~/epics/1.3.0/debian-13/7.0.10/setEpicsEnv.bash
 ```
-Sourcing the script sets up necessary environment variables like `EPICS_BASE`, `PATH`, and `LD_LIBRARY_PATH`. The output should resemble this (user and specific paths will vary):
+
+On another system, replace `debian-13` with the name printed above. The directory below it is the EPICS base version; list it with `ls ~/epics/1.3.0/<name>/`, for example `ls ~/epics/1.3.0/rocky-8.10/`.
+
+Sourcing the script sets up necessary environment variables like `EPICS_BASE`, `PATH`, and `LD_LIBRARY_PATH`. The output should resemble this, with your home directory in place of `/home/user`. `PATH` and `LD_LIBRARY_PATH` show only the part the script adds; `...` stands for the values your shell already had, and does not appear when the variable was empty:
 ```shell
 Set the EPICS Environment as follows:
 THIS Source NAME    : setEpicsEnv.bash
-THIS Source PATH    : /home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10
-EPICS_BASE          : /home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/base
+THIS Source PATH    : /home/user/epics/1.3.0/debian-13/7.0.10
+EPICS_BASE          : /home/user/epics/1.3.0/debian-13/7.0.10/base
 EPICS_HOST_ARCH     : linux-x86_64
-EPICS_MODULES       : /home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/modules
-PATH                : /home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/modules/pmac/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/modules/pvxs/bin/linux-x86_64:/home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/base/bin/linux-x86_64:/home/jeonglee/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-LD_LIBRARY_PATH     : /home/jeonglee/EPICS-env-distribution/1.3.0/debian-13/7.0.10/base/lib/linux-x86_64
+EPICS_MODULES       : /home/user/epics/1.3.0/debian-13/7.0.10/modules
+PATH                : /home/user/epics/1.3.0/debian-13/7.0.10/modules/pmac/bin/linux-x86_64:/home/user/epics/1.3.0/debian-13/7.0.10/modules/pvxs/bin/linux-x86_64:/home/user/epics/1.3.0/debian-13/7.0.10/base/bin/linux-x86_64:...
+LD_LIBRARY_PATH     : /home/user/epics/1.3.0/debian-13/7.0.10/base/lib/linux-x86_64:...
 
 Enjoy Everlasting EPICS!
 
@@ -68,11 +80,15 @@ Once the environment is sourced, verify that the EPICS command-line tools are ac
 
 ```shell
 # Check help output for an EPICS command-line tool (e.g., caput)
-$ caput -h
+caput -h
 
 # Verify the location of an EPICS command-line tool (e.g., caget)
-$ which caget
+which caget
 ```
 
 If these commands run successfully and show help/path information, you have successfully configured the ALS-U EPICS environment in your current terminal session.
+
+## Using a Coding Agent
+
+`epics-env-usage/SKILL.md` is a self-contained instruction file for coding agents. Start your agent in `~/epics` and ask it to read this repository, or to read that file; it selects the tree for your system, activates it, verifies it, and answers questions about the environment.
 
