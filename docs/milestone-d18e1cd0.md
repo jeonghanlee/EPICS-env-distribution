@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: none
 
-Next session entry point: `docs/milestone-d18e1cd0.md` M2 - continue the Implementation Plan from the first step without a Verification Results entry.
+Next session entry point: `docs/milestone-d18e1cd0.md` M4 - run T1: with `HOME` set to an empty directory, run each README command verbatim against the published repository.
 
 ## Milestone
 
@@ -18,7 +18,7 @@ Next session entry point: `docs/milestone-d18e1cd0.md` M2 - continue the Impleme
 | Agent skill | M1 | Confirm agent skill discovery paths | Milestone | Complete | No | D1, D2, D5 | Discovery paths and an isolated test method confirmed for each installed agent CLI, and the file layout recorded as a decision; [detail](#m1---confirm-agent-skill-discovery-paths) |
 | Agent skill | M2 | Environment usage skill | Milestone | In progress | No | D6 | An agent told only to read this repository finds `epics-env-usage/SKILL.md`, activates the tree matching the host, and answers environment questions from it; [detail](#m2---environment-usage-skill) |
 | Repository | M4 | Human-followable README | Milestone | In progress | No | D3 | README commands run verbatim in an empty `$HOME` match the README under the M4 matching rule; [detail](#m4---human-followable-readme) |
-| Repository | M5 | Remove install.bash | Milestone | In progress | No | D4 | `install.bash` absent from the tree with no remaining reference; [detail](#m5---remove-installbash) |
+| Repository | M5 | Remove install.bash | Milestone | Complete | No | D4 | `install.bash` absent from the tree with no remaining reference; [detail](#m5---remove-installbash) |
 
 ### Decisions
 
@@ -152,6 +152,14 @@ trees; `AGENTS.md`, `CLAUDE.md`, or any agent-specific discovery file.
 ##### Dependencies And Decisions
 
 - D6
+- The skill is commit `b04f3ea5`, observed on `origin/master` at 2026-09-23 by
+  `git fetch origin` followed by
+  `git merge-base --is-ancestor b04f3ea5 origin/master` exiting 0.
+- Remaining: a second-person review of the change that guards every `REPO`
+  use, and a fresh sub-agent run of T5 on that change.
+- T2 through T4 are not run: on 2026-09-23 the owner declined running the
+  agent CLIs with copied authentication files. They stay Pending until a
+  method without copied credentials is chosen or the owner waives them.
 
 ##### Implementation Plan
 
@@ -220,6 +228,11 @@ Out of scope: training material in the separate training repository.
 ##### Dependencies And Decisions
 
 - D3
+- Steps 2 and 3 are done: the README change is commit `f94cc998`, observed on
+  `origin/master` at 2026-09-23 by `git fetch origin` followed by
+  `git merge-base --is-ancestor f94cc998 origin/master` exiting 0. The push
+  landed before the step 3 gate row existed, so no gate row is open. T1 is
+  next.
 
 ##### Implementation Plan
 
@@ -260,7 +273,7 @@ Superseded Plan Artifacts: none
 Origin: d18e1cd0 / M5
 Identity History: none
 GitHub Issue: none
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -308,7 +321,8 @@ Superseded Plan Artifacts: none
 
 ##### Closure Evidence
 
-- none
+- Commit `7bcc1803` observed on `origin/master` at 2026-09-23 by `git fetch origin`
+  followed by `git merge-base --is-ancestor 7bcc1803 origin/master` exiting 0.
 
 ## Backlog
 
