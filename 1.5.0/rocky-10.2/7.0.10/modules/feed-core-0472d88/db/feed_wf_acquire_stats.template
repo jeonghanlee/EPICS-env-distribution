@@ -1,0 +1,80 @@
+# Waveform statistics
+#
+# Macros:
+#  PREF - Prefix of our records
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  TIME - Record name of timebase
+#  SIG  - Record name of signal
+#  SIZE - Max signal length (eg. 16384)
+#
+
+# external db FLNK's here
+record(aSub, "$(PREF)STAT_CALC_") {
+  field(SNAM, "Wf Stats")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTE , "LONG")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(INPA, "$(SIG) NPP MSI")
+  field(INPB, "$(TIME) NPP MSI")
+  field(INPC, "$(BASE)STAT_START") # window start
+  field(INPD, "$(BASE)STAT_WIDTH") # window width
+  field(INPE, "$(WRAP=0)")  #TODO: really should be doing circular mean of I/Q, then angle.  instead we unwrap and average
+  field(OUTA, "$(PREF)MEAN PP MSI")
+  field(OUTB, "$(PREF)STD PP MSI")
+  field(OUTC, "$(PREF)MIN PP MSI")
+  field(OUTD, "$(PREF)MAX PP MSI")
+  field(OUTE, "$(PREF)RSTD PP MSI")
+  field(OUTF, "$(PREF)RANGE PP MSI")
+  field(OUTG, "$(PREF)RMS PP MSI")
+  field(FLNK, "$(FLNK=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)MEAN") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)STD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)MIN") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)MAX") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)RSTD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)RANGE") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)RMS") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+

@@ -1,0 +1,9 @@
+format=1
+name=retools
+version=5ada1e1
+tag=5ada1e1
+source=5ada1e1573969c242d2af922c2021e9c7971dbff
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/retools.dbd 9b6eb74fb8e35d2b2f7480cc47add741f153118916c81388aa922c329fd8e051
+artifact=lib/linux-x86_64/libretools.so fa3de6210df25d4202e70131e5970032ef2fbd30de02b04dc55ad48aad25ac49

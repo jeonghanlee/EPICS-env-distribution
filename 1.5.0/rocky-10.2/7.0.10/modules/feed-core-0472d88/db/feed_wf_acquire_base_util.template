@@ -1,0 +1,149 @@
+# waveform support outside of primary processing chain
+#
+# Macros
+#  BASE - Record name prefix
+#  NAME - FEED Device name
+
+# local (re)initialization
+
+record(longin, "$(BASE)UTIL_INIT1_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(FLNK, "$(BASE)FLT_DELAY")
+    field(TPRO, "$(TPRO=0)")
+}
+
+#==================================
+# Determine waveform period length
+# based on number of active waveforms
+# and decimation factor.
+#==================================
+
+record(calc, "$(BASE)NORD1_") {
+  field(DESC, "Calc WF NORD")
+  field(CALC, "A+B+C+D+E+F+G+H+I+K+K+L")
+  field(INPA, "$(INPA=)")
+  field(INPB, "$(INPB=)")
+  field(INPC, "$(INPC=)")
+  field(INPD, "$(INPD=)")
+  field(INPE, "$(INPE=)")
+  field(INPF, "$(INPF=)")
+  field(INPG, "$(INPG=)")
+  field(INPH, "$(INPH=)")
+  field(INPI, "$(INPI=)")
+  field(INPJ, "$(INPJ=)")
+  field(INPK, "$(INPK=)")
+  field(INPL, "$(INPL=)")
+  field(PINI, "YES")
+  field(FLNK, "$(BASE)NORD2_")
+}
+
+# Independent calculation of NORD instead
+# of reading from WF NORD PV; it can be
+# wrong if WFs not updating.
+record(calc, "$(BASE)NORD2_") {
+  field(DESC, "Calc WF NORD")
+  field(CALC, "A=0?(B/C):CEIL(B/C/A)")
+  field(INPA, "$(BASE)NORD1_")
+  field(INPB, "$(SIZE)")
+# Set to 2 if this is used for signal pairs
+  field(INPC, "$(SIGPER=1)")
+  field(FLNK, "$(BASE)NORD")
+}
+
+record(longin, "$(BASE)NORD") {
+  field(DESC, "nsamples for active wf")
+  field(INP,  "$(BASE)NORD2_")
+  field(FLNK, "$(BASE)PERIOD")
+}
+
+record(calcout, "$(BASE)PERIOD") {
+  field(DESC, "WF acquisition length")
+# Number of samples * sample period
+  field(CALC, "A*B")
+  field(INPA, "$(BASE)NORD")
+  field(INPB, "$(BASE)SAMP_PERIOD CP")
+  field(EGU,  "s")
+# Set DOPT to force OCAL to be executed
+  field(DOPT, "Use OCAL")
+  field(OOPT, "Every Time")
+  field(OCAL, "A*B*1000")
+# OVAL = VAL in ms
+  field(FLNK, "$(BASE)FLT_DELAY_")
+}
+
+
+#==================================# 
+# Set how much of fault waveform buffer
+# is pre- and post- fault event
+# 0%   - full waveform buffer is pre-fault
+# 100% - full waveform buffer is post-fault
+#==================================
+record(ao, "$(BASE)FLT_DELAY") {
+    field(DESC, "Fault wf trigger delay")
+    field(DRVH, "100.0")
+    field(DRVL, "0")
+    field(VAL , "0")
+    field(EGU , "%")
+    field(PREC, "1")
+    field(PINI, "YES")
+    field(FLNK, "$(BASE)FLT_DELAY_")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# FLNK-ed to from all inputs
+record(calcout, "$(BASE)FLT_DELAY_") {
+    field(INPA, "$(BASE)NORD") # waveform number of elements
+    field(INPB, "$(BASE)FLT_DELAY")
+    field(INPC, "$(BASE)PERIOD") # waveform period [s]
+# Fault wf trigger delay register setting
+    field(CALC, "FLOOR(2 * A * B / 100)")
+    field(PREC, "0")
+# Set DOPT to force OCAL to be executed
+    field(DOPT, "Use OCAL")
+    field(OOPT, "Every Time")
+# Delta time to shift zero of timebase waveform
+# Optionally used in fault timebase waveforms
+# Relies on 0-100 DRV range of FLT_DELAY
+    field(OCAL, "-C*(1-(B/100))")
+# OVAL units [s]
+    field(FLNK, "$(BASE)FLT_DELAY_TICKS")
+}
+
+record(longout, "$(BASE)FLT_DELAY_TICKS") {
+    field(DESC, "Fault wf trigger delay")
+    field(DTYP, "FEED Register Write")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(BASE)FLT_DELAY_")
+    field(DRVH, "65535")
+    field(EGU,  "ticks")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_cbuf_post_delay wait=false")
+    info(feed:info:setting, "$(BASE)FLT_DELAY_TICKS")
+    field(FLNK, "$(BASE)CONFIG_STAT_")
+}
+
+# Check if waveform period ends before statistics window begins
+# For SRF cavity systems, this will result in IOC watchdog fault
+record(calcout, "$(BASE)CONFIG_STAT_") {
+  field(DESC, "WF config error")
+  field(CALC, "A>B?1:0")
+  field(INPA, "$(BASE)PERIOD")
+  field(INPB, "$(BASE)STAT_START CP")
+  field(EGU,  "s")
+# Set DOPT to force OCAL to be executed
+  field(DOPT, "Use OCAL")
+  field(OOPT, "Every Time")
+# Diff in seconds
+  field(OCAL, "A-B")
+  field(FLNK, "$(BASE)CONFIG_STAT")
+}
+
+record(bi, "$(BASE)CONFIG_STAT") {
+  field(DESC, "WF config error")
+  field(INP,  "$(BASE)CONFIG_STAT_ MSI")
+  field(ZNAM, "Error")
+  field(ZSV,  "MAJOR")
+  field(ONAM, "Ok")
+}

@@ -1,0 +1,10 @@
+################
+# Register global functions
+################
+registrar(mcaCanberraRegister)
+registrar(mcaAIMRegister)
+registrar(icbAsynRegister)
+registrar(DSA2000Register)
+
+variable("icbDebug", int)
+variable("aimDebug", int)

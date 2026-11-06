@@ -1,0 +1,24 @@
+# feed_logic_decim.template
+# BASE="$(BASE)", NAME="$(NAME)", REG="$(REG)"
+
+record(longin, "$(BASE)DECIMI_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(BASE)DECIM")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)DECIM") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=$(REG)")
+    field(VAL , "1")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(BASE)DECIM_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=$(REG) rbv=true") # use last written value
+    field(SCAN, "I/O Intr") # process after any read/write
+    field(TSE , "-2")
+}

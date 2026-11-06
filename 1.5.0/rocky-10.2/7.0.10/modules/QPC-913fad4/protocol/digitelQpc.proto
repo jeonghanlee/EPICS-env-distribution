@@ -1,0 +1,259 @@
+# digitelQpc.proto
+# Stream Device Protocol for Gamma Vacuum Digitel QPC
+# This protocol uses features defined in Stream Device 2
+#
+# Ian Gillingham 06-09-18
+#
+# Message format is:
+#      <START>" "<ADR>" "<CMD>" "<DATA>" "<CKSUM><TERM>
+# where
+#      <START> : Start character(1 byte) = '~'
+#      <ADR>   : Address(2 bytes) - address of unit in hex (defalut = 05)
+#      <CMD>   : Command code (2 bytes) - hex
+#      <DATA>  : Optional - depends on <CMD>
+#      <CHK>   : Checksum (2 bytes) - hex
+#      <TERM>  : Terminator character (1 byte) = '\r'
+#
+# Reply format is:
+#      <ADR>" "<STA>" "<CODE>" "<DATA>" "<CKSUM><TERM>
+# where
+#      <ADR>   : Address(2 bytes) - address of unit in hex (default = 05)
+#      <STA>   : Status Mnemonic(2 bytes) "OK" or "ER"
+#      <CODE>  : Response code(2 bytes) Error number
+#      <DATA>  : Optional - depends on <CMD>
+#      <CHK>   : Checksum (2 bytes) - hex
+#      <TERM>  : Terminator character (1 byte) = '\r'#
+#
+# Arguments:
+# $1 = address: (2 hex digits - default 05){1|2|3|4}
+# $2 = parameter: (ion pump/filament (1,2 or 3)
+
+
+locktimeout = 5000;
+terminator   = CR;
+replytimeout = 1000;
+readtimeout  = 1000;
+extrainput   = Ignore;
+
+autost {
+    out "~ \$1 34 \$2 00";
+    in "\$1 OK %*2X %{NO|YES} %*2c";
+    }
+
+setautost {
+    out "~ \$1 33 \$2,%{N|Y} 00";
+    in "\$1 OK %*2X %*2c";
+    @mismatch { in "ER %*2X *ERROR: %(\$3:STATUSERRMSG.VAL)s %*2X";}
+
+    }
+
+sethv {
+    out "~ \$1 %{38|37} \$2 00";
+    in "\$1 OK %*2X %*2c";
+    @mismatch { in "ER %*2X *ERROR: %(\$3:HVERRMSG.VAL)36c %*2X";}
+    # @mismatch { in "ER 08 *ERROR: %(\$3:HVERRMSG.VAL)36c %*2c";}
+    }
+
+getcal {
+       out "~ \$1 1D \$2 00";
+       in "\$1 OK %*2c %f %*2c";
+       ExtraInput = Ignore;
+       }
+
+setcal {
+       out "~ \$1 1E \$2,%4.2f 00";
+       in "\$1 OK %*2X %*2X";
+       @init { getcal; }
+       }
+
+settext {
+        out "~ \$1 ED \$2,\"%s\" 00";
+        in "\$1 OK %*s %*2X";
+        }
+
+# Command 0A Read Current
+getCurrent {
+	out "~ \$1 0A \$2 00";
+    in "\$1 OK %*2X %g %*{AMPS|Amps} %*2c";
+	ExtraInput = Ignore;
+}
+
+# Command 0B Read Pressure
+getPressure {
+	out "~ \$1 0B \$2 00";
+	in "\$1 OK %*2c %g %*2c";
+	ExtraInput = Ignore;
+}
+
+# Command 0C Read Voltage
+getVoltage {
+	out "~ \$1 0C \$2 00";
+	in "\$1 OK %2X %d %*2c";
+	ExtraInput = Ignore;
+}
+
+getVoltageSetpoint {
+           out "~ \$1 53 \$2 00";
+           in "\$1 OK %2X %d %*2c";
+           ExtraInput = Ignore;
+           }
+
+setVoltage {
+           out "~ \$1 53 \$2,%d 00";
+           in "\$1 OK %2X %*2c";
+           # Initial voltage setpoint now via template macro
+           # @init { getVoltage; }
+           ExtraInput = Ignore;
+           }
+
+
+# Command 0D Get Supply Status
+# New command has the format cmd 0D supply,option
+# If you send cmd 0D \$1,00 (Currently 00 is the only option)
+# The return format will be XX where XX is one of:
+# 00 - pump standby
+# 01 - pump starting
+# 02 - pump running
+# 03 - pump cooldown
+# 04 - pump error
+# Otherwise this protocol sends back a string as is done here
+getStatus {
+	out "~ \$1 0D \$2, 00 00";
+	in "\$1 OK %*2x %d";
+	@mismatch {in "\$1 OK %2c %*2X";}
+	ExtraInput = Ignore;
+}
+
+err {
+    out "~ \$1 0D \$2, 00 00";
+    in "\$1 OK %*2X %*[^0-9]%d %*2X";
+    }
+
+# Command 61 Is High Voltage On - Indicates if the high voltage is on for
+# the specified pump
+# This is likely a legacy command as it does not exist in the revision G
+# manual. I think that it is replaced by the 0D command above.
+isEnabled {
+	out "~ \$1 61 \$2 00";
+	in "\$1 OK %s %*2c";
+	ExtraInput = Ignore;
+}
+
+# Command 37 Start Pump - Enables high voltage of specified supply
+enable {
+	out "~ \$1 37 \$2 00";
+	ExtraInput = Ignore;
+}
+
+# Command 38 Stop Pump - Disables high voltage of specified supply
+disable {
+	out "~ \$1 38 \$2 00";
+	ExtraInput = Ignore;
+}
+
+# Command 01 Get Model - Returns the pump controller model (QPC,MPC,etc)
+getModel {
+	out "~ \$1 01 00";
+	in "\$1 OK %*2c DIGITEL %s %*2c";
+	ExtraInput = Ignore;
+}
+
+# Command 02 Version - Returns the firmware version of the pump controller
+getFirmware {
+	out "~ \$1 02 00";
+    in "\$1 OK %*2c FIRMWARE VERSION: %s %*2c";
+	ExtraInput = Ignore;
+}
+
+###
+# Uses the command 0B above but returns only the pressure units selected
+# This function is used to initialize setPressUnit function below.
+# Note that the supply channel is arbitrarily set to 1, but any valid supply channel could be chosen
+# as the units are common to all supply channels.
+#
+getPressureUnit {
+	out "~ \$1 0B 1 00";
+	in "\$1 OK %*2X %*G %{TORR|MBAR|PASCAL} %*2X";
+	ExtraInput = Ignore;
+}
+
+# Command 0E Set Pressure Units - Allows remote control over pressure units
+setPressUnit {
+	out "~ \$1 0E %{T|M|P} 00";
+
+	@init { getPressureUnit; }
+	ExtraInput = Ignore;
+}
+
+# Command 11 Get pump Size - Reads pump size in liters/second
+getPumpSize {
+	out "~ \$1 11 \$2 00";
+	in "%*2c OK %*2c %d L/S %*2c";
+	ExtraInput = Ignore;
+}
+
+# Command 12 Set pump Size - Sets pump size in liters/second
+setPumpSize {
+	out "~ \$1 12 \$2,%d 00";
+	in "%*2c OK %*2c";
+
+	@init { getPumpSize; }
+	ExtraInput = Ignore;
+}
+
+# For the set points here we just get the set point on/off pressure and output
+# relay/digital out status
+# NOTE:
+# We will use the new 3B command which has replaced the 3C and 3D commands
+# get the on pressure set point
+#
+# Arguments
+# 1 => Unit, 2 => Setpoint Number, 3 => device PV base name
+#
+getSetpoints {
+	out "~ \$1 3B \$2 00";
+    in "\$1 OK %2X %*i,%(\$3:SPFUNCTION.VAL)i,%*i,%(\$3:SPON.VAL)G,%(\$3:SPOFF.VAL)G,%(\$3:SPSTA.VAL)i %*2c";
+	ExtraInput = Ignore;
+}
+
+
+##
+# Args: 1 => Unit, 2 => Supply , 3 => Setpoint number, 4 => Pump name
+#
+#
+setSetpoints
+    {
+	out "~ \$1 3B %(A)1d,1,%(B)1d,%(C)G,%(D)G 00";
+	in "\$1 OK %*2X %*i,%*i,%*i,%(\$2:SPON)G,%(\$2:SPOFF)G,%(\$2:SPSTA)i %*2c";
+	@mismatch { in "ER 08 *ERROR: %(\$2:SPMESSAGE.VAL)36c";}
+##
+# This will initialise the setpoint to the values presently in controller.
+# On IOC reboot, we should set the setpoints to the default startup values given by EPICS.
+#    @init { out "~ \$1 3B %(A)1d 00";
+#             in "\$1 OK %2X %*i,%*i,%*i,%(\$2:SETSPON.VAL)G,%(\$2:SETSPOFF.VAL)G,%*i %*2c";
+#          }
+	ExtraInput = Ignore;
+    }
+
+##
+# Digital Input assignment
+#
+# CMD 58 N,S,F - N = digital input channel, S = pump (1-4), F = Function (00 => Off, 01 => HV Interlock, 02 => TSP1 Ilk, 03 => TSP2 ilk)
+# $1 => Unit, $2 => Pump, $3 => Digital inp chan, $4 => Function, $5 => PV base name for pump
+#
+getDigitalInput
+    {
+    out "~ \$1 58 \$2 00";
+    in  "%*2c OK %(\$5:FUNCTION)d,%(\$5:DIGIN)d %*2c";
+    }
+
+##
+# Digital Input assignment
+#
+# CMD 58 N,S,F - N = digital input channel, S = pump (1-4), F = Function (00 => Off, 01 => HV Interlock, 02 => TSP1 Ilk, 03 => TSP2 ilk)
+#
+setDigitalInput
+    {
+    out "~ \$1 58 \$3,\$2,\$4 00";
+    in  "%*2c OK %*d,%(\$5:DIGIN)d %*2c";
+    }
