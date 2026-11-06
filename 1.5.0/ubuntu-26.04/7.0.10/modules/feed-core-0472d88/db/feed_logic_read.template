@@ -1,0 +1,27 @@
+# Read back single device register
+#
+# Entry point: "$(BASE)E_"
+#
+# Required Macros:
+#   BASE - common record prefix
+#   NAME - FEED device instance name
+#   REG - register name
+#
+# Optional Macros:
+#   FLNK - Next record in chain
+
+record(longout, "$(BASE)RD_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK , "$(BASE)")
+
+    alias("$(BASE)E_")
+}
+
+record(longin, "$(BASE)") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=$(REG)")
+    field(TSE , "-2")
+    field(FLNK, "$(FLNK=)")
+    field(TPRO, "$(TPRO=0)")
+}

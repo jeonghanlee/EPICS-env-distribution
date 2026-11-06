@@ -1,0 +1,21 @@
+ifeq (,$(_CALC_INCLUDED))
+_CALC_INCLUDED = YES
+
+_CALC_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+ifdef T_A
+
+_CALC_DEPS := $(shell $(CONVERTRELEASE) -T $(_CALC_DIR)/.. releaseTops)
+_CALC_DEPS := $(filter-out EPICS_BASE SUPPORT, $(_CALC_DEPS))
+
+$(foreach dep, $(_CALC_DEPS), $(eval -include $($(dep))/cfg/CONFIG_MODULE))
+
+-include $(_CALC_DIR)/CALC_DEPS
+-include $(_CALC_DIR)/CALC_DEPS.local
+
+ALL_IOC_DBDS += $(CALC_IOC_DBDS)
+ALL_IOC_LIBS := $(CALC_IOC_LIBS) $(ALL_IOC_LIBS)
+ALL_IOC_SYS_LIBS := $(CALC_IOC_SYS_LIBS) $(ALL_IOC_SYS_LIBS)
+
+endif # T_A
+endif # included

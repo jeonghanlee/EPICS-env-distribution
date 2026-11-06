@@ -1,0 +1,11 @@
+format=1
+name=ADGenICam
+version=ba5b9b8
+tag=ba5b9b8
+source=ba5b9b8bfcd0a38e1de558096cadf1bf5aca7768
+base=7.0.10
+arch=linux-x86_64
+dep=ADCore ee039d2
+dep=asyn 4.46.0
+artifact=dbd/ADGenICamSupport.dbd 19e2022ffb39a4a46b80397f829d4da56be413e4206db2a6e03dad9b867c2f11
+artifact=lib/linux-x86_64/libADGenICam.so 43af85288fe4777d2662607eb4f3ec3a61bf651b6f91c3ec447534312d3c1768

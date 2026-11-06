@@ -1,0 +1,188 @@
+<h1>CA Server Example</a></h1>
+
+<h2>Usage</h2>
+
+<p>excas [options]</p>
+
+<p>This is an example CA server that is sometimes used for testing purposes.
+It can be created as a module with the makeBaseApp script, as described in
+the EPICS Application Developer's Guide.</p>
+
+<p>This code is meant to provide some examples of how the CA server library
+can be used, but is not intended to be an example of code organization.</p>
+
+<table border="1">
+  <col>
+  <col>
+  <tbody>
+    <tr>
+      <th>Option</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>-d &lt;uuuu&gt;</td>
+      <td>Set verbosity level uuuu for debug messages,
+      where uuuu is a positive integer.</td>
+    </tr>
+    <tr>
+      <td>-p &lt;aaaa&gt;</td>
+      <td>Prefix all PV names below with aaaa (e.g. using "-p xyz:" the
+        PV name "bill" becomes "xyz:bill").</td>
+    </tr>
+    <tr>
+      <td>-t &lt;n.n&gt;</td>
+      <td>Set execution time where n.n is a positive real number.</td>
+    </tr>
+    <tr>
+      <td>-c &lt;uuuu&gt;</td>
+      <td>Set the numbered alias count. The alias names are of the form
+      "fred1", "fred2", etc. Defaults to no aliases.</td>
+    </tr>
+    <tr>
+      <td>-s &lt;nnn&gt;</td>
+      <td>nnn=1 (default) sets periodic scanning of the PVs,
+      adding small random noise. nnn=0 turns off periodic scanning.</td>
+    </tr>
+    <tr>
+      <td>-ss &lt;nnn&gt;</td>
+      <td>nnn=1 (default) enables synchronous scanning, nnn=0 turns on
+      asynchronous scanning.</td>
+    </tr>
+    <tr>
+      <td>-ad &lt;n.n&gt;</td>
+      <td>Set the delay before asynchronous operations complete
+      (defaults to 0.1 seconds).</td>
+    </tr>
+    <tr>
+      <td>-an &lt;nnn&gt;</td>
+      <td>Set the maximum number of simultaneous asynchronous operations
+        (defaults to 1000).</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The example server has a compile time fixed set of example variables.</p>
+
+<table border="1">
+  <col>
+  <col>
+  <col>
+  <col>
+  <col>
+  <col>
+  <col>
+  <tbody>
+    <tr>
+      <th>Process Variable Name</th>
+      <th>Number of Elements</th>
+      <th>IO Type</th>
+      <th>Data Type</th>
+      <th>High Limit</th>
+      <th>Low Limit</th>
+      <th>Scan Period</th>
+    </tr>
+    <tr>
+      <td>jane</td>
+      <td>1</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.1 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>fred</td>
+      <td>1</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>2.0 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>janet</td>
+      <td>1</td>
+      <td>Asynchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.1 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>freddy</td>
+      <td>1</td>
+      <td>Asynchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>2.0 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>alan</td>
+      <td>100</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>2.0 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>albert</td>
+      <td>1000</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>20.0 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>boot</td>
+      <td>1</td>
+      <td>Synchronous</td>
+      <td>enumerated, 16 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>changed only by client</td>
+    </tr>
+    <tr>
+      <td>booty</td>
+      <td>1</td>
+      <td>Asynchronous</td>
+      <td>enumerated, 16 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>1.0 Seconds, random noise changes</td>
+    </tr>
+    <tr>
+      <td>bill</td>
+      <td>1</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>changed only by client</td>
+    </tr>
+    <tr>
+      <td>billy</td>
+      <td>1</td>
+      <td>Asynchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>changed only by client</td>
+    </tr>
+    <tr>
+      <td>bloaty</td>
+      <td>100000</td>
+      <td>Synchronous</td>
+      <td>float point, 64 bits</td>
+      <td>10.0</td>
+      <td>-10.0</td>
+      <td>changed only by client</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Bugs</h2>
+
+<p>Not all of the options listed above have been tested recently.</p>

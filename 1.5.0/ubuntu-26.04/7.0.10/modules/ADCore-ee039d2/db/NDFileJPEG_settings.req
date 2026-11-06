@@ -1,0 +1,2 @@
+$(P)$(R)JPEGQuality
+file "NDPluginFile_settings.req", P=$(P), R=$(R)

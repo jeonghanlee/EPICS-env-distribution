@@ -1,0 +1,10 @@
+format=1
+name=ether_ip
+version=3.10.0
+tag=tags/ether_ip-3-10
+source=b069447cd55d3d72a1a58e40f18b3ec2870415e5
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/eipIoc.dbd d327fea0ad4cb55029b3ae716f90d71c97d05cf2e78c0dd84832d6906f35b23d
+artifact=dbd/ether_ip.dbd 2610e9cd51829202d6861936744ab0a5fbc9842e7dce68b97b4aa4b9cf18c346
+artifact=lib/linux-x86_64/libether_ip.so 7f2092b4ff3dea1112d5f36174c5090d670c3149e7b0487fed031c0c2c402cc1
