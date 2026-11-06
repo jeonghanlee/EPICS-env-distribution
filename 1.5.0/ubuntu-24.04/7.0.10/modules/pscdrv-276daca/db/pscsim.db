@@ -1,0 +1,374 @@
+
+record(bi, "$(P)conn") {
+  field(DTYP, "PSC Ctrl Connected")
+  field(INP , "@test")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(ZSV , "MAJOR")
+}
+
+record(bo, "$(P)reconn") {
+  field(DTYP, "PSC Ctrl Reconnect")
+  field(OUT , "@test")
+  field(ZNAM, "Reconnect")
+  field(ONAM, "Reconnect")
+}
+
+record(stringin, "$(P)msg") {
+  field(DTYP, "PSC Ctrl Message")
+  field(INP , "@test")
+  field(DESC, "Last message")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)cnt:conn") {
+  field(DTYP, "PSC Conn Count")
+  field(INP , "@test")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)cnt:ukn") {
+  field(DTYP, "PSC Unknown Msg Count")
+  field(INP , "@test")
+  field(SCAN, "1 second")
+}
+
+record(bo, "$(P)send") {
+  field(DTYP, "PSC Ctrl Send All")
+  field(OUT , "@test")
+  field(ZNAM, "Send")
+  field(ONAM, "Send")
+}
+
+# actions when connection established
+
+record(bi, "$(P)onconn") {
+  field(DTYP, "PSC On Connect")
+  field(INP , "@test")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(FLNK, "$(P)onconn:1")
+}
+
+record(fanout, "$(P)onconn:1") {
+  #field(LNK0, "$(P)speak") # use info(SYNC, ... instead
+  field(LNK1, "$(P)wfout")
+  field(LNK2, "$(P)wfout2")
+  field(LNK3, "$(P)wfout3")
+  field(LNK4, "$(P)wfout4")
+  field(LNK5, "$(P)reg0-SP")
+  field(LNK6, "$(P)reg1-SP")
+  field(LNK7, "$(P)reg2-SP")
+  field(LNK8, "$(P)reg3:0-Sel")
+  field(LNK9, "$(P)reg3:1-Sel")
+  field(LNKA, "$(P)reg4-SP")
+  field(LNKB, "$(P)regsend")
+  field(LNKC, "$(P)write0-SP")
+}
+
+
+
+# Test strings
+record(stringin, "$(P)hear") {
+  field(DTYP, "PSC Block")
+  field(INP , "@test 1025 8")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+  info("TimeFromBlock", "0")
+}
+
+record(stringout, "$(P)speak") {
+  field(DTYP, "PSC Block")
+  field(OUT , "@test 1015")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+  info(SYNC, "ProcOnConn")
+}
+
+record(longin, "$(P)cnt:hear") {
+  field(DTYP, "PSC Block Msg Count")
+  field(INP , "@test 1025 rx")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)cnt:speak") {
+  field(DTYP, "PSC Block Msg Count")
+  field(INP , "@test 1015 tx")
+  field(SCAN, "1 second")
+}
+
+# Test waveforms
+record(waveform, "$(P)wfout") {
+  field(DTYP, "PSC Block I16 Out")
+  field(INP , "@test 43")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(waveform, "$(P)wfin") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 53")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+}
+
+record(waveform, "$(P)wfout2") {
+  field(DTYP, "PSC Block I32 Out")
+  field(INP , "@test 42")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(waveform, "$(P)wfin2") {
+  field(DTYP, "PSC Block I32 In")
+  field(INP , "@test 52")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+}
+
+record(waveform, "$(P)wfout3") {
+  field(DTYP, "PSC Block I8 Out")
+  field(INP , "@test 41")
+  field(FTVL, "CHAR")
+  field(NELM, "10")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(waveform, "$(P)wfin3") {
+  field(DTYP, "PSC Block I8 In")
+  field(INP , "@test 51")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "CHAR")
+  field(NELM, "10")
+}
+
+record(waveform, "$(P)wfout4") {
+  field(DTYP, "PSC Block F32 Out")
+  field(INP , "@test 40")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(waveform, "$(P)wfin4") {
+  field(DTYP, "PSC Block F32 In")
+  field(INP , "@test 50")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+}
+
+record(waveform, "$(P)wfx") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 55")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(TSE , "-2")
+}
+
+record(waveform, "$(P)wfx1") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 55 0 6")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(TSE , "-2")
+}
+
+record(waveform, "$(P)wfx2") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 55 2 6")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(TSE , "-2")
+}
+
+record(waveform, "$(P)wfx3") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 55 4 6")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(TSE , "-2")
+}
+
+# Test register blocks
+
+record(longout, "$(P)regsend") {
+  field(DTYP, "PSC Ctrl Send")
+  field(OUT , "@test")
+  field(VAL , "1") # block w/ msgid=1
+  field(FLNK, "$(P)send")
+}
+
+record(longout, "$(P)reg0-SP") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 1")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(longout, "$(P)reg1-SP") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 1 4")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(longout, "$(P)reg2-SP") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 1 8")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(P)reg4-SP") {
+  field(DTYP, "PSC Reg F32")
+  field(OUT , "@test 1 16")
+  field(PREC, "3")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(P)reg0-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+}
+
+record(longin, "$(P)reg1-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11 4")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+}
+
+record(longin, "$(P)reg2-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11 8")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+}
+
+record(ai, "$(P)reg4-I") {
+  field(DTYP, "PSC Reg F32")
+  field(INP , "@test 11 16")
+  field(SCAN, "I/O Intr")
+  field(PREC, "3")
+  field(TSE , "-2")
+}
+
+# offset 12 is a bit register.
+
+record(bo, "$(P)reg3:0-Sel") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 1 12")
+  field(MASK, "0x40000") # bit 18
+  field(ZNAM, "False")
+  field(ONAM, "True")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(mbbo, "$(P)reg3:1-Sel") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 1 12")
+  field(NOBT, "2")
+  field(SHFT, "16") # select bits 16 and 17
+  field(ZRST, "Zero")
+  field(ONST, "One")
+  field(TWST, "Two")
+  field(THST, "Three")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(bi, "$(P)reg3:0-Sts") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11 12")
+  field(SCAN, "I/O Intr")
+  field(MASK, "0x40000")
+  field(ZNAM, "False")
+  field(ONAM, "True")
+  field(TSE , "-2")
+}
+
+record(mbbi, "$(P)reg3:1-Sts") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11 12")
+  field(SCAN, "I/O Intr")
+  field(NOBT, "2")
+  field(SHFT, "16")
+  field(ZRST, "Zero")
+  field(ONST, "One")
+  field(TWST, "Two")
+  field(THST, "Three")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  field(TSE , "-2")
+}
+
+record(longin, "$(P)reg3-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 11 12")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+}
+
+record(waveform, "$(P)regs") {
+  field(DTYP, "PSC Block I16 In")
+  field(INP , "@test 11")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "10")
+  field(TSE , "-2")
+}
+
+
+# Test single register writes
+
+record(longout, "$(P)write0-SP") {
+  field(DTYP, "PSC Single I32")
+  field(OUT , "@test 100 4660")
+  field(FLNK, "$(P)send")
+  info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(P)write1-SP") {
+  field(DTYP, "PSC Single I32")
+  field(OUT , "@test 100 4670")
+  field(FLNK, "$(P)send")
+  info(SYNC, "SAME")
+}
+
+record(bo, "$(P)resync-Sel") {
+  field(DTYP, "PSC Single U32")
+  field(OUT , "@test 100 10")
+  field(ZNAM, "Re-sync")
+  field(ONAM, "Re-Sync")
+  field(HIGH, "0.1")
+  field(FLNK, "$(P)send")
+  info(SYNC, "NONE")
+}
+
+record(waveform, "$(P)prev0") {
+  field(DTYP, "PSC Block I32 In")
+  field(INP , "@test 110")
+  field(SCAN, "I/O Intr")
+  field(FTVL, "DOUBLE")
+  field(NELM, "2")
+  field(TSE , "-2")
+}

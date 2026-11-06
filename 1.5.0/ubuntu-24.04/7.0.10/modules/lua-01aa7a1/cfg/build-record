@@ -1,0 +1,11 @@
+format=1
+name=lua
+version=01aa7a1
+tag=01aa7a1
+source=01aa7a1474a1ab525f1b97e042dcf7a7555ff15d
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+artifact=dbd/luaSupport.dbd b56351fa71059dea2cf5c4e78e1e634518ee3e09c5378fbf608542f197a9c77a
+artifact=dbd/luascriptRecord.dbd eaa547fa9912cb576984ed8b7967f0ec51a86bf569c1dbce337972b0d5b4edbd
+artifact=lib/linux-x86_64/liblua.so ba6ded89ce9ce44893300c8edc2b8d118a1a7602ad54a7512f509d5de4aaf12d

@@ -1,0 +1,21 @@
+ifeq (,$(_BUSY_INCLUDED))
+_BUSY_INCLUDED = YES
+
+_BUSY_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+ifdef T_A
+
+_BUSY_DEPS := $(shell $(CONVERTRELEASE) -T $(_BUSY_DIR)/.. releaseTops)
+_BUSY_DEPS := $(filter-out EPICS_BASE SUPPORT, $(_BUSY_DEPS))
+
+$(foreach dep, $(_BUSY_DEPS), $(eval -include $($(dep))/cfg/CONFIG_MODULE))
+
+-include $(_BUSY_DIR)/BUSY_DEPS
+-include $(_BUSY_DIR)/BUSY_DEPS.local
+
+ALL_IOC_DBDS += $(BUSY_IOC_DBDS)
+ALL_IOC_LIBS := $(BUSY_IOC_LIBS) $(ALL_IOC_LIBS)
+ALL_IOC_SYS_LIBS := $(BUSY_IOC_SYS_LIBS) $(ALL_IOC_SYS_LIBS)
+
+endif # T_A
+endif # included

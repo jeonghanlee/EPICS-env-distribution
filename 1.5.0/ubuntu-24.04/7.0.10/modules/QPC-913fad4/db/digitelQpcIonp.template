@@ -1,0 +1,660 @@
+# digitelQPCIonPump.template
+#% macro, __doc__, Template database for digitel MPC - Ion Pump
+# Pete Owens - 30/9/03
+#
+# substitutions:
+#% macro, device, device name
+#% macro, name, Object name and gui association name
+#% macro, port, asyn serial port number
+#% macro, unit, unit number for multi-drop serial (2 hex digits - 05 by default)
+#% macro, pump, ion pump number (1, 2, 3, 4)
+#% macro, size, pump size (l/s)
+#% macro, hv,   default HV setting
+#% macro, spon, setpoint on
+#% macro, spoff, setpoint off
+#% macro, alh,  alarm handler tag (Defaults to None) c.f. mp49's commit 80833
+#% macro, text, Text to display in the ion pump controller window.
+################################################################################
+
+# This associates an edm screen with the template
+# % gui, $(name=), edm, digitelQpcIonpControl.edl, device=$(device)
+
+# This associates BOY screens with the template
+# % gui, $(name=), boydetail, digitelQpcApp_opi/ionp_detail.opi, device=$(device), desc=$(device), name=$(name=)
+# % gui, $(name=), boyembed, digitelQpcApp_opi/ionp_embed_box.opi, device=$(device), desc=$(device), name=$(name=)
+# % gui, $(name=), boyembed, digitelQpcApp_opi/ionp_embed.opi, device=$(device), desc=$(device), name=$(name=)
+
+# These define what PVs a valve detail screen should contain
+# % gui, $(name=), readback, Status,   $(device):QPCSTA
+# % gui, $(name=), readback, Error Code,  $(device):ERR
+# % gui, $(name=), readback, Voltage,  $(device):V
+# % gui, $(name=), readback, Current,  $(device):I
+# % gui, $(name=), readback, Pressure,  $(device):P
+# % gui, $(name=), enum, Start,  $(device):SETHV
+# % gui, $(name=), readback, Pump Size,  $(device):PUMPSIZE
+# % gui, $(name=), demand, Pump Size,  $(device):SETPUMPSIZE
+# % gui, $(name=), readback, Calibration,  $(device):CAL
+# % gui, $(name=), demand, Calibration,  $(device):SETCAL
+# % gui, $(name=), readback, Setpoint On,  $(device):SPON
+# % gui, $(name=), demand, Setpoint On,  $(device):SETSPON
+# % gui, $(name=), readback, Setpoint Off,  $(device):SPOFF
+# % gui, $(name=), demand, Setpoint Off,  $(device):SETSPOFF
+
+######
+# device        - full ion pump device name (PV base)
+# controller    - The QPC pump controller to which this pump is connected
+# SPT           - Set point number for this pump
+# SPLY          - Which pump supply number
+
+################################################################################
+# Text string on front panel
+#
+record(stringout, "$(device):SETTEXT")
+    {
+    field(DESC, "Text String")
+    field(VAL , "$(text=$(device))")
+    field(DTYP, "stream")
+    field(OUT,  "@digitelQpc$(QPCBUS=).proto settext($(unit),$(SPLY),$(device)) $(port)")
+    field(PINI, "YES")
+    }
+
+################################################################################
+# Automatically Restart on power up
+#
+record(bo, "$(device):SETAUTOST")
+{
+    field(DESC, "Auto Restart")
+    field(DTYP, "stream")
+    field(OUT,  "@digitelQpc$(QPCBUS=).proto setautost($(unit=01),$(SPLY),$(device)) $(port)")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+    field(DOL,  "0")
+    field(PINI, "YES")
+    field(FLNK, "$(device):AUTOST")
+
+    info(autosaveFields, "VAL")
+}
+#
+#% controldesk Auto Restart smon
+#
+record(bi, "$(device):AUTOST")
+{
+    field(DESC, "Auto Restart")
+    field(DTYP, "stream")
+    field(INP,  "@digitelQpc$(QPCBUS=).proto autost($(unit=01),$(SPLY)) $(port)")
+    field(SCAN, "10 second")
+    field(PINI, "YES")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+################################################################################
+# Calibration factor
+#
+#% archiver 10 Monitor
+#% controldesk Calibration Factor readback
+#
+record(ai, "$(device):CAL") {
+    field(DESC, "Calibration Factor")
+    field(DTYP, "stream")
+    field(PINI, "YES")
+    field(INP,  "@digitelQpc$(QPCBUS=).proto getcal($(unit=01),$(SPLY)) $(port)")
+    field(SCAN, "10 second")
+    field(LOPR, "0.0")
+    field(HOPR, "9.99")
+    field(PREC, "2")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Calibration Factor setpoint
+#
+record(ao, "$(device):SETCAL") {
+    field(DESC, "Calibration Factor")
+    field(DTYP, "stream")
+    field(OUT,  "@digitelQpc$(QPCBUS=).proto setcal($(unit=01),$(SPLY)) $(port)")
+    field(DRVL, "0.0")
+    field(DRVH, "9.99")
+    field(LOPR, "0.0")
+    field(HOPR, "9.99")
+    field(PREC, "2")
+    field(FLNK, "$(device):CAL")
+
+	info(autosaveFields, "VAL")
+}
+
+
+record(ai, "$(device):GETV") {
+    field(DESC, "Get Target Voltage")
+    field(DTYP, "stream")
+    field(PINI, "YES")
+    field(INP,  "@digitelQpc$(QPCBUS=).proto getVoltageSetpoint($(unit=01),$(SPLY)) $(port)")
+    field(SCAN, "1 second")
+    field(LOPR, "3000")
+    field(HOPR, "7000")
+    field(PREC, "0")
+}
+
+# If readback HV is less than sa 100V then assume HV is off
+# This is the only way to get the real HV status, especially
+# as we must not SETHV on IOC startup
+# (PINI must be OFF to avoid stopping the pump on IOC reboot)
+record(calcout, "$(device):ISON")
+{
+    field(DESC, "Determine whether HV is ON by V readback")
+    field(INPA, "$(device):V CP MS")
+    field(CALC, "(A<100)?0:1")
+    field(OUT, "$(device):STA PP")
+    field(FLNK, "$(device):STA")
+}
+
+
+################################################################################
+# Set target output voltage
+# SPLY - Supply (1-4)
+# .VAL - Target voltage (3000 - 7000)
+#
+#
+#% archiver 10 Monitor
+#% controldesk Target voltage setpoint
+#
+record(ao, "$(device):SETV") {
+    field(DESC, "Set target voltage")
+    field(DTYP, "stream")
+    field(OUT,  "@digitelQpc$(QPCBUS=).proto setVoltage($(unit=01),$(SPLY)) $(port)")
+    field(PINI, "YES")
+    field(DOL,  "$(HV=3000)")
+    field(DRVL, "3000")
+    field(DRVH, "7000")
+    field(LOPR, "3000")
+    field(HOPR, "7000")
+    field(PREC, "0")
+
+	info(autosaveFields, "VAL")
+}
+
+
+################################################################################
+# Switch on/off HV
+#
+record(bo, "$(device):SETHV")
+{
+    field(DESC, "HV On / Off")
+    field(DTYP, "stream")
+    field(OUT,  "@digitelQpc$(QPCBUS=).proto sethv($(unit=01),$(SPLY),$(device)) $(port)")
+    field(ZNAM, "Stop")
+    field(ONAM, "Start")
+    field(DOL,  "$(device):ISON PP")
+    field(PINI, "NO")
+}
+
+record(bi,"$(device):STARTING")
+{
+    field(DESC, "Starting Pumps")
+    field(PINI, "YES")
+    field(INP,  "0")
+    field(ZNAM, "")
+    field(ONAM, "Starting")
+}
+
+######
+# Read the supply current.
+# Ideally this should be scanning at higher rate when HV is on
+# or perhaps disabled when HV is off.
+#
+record(ai, "$(device):I")
+{
+    field(DESC, "Reads Supply Current")
+    field(SCAN, "5 second")
+#   field(PINI, "YES")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getCurrent($(unit=01),$(SPLY)) $(port)")
+}
+
+record(ai, "$(device):P")
+{
+    field(DESC, "Reads Supply Pressure")
+    field(SCAN, "5 second")
+#   field(PINI, "YES")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getPressure($(unit=01),$(SPLY)) $(port)")
+}
+
+record(ai, "$(device):V")
+{
+    field(DESC, "Reads Supply Voltage")
+    field(SCAN, "1 second")
+#   field(PINI, "YES")
+    field(PREC, "0")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getVoltage($(unit=01),$(SPLY)) $(port)")
+}
+
+record(stringin, "$(device):SCAN")
+{
+    field(DESC, "SCAN rates according to status")
+    field(VAL, "10 second")
+}
+
+record(scalcout,"$(device):CALCSCAN")
+{
+    field(DESC,"Generates SCAN rates re status")
+    field(SCAN,"Passive")
+    field(CALC,"A=1?BB:AA")
+    field(INPA,"$(device):ENABLED PP NMS")
+    field(AA,"10 second")
+    field(BB,"1 second")
+    field(OUT,"$(device):SCAN.VAL PP NMS")
+    field(OOPT,"On Change")
+}
+
+
+################################################################################
+# Get supply status
+#
+#% archiver 10 Monitor
+#% controldesk Supply Status smon
+#% $(alh=None) $SEVRCOMMAND UP_ANY dls-alh-handler.py $(device):QPCSTA
+record(mbbi, "$(device):QPCSTA")
+{
+    field(DESC, "Supply Status")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getStatus($(unit=01),$(SPLY),$(device):STATUSERRMSG) $(port)")
+    field(SCAN, "5 second")
+    field(ZRST, "Standby")
+    field(ONST, "Starting")
+    field(TWST, "Running")
+    field(THST, "Cool Down")
+    field(FRST, "Pump Error")
+    field(FVST, "Invalid")
+    field(SXST, "Invalid")
+    field(SVST, "Invalid")
+    field(EIST, "Invalid")
+    field(NIST, "Invalid")
+    field(TEST, "Invalid")
+    field(ELST, "Invalid")
+    field(TVST, "Invalid")
+    field(TTST, "Invalid")
+    field(FTST, "Invalid")
+    field(FFST, "Invalid")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "MAJOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "MINOR")
+    field(FRSV, "NO_ALARM")
+    field(FVSV, "MINOR")
+    field(SXSV, "MAJOR")
+    field(SVSV, "MAJOR")
+    field(EISV, "MAJOR")
+    field(NISV, "MAJOR")
+    field(TESV, "MAJOR")
+    field(ELSV, "MAJOR")
+    field(TVSV, "MAJOR")
+    field(TTSV, "MAJOR")
+    field(FTSV, "MAJOR")
+    field(FFSV, "MAJOR")
+    field(FLNK, "$(device):TRANSSTA")
+}
+record(calcout, "$(device):TRANSSTA")
+{
+    field(DESC, "Translate QPC STA to VacSpace STA")
+    field(INPA, "$(device):QPCSTA CP MS")
+    field(CALC, "(A=0)?2:((A=1)||(A=2)?4:((A=3)?5:6))")
+    field(OUT, "$(device):STA PP")
+    field(FLNK, "$(device):STA")
+}
+
+################################################################################
+# Supply status compatibility layer
+# This is to facilitate mixing with vacuumSpace records
+#
+#% archiver 10 Monitor
+#% controldesk Supply Status smon
+#% $(alh=None) $SEVRCOMMAND UP_ANY dls-alh-handler.py $(device):STA
+record(mbbi, "$(device):STA")
+{
+    field(DESC, "Supply Status (compatible)")
+    field(DTYP, "Soft Channel")
+    field(INP,  "$(device):TRANSSTA PP MS")
+    field(ZRST, "Unknown")
+    field(ONST, "Waiting")
+    field(TWST, "Standby")
+    field(THST, "Safe-Conn")
+    field(FRST, "Running")
+    field(FVST, "Cool Down")
+    field(SXST, "Pump Error")
+    field(SVST, "HV Switched Off")
+    field(EIST, "Interlock")
+    field(NIST, "Shut Down")
+    field(TEST, "Calibration")
+    field(ELST, "Invalid")
+    field(TVST, "Invalid")
+    field(TTST, "Invalid")
+    field(FTST, "Invalid")
+    field(FFST, "Invalid")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "MAJOR")
+    field(ONSV, "MAJOR")
+    field(TWSV, "MAJOR")
+    field(THSV, "MAJOR")
+    field(FRSV, "NO_ALARM")
+    field(FVSV, "MINOR")
+    field(SXSV, "MAJOR")
+    field(SVSV, "MAJOR")
+    field(EISV, "MAJOR")
+    field(NISV, "MAJOR")
+    field(TESV, "MAJOR")
+    field(ELSV, "MAJOR")
+    field(TVSV, "MAJOR")
+    field(TTSV, "MAJOR")
+    field(FTSV, "MAJOR")
+    field(FFSV, "MAJOR")
+    field(FLNK, "$(device):ERRSEL")
+}
+
+record(bi, "$(device):ENABLED")
+{
+    field(DESC, "Reads channel HV status.")
+    field(SCAN, "Passive")
+    field(ZSV, "MAJOR")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+record(calcout, "$(device):CALCENABLED")
+{
+    field(DESC, "Reads channel HV status.")
+    field(SCAN, "2 second")
+    field(INPA, "$(device):QPCSTA PP MS")
+    field(CALC, "(A>=1)&&(A<=2)?1:0")
+    field(OUT, "$(device):ENABLED PP")
+}
+
+
+
+record(bo, "$(device):ENABLE")
+{
+    field(DESC, "Enable ion pump HV")
+    field(PINI, "NO")
+    field(VAL, "1")
+    field(DTYP, "stream")
+    field(OUT, "@digitelQpc$(QPCBUS=).proto sethv($(unit=01),$(SPLY),$(device)) $(port)")
+}
+
+record(bo, "$(device):DISABLE")
+{
+    field(DESC, "Disable ion pump HV")
+    field(PINI, "NO")
+    field(VAL, "0")
+    field(DTYP, "stream")
+    field(OUT, "@digitelQpc$(QPCBUS=).proto sethv($(unit=01),$(SPLY),$(device)) $(port)")
+}
+
+###################################################################
+# Pump size
+record(ai, "$(device):PUMPSIZE")
+    {
+    field(DESC, "Reads Pump Size for pump $(SPLY)")
+    field(PINI, "YES")
+    field(SCAN, "10 second")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getPumpSize($(unit=01),$(SPLY)) $(port)")
+    field(EGU,"L/S")
+    }
+record(ao, "$(device):SETPUMPSIZE") {
+    field(DESC, "Sets Pump Size (L/S) for Pump $(SPLY)")
+    field(DTYP, "stream")
+    field(PINI, "YES")
+    field(DOL, "$(SIZE=500)")
+    field(OUT, "@digitelQpc$(QPCBUS=).proto setPumpSize($(unit=01),$(SPLY)) $(port)")
+    field(OMSL, "supervisory")
+    field(EGU,"L/S")
+    field(DRVH,"1200")
+    field(DRVL,"30")
+
+    info(autosaveFields, "VAL")
+}
+###################################################################
+# Pump set point readbacks for on/off pressures and relay/digital out status
+# These records are really only good for 1 set point but the database is good
+# for 1 of the controllers pump supplies.
+#
+
+##
+# This record reads the response to the 3B command and pushes the returned values directly to the
+# respective records, via the protocol file.
+#
+record(ai, "$(device):GETSP")
+    {
+    field(DESC, "Reads setpoints and status")
+    field(PINI, "YES")
+    field(SCAN, "5 second")
+    field(DTYP, "stream")
+    field(INP, "@digitelQpc$(QPCBUS=).proto getSetpoints($(unit=01),$(SPLY),$(device)) $(port)")
+    field(PREC,"1")
+    }
+
+# SPFUNCTION is the 'F' argument returned from the 3B cmd (See QPC User Manual)
+record(mbbi, "$(device):SPFUNCTION")
+    {
+    field(DESC, "Setpoint Function")
+    field(DTYP, "Soft Channel")
+    field(SCAN, "Passive")
+    field(ZRST, "OFF")
+    field(ONST, "Pressure Setpoint")
+    field(TWST, "HV Error")
+    field(THST, "HV Indicator")
+    }
+
+record(ai, "$(device):SPON")
+    {
+    field(DESC, "Relay setpoint ON Pressure")
+    field(PREC,"1")
+    }
+
+record(ai, "$(device):SPOFF")
+    {
+    field(DESC, "Relay setpoint OFF Pressure")
+    field(PREC,"1")
+    }
+
+record(bi, "$(device):SPSTA")
+    {
+    field(DESC, "Protection Relay status for pump")
+    field(OSV, "NO_ALARM")
+    field(ZSV, "MAJOR")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    }
+
+record(ai, "$(device):RANGEUPPER")
+    {
+    field(DESC, "Constant for pressure range upper")
+    field(DTYP, "Soft Channel")
+    field(PINI, "YES")
+    field(VAL,"1.0E-4")
+    }
+record(ai, "$(device):RANGELOWER")
+    {
+    field(DESC, "Constant for pressure range lower")
+    field(DTYP, "Soft Channel")
+    field(PINI, "YES")
+    field(VAL,"1.0E-11")
+    }
+
+
+###################################################################
+# Pump set point on pressure set
+# CAUTION: Setting this to a value greater than the off pressure will
+#      cause the off pressure to be readjusted (by the pump firmware)
+#      so that the off pressure will be 20% greater than the on pressure
+#      The same does not hold true for setting the off pressure but insetad
+#      the controller will simply return an error.
+record(ai, "$(device):SETSPON")
+    {
+    field(DESC, "Set on press for Spt$(SPT=$(SPLY))")
+    field(DTYP, "Soft Channel")
+    field(HOPR,"1.0E-4")
+    field(LOPR,"1.0e-11")
+    field(VAL,"$(spon)")
+    field(PREC,"1")
+    field(FLNK,"$(device):WRITEENABLE.PROC PP NMS")
+
+    info(autosaveFields, "VAL")
+    }
+
+record(ai, "$(device):SETSPOFF")
+    {
+    field(DESC, "Set off press for Spt$(SPT=$(SPLY))")
+    field(DTYP, "Soft Channel")
+    field(HOPR,"1.0E-4")
+    field(LOPR,"1.0e-11")
+    field(VAL,"$(spoff)")
+    field(PREC,"1")
+    field(FLNK,"$(device):WRITEENABLE.PROC PP NMS")
+
+    info(autosaveFields, "VAL")
+    }
+
+############################################################
+# Set the off pressure
+# This is a bit more tricky than setting on pressure in order to avoid the return
+# error message.
+# Must be set between 1.0E-4 and 1.0E-11
+# Must be at least 20% > than on pressure
+# INPA - Reserved for user input of desired off pressure
+############################################################
+record(calcout,"$(device):WRITEENABLE")
+    {
+    field(DESC,"Gate to enable/disable SP write")
+    field(CALC,"(((A>=(B+B*0.2))&&((A<D)&&(A>C)))?1:0)")
+    field(INPA,"$(device):SETSPOFF.VAL PP NMS")
+    field(INPB,"$(device):SETSPON.VAL PP NMS")
+    field(INPC,"$(device):RANGELOWER.VAL NPP NMS")
+    field(INPD,"$(device):RANGEUPPER.VAL NPP NMS")
+    field(OUT,"$(device):WRITESP PP NMS")
+    field(OOPT,"When Non-zero")
+    field(DOPT,"Use CALC")
+    field(HOPR,"1.0E-4")
+    field(LOPR,"1.0E-11")
+
+    }
+
+# IG - rationalise setpoint writing into a single operation
+# ~ 01 3B <N>,<F>,<S>,<SPON>,<SPOFF>
+#
+# PINI is set to YES to force the initial startup values from the IOC to be
+# set on IOC boot.
+# Should it be required in future to set the setpoint target to the value currently
+# in the controller, then PINI should be set to NO.
+#
+record(calcout,"$(device):WRITESP")
+    {
+    field(DESC,"Write On/Off Setpoints")
+    field(DTYP, "stream")
+    field(CALC,"0")
+    field(PINI, "YES")
+    field(INPA,"$(SPT=$(SPLY))")
+    field(INPB,"$(SPLY)")
+    field(INPC,"$(device):SETSPON.VAL NPP NMS")
+    field(INPD,"$(device):SETSPOFF.VAL NPP NMS")
+    field(OUT,"@digitelQpc$(QPCBUS=).proto setSetpoints($(unit=01),$(device)) $(port)")
+    }
+
+record(stringin, "$(device):SPOFFMESSAGE")
+{
+    field(DESC, "Display Off Spt Mesg")
+    field(INP, " ")
+}
+record(stringin, "$(device):SPMESSAGE")
+{
+    field(DESC, "Display Spt Error Mesg")
+    field(INP, " ")
+}
+record(stringin, "$(device):HVERRMSG")
+{
+    field(DESC, "Display HV Error Mesg")
+    field(PINI, "YES")
+    field(INP, " ")
+}
+record(stringin, "$(device):STATUSERRMSG")
+{
+    field(DESC, "Display Status Error Msg")
+    field(PINI, "YES")
+    field(INP, " ")
+}
+
+##################
+# Error handling
+#---------------
+record(seq, "$(device):ERRSEQ")
+{
+    field(DESC, "Get Error if applicable")
+    field(SCAN, "Passive")
+    field(SELM, "Specified")
+    field(SELN, "1")
+    field(DOL1, "0")
+    field(LNK1, "$(device):ERR PP NMS")
+    field(DOL2, "$(device):ERRGET PP NMS")
+    field(LNK2, "$(device):ERR PP NMS")
+}
+
+record(longin, "$(device):ERRGET")
+{
+    field(DESC, "Get Error Code")
+    field(DTYP, "stream")
+    field(INP,  "@digitelQpc$(QPCBUS=).proto err($(unit),$(SPLY)) $(port)")
+    field(SCAN, "Passive")
+}
+
+record(calcout, "$(device):ERRSEL")
+{
+    field(DESC, "Choose which error source")
+    field(INPA, "$(device):QPCSTA MS")
+    field(CALC, "A>=3?2:1")
+    field(OUT, "$(device):ERRSEQ.SELN PP MS")
+}
+
+#
+#% archiver 10 Monitor
+#% controldesk Error Code smon
+#
+record(mbbi, "$(device):ERR")
+{
+    field(DESC, "Error Code")
+    field(DTYP, "Soft Channel")
+    field(SCAN, "Passive")
+    field(ZRST, "OK")
+    field(ONST, "Too many cycles")
+    field(TWST, "High pressure")
+    field(THST, "High current")
+    field(FRST, "High pressure")
+    field(FVST, "Pump power")
+    field(SXST, "High current")
+    field(SVST, "Short circuit")
+    field(EIST, "Malfunction")
+    field(NIST, "Low voltage")
+    field(TEST, "Arc detect")
+    field(ELST, "11")
+    field(TVST, "12")
+    field(TTST, "13")
+    field(FTST, "14")
+    field(FFST, "15")
+    field(UNSV, "MINOR")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "MINOR")
+    field(TWSV, "MINOR")
+    field(THSV, "MINOR")
+    field(FRSV, "MINOR")
+    field(FVSV, "MINOR")
+    field(SXSV, "MINOR")
+    field(SVSV, "MINOR")
+    field(EISV, "MINOR")
+    field(NISV, "MINOR")
+    field(TESV, "MINOR")
+    field(ELSV, "MINOR")
+    field(TVSV, "MINOR")
+    field(TTSV, "MINOR")
+    field(FTSV, "MINOR")
+    field(FFSV, "MINOR")
+}

@@ -1,0 +1,11 @@
+format=1
+name=modbus
+version=3.4.0
+tag=tags/R3-4
+source=4a1276b0efa6f378a6dcbe58a10a1d73a44c7ed3
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+artifact=dbd/modbusApp.dbd 44f2b5ffad13445ab212ef1b07798baf1b47b665a8d9fdbfa8f656f39ad78300
+artifact=dbd/modbusSupport.dbd 89163178cc2fffb3d248e7de6d855030bb9a67ba94c4931b77cfb5259ab66535
+artifact=lib/linux-x86_64/libmodbus.so 6a5333e1d730e5521bde8360dfcd160106e5c913c4da63047baae3e8b4322d08

@@ -1,0 +1,21 @@
+ifeq (,$(_SSCAN_INCLUDED))
+_SSCAN_INCLUDED = YES
+
+_SSCAN_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+ifdef T_A
+
+_SSCAN_DEPS := $(shell $(CONVERTRELEASE) -T $(_SSCAN_DIR)/.. releaseTops)
+_SSCAN_DEPS := $(filter-out EPICS_BASE SUPPORT, $(_SSCAN_DEPS))
+
+$(foreach dep, $(_SSCAN_DEPS), $(eval -include $($(dep))/cfg/CONFIG_MODULE))
+
+-include $(_SSCAN_DIR)/SSCAN_DEPS
+-include $(_SSCAN_DIR)/SSCAN_DEPS.local
+
+ALL_IOC_DBDS += $(SSCAN_IOC_DBDS)
+ALL_IOC_LIBS := $(SSCAN_IOC_LIBS) $(ALL_IOC_LIBS)
+ALL_IOC_SYS_LIBS := $(SSCAN_IOC_SYS_LIBS) $(ALL_IOC_SYS_LIBS)
+
+endif # T_A
+endif # included

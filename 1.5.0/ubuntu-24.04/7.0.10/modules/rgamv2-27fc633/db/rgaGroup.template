@@ -1,0 +1,1060 @@
+# mks937aImgGroup.template
+# Template database for a group of up to 8 RGAs
+# Pete Owens - 13/5/05
+#
+# substitutions:
+# device - device name
+# rga1-8 - names of RGAs in group
+################################################################################
+# Head Connected
+#
+record(stringin, "$(device):HEAD")
+{
+    field(DESC, "Head")
+    field(INP,  "$(rga1):HEAD")
+    field(SCAN, "10 second")
+}
+################################################################################
+# Head Status
+#
+record(calc, "$(device):STA")
+{
+    field(DESC, "Overall status")
+    field(CALC, "((A>4)&&(A<7)&&(B#1))?0:A")
+    field(SCAN, "1 second")
+    field(INPA, "$(device):HEADSTA PP")
+    field(INPB, "$(device):FILSTA PP")
+    field(INPC, "$(device):SEV MS")
+}
+record(calc, "$(device):SEV")
+{
+    field(DESC, "Persistent Severity")
+    field(CALC, "(B=3)?((A>999)?1000:(A+1)):0")
+    field(SCAN, "1 second")
+    field(INPA, "$(device):SEV.VAL")
+    field(INPB, "$(device):HEADSTA.SEVR")
+    field(HIGH, "30")
+    field(HIHI, "120")
+    field(HSV,  "MAJOR")
+    field(HHSV, "INVALID")
+}
+#% controldesk Head Status smon
+record(mbbi, "$(device):HEADSTA")
+{
+    field(DESC, "Head Status")
+    field(INP,  "$(device):SELSTA PP MS")
+#    field(SCAN, "1 second")
+    field(ZRST, "Idle")
+    field(ONST, "Local Control")
+    field(TWST, "Degas Filament")
+    field(THST, "Cal Faraday")
+    field(FRST, "Cal Multiplier")
+    field(FVST, "Barchart 1-50")
+    field(SXST, "Barchart 1-100")
+    field(SVST, "Barchart 1-200")
+    field(EIST, "Analog 1-200")
+    field(NIST, "No RGA")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "MINOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "MINOR")
+    field(THSV, "MINOR")
+    field(FRSV, "MINOR")
+    field(FVSV, "NO_ALARM")
+    field(SXSV, "NO_ALARM")
+    field(SVSV, "NO_ALARM")
+    field(EISV, "NO_ALARM")
+    field(NISV, "INVALID")
+}
+record(sel, "$(device):SELSTA") 
+{
+    field(DESC, "Select Status")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):STA MS")
+    field(INPB, "$(rga2):STA MS")
+    field(INPC, "$(rga3):STA MS")
+    field(INPD, "$(rga4):STA MS")
+    field(INPE, "$(rga5):STA MS")
+    field(INPF, "$(rga6):STA MS")
+    field(INPG, "$(rga7):STA MS")
+    field(INPH, "$(rga8):STA MS")
+}
+#% controldesk Head Status smon
+record(mbbo, "$(device):CON")
+{
+    field(DESC, "Head Status")
+    field(FLNK, "$(device):SEQCON")
+    field(NOBT, "4")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(SXVL, "6")
+    field(SVVL, "7")
+    field(EIVL, "8")
+    field(ZRST, "Stop")
+    field(ONST, "Local Control")
+    field(TWST, "Degas Filament")
+    field(THST, "Cal Faraday")
+    field(FRST, "Cal Multiplier")
+    field(FVST, "Barchart 1-50")
+    field(SXST, "Barchart 1-100")
+    field(SVST, "Barchart 1-200")
+#    field(EIST, "Analog 1-200")
+}
+record(seq, "$(device):SEQCON")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):CON")
+    field(DOL2, "$(device):CON")
+    field(DOL3, "$(device):CON")
+    field(DOL4, "$(device):CON")
+    field(DOL5, "$(device):CON")
+    field(DOL6, "$(device):CON")
+    field(DOL7, "$(device):CON")
+    field(DOL8, "$(device):CON")
+    field(LNK1, "$(rga1):CON CA")
+    field(LNK2, "$(rga2):CON CA")
+    field(LNK3, "$(rga3):CON CA")
+    field(LNK4, "$(rga4):CON CA")
+    field(LNK5, "$(rga5):CON CA")
+    field(LNK6, "$(rga6):CON CA")
+    field(LNK7, "$(rga7):CON CA")
+    field(LNK8, "$(rga8):CON CA")
+}
+################################################################################
+# Disable Barcharts
+#
+record(bo, "$(device):SEL")
+{
+    field(DESC, "Select Bars")
+    field(FLNK, "$(device):SEQSEL")
+    field(VAL,  "0")
+    field(ZNAM, "Selected")
+    field(ONAM, "All")
+}
+record(seq, "$(device):SEQSEL")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):SEL")
+    field(DOL2, "$(device):SEL")
+    field(DOL3, "$(device):SEL")
+    field(DOL4, "$(device):SEL")
+    field(DOL5, "$(device):SEL")
+    field(DOL6, "$(device):SEL")
+    field(DOL7, "$(device):SEL")
+    field(DOL8, "$(device):SEL")
+    field(LNK1, "$(rga1):SEL CA")
+    field(LNK2, "$(rga2):SEL CA")
+    field(LNK3, "$(rga3):SEL CA")
+    field(LNK4, "$(rga4):SEL CA")
+    field(LNK5, "$(rga5):SEL CA")
+    field(LNK6, "$(rga6):SEL CA")
+    field(LNK7, "$(rga7):SEL CA")
+    field(LNK8, "$(rga8):SEL CA")
+}
+record(sel, "$(device):DIS200") 
+{
+    field(DESC, "Disable 200")
+    field(SCAN, "1 second")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):DIS200")
+    field(INPB, "$(rga2):DIS200")
+    field(INPC, "$(rga3):DIS200")
+    field(INPD, "$(rga4):DIS200")
+    field(INPE, "$(rga5):DIS200")
+    field(INPF, "$(rga6):DIS200")
+    field(INPG, "$(rga7):DIS200")
+    field(INPH, "$(rga8):DIS200")
+}
+record(sel, "$(device):DIS100") 
+{
+    field(DESC, "Disable 100")
+    field(SCAN, "1 second")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):DIS100")
+    field(INPB, "$(rga2):DIS100")
+    field(INPC, "$(rga3):DIS100")
+    field(INPD, "$(rga4):DIS100")
+    field(INPE, "$(rga5):DIS100")
+    field(INPF, "$(rga6):DIS100")
+    field(INPG, "$(rga7):DIS100")
+    field(INPH, "$(rga8):DIS100")
+}
+record(sel, "$(device):DIS50") 
+{
+    field(DESC, "Disable 50")
+    field(SCAN, "1 second")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):DIS50")
+    field(INPB, "$(rga2):DIS50")
+    field(INPC, "$(rga3):DIS50")
+    field(INPD, "$(rga4):DIS50")
+    field(INPE, "$(rga5):DIS50")
+    field(INPF, "$(rga6):DIS50")
+    field(INPG, "$(rga7):DIS50")
+    field(INPH, "$(rga8):DIS50")
+}
+record(sel, "$(device):DIS20") 
+{
+    field(DESC, "Disable Select")
+    field(SCAN, "1 second")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):DIS20")
+    field(INPB, "$(rga2):DIS20")
+    field(INPC, "$(rga3):DIS20")
+    field(INPD, "$(rga4):DIS20")
+    field(INPE, "$(rga5):DIS20")
+    field(INPF, "$(rga6):DIS20")
+    field(INPG, "$(rga7):DIS20")
+    field(INPH, "$(rga8):DIS20")
+}
+################################################################################
+# Current Selected Filament
+#
+#% controldesk Filament smon
+record(bi,"$(device):FIL") 
+{
+    field(DESC, "Filament")
+    field(INP,  "$(rga1):FIL")
+    field(SCAN, "1 second")
+    field(SDIS, "$(device):MODE")
+    field(ZNAM, "Filament 1")
+    field(ONAM, "Filament 2")
+}
+#% controldesk Filament scon
+record(bo, "$(device):SETFIL")
+{
+    field(DESC, "Filament")
+    field(FLNK, "$(device):SEQFIL")
+    field(ZNAM, "Filament 1")
+    field(ONAM, "Filament 2")
+}
+record(seq, "$(device):SEQFIL")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):SETFIL")
+    field(DOL2, "$(device):SETFIL")
+    field(DOL3, "$(device):SETFIL")
+    field(DOL4, "$(device):SETFIL")
+    field(DOL5, "$(device):SETFIL")
+    field(DOL6, "$(device):SETFIL")
+    field(DOL7, "$(device):SETFIL")
+    field(DOL8, "$(device):SETFIL")
+    field(LNK1, "$(rga1):SETFIL CA")
+    field(LNK2, "$(rga2):SETFIL CA")
+    field(LNK3, "$(rga3):SETFIL CA")
+    field(LNK4, "$(rga4):SETFIL CA")
+    field(LNK5, "$(rga5):SETFIL CA")
+    field(LNK6, "$(rga6):SETFIL CA")
+    field(LNK7, "$(rga7):SETFIL CA")
+    field(LNK8, "$(rga8):SETFIL CA")
+}
+################################################################################
+# Filament Status
+#
+#% controldesk Filament Status smon
+record(mbbi, "$(device):FILSTA")
+{
+    field(DESC, "Filament Status")
+    field(INP,  "$(device):SELFILSTA PP MS")
+#    field(SCAN, "1 second")
+    field(SDIS, "$(device):MODE")
+    field(ZRST, "Off")
+    field(ONST, "On")
+    field(TWST, "Warming up")
+    field(THST, "Cooling Down")
+    field(FRST, "Failed")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "NO_ALARM")
+    field(FRSV, "MAJOR")
+}
+record(sel, "$(device):SELFILSTA") 
+{
+    field(DESC, "Select Filament Status")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):FILSTA MS")
+    field(INPB, "$(rga2):FILSTA MS")
+    field(INPC, "$(rga3):FILSTA MS")
+    field(INPD, "$(rga4):FILSTA MS")
+    field(INPE, "$(rga5):FILSTA MS")
+    field(INPF, "$(rga6):FILSTA MS")
+    field(INPG, "$(rga7):FILSTA MS")
+    field(INPH, "$(rga8):FILSTA MS")
+}
+#% controldesk Filament Status scon
+record(bo, "$(device):FILCON")
+{
+    field(DESC, "Filament Control")
+    field(FLNK, "$(device):SEQFILCON")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+record(seq, "$(device):SEQFILCON")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):FILCON")
+    field(DOL2, "$(device):FILCON")
+    field(DOL3, "$(device):FILCON")
+    field(DOL4, "$(device):FILCON")
+    field(DOL5, "$(device):FILCON")
+    field(DOL6, "$(device):FILCON")
+    field(DOL7, "$(device):FILCON")
+    field(DOL8, "$(device):FILCON")
+    field(LNK1, "$(rga1):FILCON CA")
+    field(LNK2, "$(rga2):FILCON CA")
+    field(LNK3, "$(rga3):FILCON CA")
+    field(LNK4, "$(rga4):FILCON CA")
+    field(LNK5, "$(rga5):FILCON CA")
+    field(LNK6, "$(rga6):FILCON CA")
+    field(LNK7, "$(rga7):FILCON CA")
+    field(LNK8, "$(rga8):FILCON CA")
+}
+################################################################################
+# IMG Interlock Status
+#
+#% controldesk IMG Interlock smon
+record(bi, "$(device):ILK") 
+{
+    field(DESC, "IMG Interlock")
+    field(INP,  "$(device):SELILK PP")
+    field(SCAN, "1 second")
+    field(SDIS, "$(device):MODE")
+    field(ZNAM, "OK")
+    field(ONAM, "Tripped")
+    field(ZSV,  "NO_ALARM")
+    field(OSV,  "MAJOR")
+}
+record(sel, "$(device):SELILK") 
+{
+    field(DESC, "Select Interlock")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):ILK MS")
+    field(INPB, "$(rga2):ILK MS")
+    field(INPC, "$(rga3):ILK MS")
+    field(INPD, "$(rga4):ILK MS")
+    field(INPE, "$(rga5):ILK MS")
+    field(INPF, "$(rga6):ILK MS")
+    field(INPG, "$(rga7):ILK MS")
+    field(INPH, "$(rga8):ILK MS")
+}
+################################################################################
+# Multiplier Status
+#
+#% controldesk Multiplier smon
+record(bi,"$(device):MLTSTA") 
+{
+    field(DESC, "Multiplier")
+    field(INP,  "$(device):SELMLTSTA PP")
+    field(SCAN, "1 second")
+    field(ZNAM, "Disabled")
+    field(ONAM, "Enabled")
+}
+record(sel, "$(device):SELMLTSTA") 
+{
+    field(DESC, "Select Multiplier Status")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):MLTSTA")
+    field(INPB, "$(rga2):MLTSTA")
+    field(INPC, "$(rga3):MLTSTA")
+    field(INPD, "$(rga4):MLTSTA")
+    field(INPE, "$(rga5):MLTSTA")
+    field(INPF, "$(rga6):MLTSTA")
+    field(INPG, "$(rga7):MLTSTA")
+    field(INPH, "$(rga8):MLTSTA")
+}
+#% controldesk Multiplier scon
+record(bo, "$(device):MLTCON")
+{
+    field(DESC, "Multiplier")
+    field(FLNK, "$(device):SEQMLTCON")
+    field(ZNAM, "Disable")
+    field(ONAM, "Enable")
+}
+record(seq, "$(device):SEQMLTCON")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):MLTCON")
+    field(DOL2, "$(device):MLTCON")
+    field(DOL3, "$(device):MLTCON")
+    field(DOL4, "$(device):MLTCON")
+    field(DOL5, "$(device):MLTCON")
+    field(DOL6, "$(device):MLTCON")
+    field(DOL7, "$(device):MLTCON")
+    field(DOL8, "$(device):MLTCON")
+    field(LNK1, "$(rga1):MLTCON CA")
+    field(LNK2, "$(rga2):MLTCON CA")
+    field(LNK3, "$(rga3):MLTCON CA")
+    field(LNK4, "$(rga4):MLTCON CA")
+    field(LNK5, "$(rga5):MLTCON CA")
+    field(LNK6, "$(rga6):MLTCON CA")
+    field(LNK7, "$(rga7):MLTCON CA")
+    field(LNK8, "$(rga8):MLTCON CA")
+}
+################################################################################
+# Scan Mode Status
+#
+#% controldesk Scan Mode smon
+record(bi,"$(device):SCAN") 
+{
+    field(DESC, "Scan Mode")
+    field(INP,  "$(rga1):SCAN")
+    field(SCAN, "1 second")
+    field(ZNAM, "Single")
+    field(ONAM, "Continuous")
+}
+#% controldesk Scan Mode scon
+record(bo, "$(device):SETSCAN")
+{
+    field(DESC, "Scan Mode")
+    field(FLNK, "$(device):SEQSCAN")
+    field(ZNAM, "Single")
+    field(ONAM, "Continuous")
+}
+record(seq, "$(device):SEQSCAN")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):SETSCAN")
+    field(DOL2, "$(device):SETSCAN")
+    field(DOL3, "$(device):SETSCAN")
+    field(DOL4, "$(device):SETSCAN")
+    field(DOL5, "$(device):SETSCAN")
+    field(DOL6, "$(device):SETSCAN")
+    field(DOL7, "$(device):SETSCAN")
+    field(DOL8, "$(device):SETSCAN")
+    field(LNK1, "$(rga1):SETSCAN CA")
+    field(LNK2, "$(rga2):SETSCAN CA")
+    field(LNK3, "$(rga3):SETSCAN CA")
+    field(LNK4, "$(rga4):SETSCAN CA")
+    field(LNK5, "$(rga5):SETSCAN CA")
+    field(LNK6, "$(rga6):SETSCAN CA")
+    field(LNK7, "$(rga7):SETSCAN CA")
+    field(LNK8, "$(rga8):SETSCAN CA")
+}
+################################################################################
+# Control Mode Status
+#
+record(bi,"$(device):MODE") 
+{
+    field(DESC, "Scan Mode")
+    field(SCAN, "1 second")
+    field(INP,  "$(device):SELMODE PP")
+    field(ZNAM, "Remote")
+    field(ONAM, "Local")
+}
+record(sel, "$(device):SELMODE") 
+{
+    field(DESC, "Select Mode")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):MODE")
+    field(INPB, "$(rga2):MODE")
+    field(INPC, "$(rga3):MODE")
+    field(INPD, "$(rga4):MODE")
+    field(INPE, "$(rga5):MODE")
+    field(INPF, "$(rga6):MODE")
+    field(INPG, "$(rga7):MODE")
+    field(INPH, "$(rga8):MODE")
+}
+record(bo, "$(device):SETMODE")
+{
+    field(DESC, "Scan Mode")
+    field(FLNK, "$(device):SEQMODE")
+    field(ZNAM, "Remote")
+    field(ONAM, "Local")
+}
+record(seq, "$(device):SEQMODE")
+{
+    field(SELM, "All")
+    field(DOL1, "$(device):SETMODE")
+    field(DOL2, "$(device):SETMODE")
+    field(DOL3, "$(device):SETMODE")
+    field(DOL4, "$(device):SETMODE")
+    field(DOL5, "$(device):SETMODE")
+    field(DOL6, "$(device):SETSCAN")
+    field(DOL7, "$(device):SETMODE")
+    field(DOL8, "$(device):SETMODE")
+    field(LNK1, "$(rga1):SETMODE CA")
+    field(LNK2, "$(rga2):SETMODE CA")
+    field(LNK3, "$(rga3):SETMODE CA")
+    field(LNK4, "$(rga4):SETMODE CA")
+    field(LNK5, "$(rga5):SETMODE CA")
+    field(LNK6, "$(rga6):SETMODE CA")
+    field(LNK7, "$(rga7):SETMODE CA")
+    field(LNK8, "$(rga8):SETMODE CA")
+}
+################################################################################
+# Is there data to read
+#
+#% controldesk Data to read smon
+record(mbbi, "$(device):DATA")
+{
+    field(DESC, "Data to read")
+    field(INP,  "$(device):SELDATA PP")
+    field(SCAN, "1 second")
+    field(ZRST, "No Data")
+    field(ONST, "Barchart 1-50")
+    field(TWST, "Barchart 1-100")
+    field(THST, "Barchart 1-200")
+    field(FRST, "Analog 1-200")
+    field(UNSV, "NO_ALARM")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "NO_ALARM")
+    field(FRSV, "NO_ALARM")
+}
+record(sel, "$(device):SELDATA") 
+{
+    field(DESC, "Select Data")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):DATA")
+    field(INPB, "$(rga2):DATA")
+    field(INPC, "$(rga3):DATA")
+    field(INPD, "$(rga4):DATA")
+    field(INPE, "$(rga5):DATA")
+    field(INPF, "$(rga6):DATA")
+    field(INPG, "$(rga7):DATA")
+    field(INPH, "$(rga8):DATA")
+}
+################################################################################
+# Date of current scan
+#
+#% controldesk Date readback
+record(stringin, "$(device):DATE")
+{
+    field(DESC, "Date")
+    field(INP,  "$(rga1):DATE")
+    field(SCAN, "1 second")
+}
+#record(stringin, "$(device):YEAR")
+#{
+#    field(DESC, "Year")
+#    field(INP,  "$(rga1):YEAR")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#}
+#record(longin, "$(device):MON")
+#{
+#    field(DESC, "Month")
+#    field(INP,  "$(rga1):MON")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#    field(HOPR, "12")
+#    field(LOPR, "1")
+#    field(HIGH, "12")
+#    field(LOW,  "1")
+#    field(HSV,  "MINOR")
+#    field(LSV,  "MINOR")
+#}
+#record(longin, "$(device):DAY")
+#{
+#    field(DESC, "Day")
+#    field(INP,  "$(rga1):DAY")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#    field(HOPR, "31")
+#    field(LOPR, "1")
+#    field(HIGH, "31")
+#    field(LOW,  "1")
+#    field(HSV,  "MINOR")
+#    field(LSV,  "MINOR")
+#}
+#record(stringin, "$(device):HOUR")
+#{
+#    field(DESC, "Hour")
+#    field(INP,  "$(rga1):HOUR")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#}
+#record(stringin, "$(device):MIN")
+#{
+#    field(DESC, "Minute")
+#    field(INP,  "$(rga1):MIN")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#}
+#record(stringin, "$(device):SEC")
+#{
+#    field(DESC, "Second")
+#    field(INP,  "$(rga1):SEC")
+#    field(SCAN, "1 second")
+#    field(SDIS, "$(device):DIS50")
+#}
+################################################################################
+# Detector Setting
+#
+#% controldesk Detector Setting smon
+record(mbbi, "$(device):DET")
+{
+    field(DESC, "Detector Setting")
+    field(INP,  "$(device):SELDET PP")
+    field(SCAN, "1 second")
+    field(ZRST, "No Data")
+    field(ONST, "Faraday")
+    field(TWST, "Multiplier")
+}
+record(sel, "$(device):SELDET") 
+{
+    field(DESC, "Select Data")
+    field(SELM, "Low Signal")
+    field(INPA, "$(rga1):DET")
+    field(INPB, "$(rga2):DET")
+    field(INPC, "$(rga3):DET")
+    field(INPD, "$(rga4):DET")
+    field(INPE, "$(rga5):DET")
+    field(INPF, "$(rga6):DET")
+    field(INPG, "$(rga7):DET")
+    field(INPH, "$(rga8):DET")
+}
+################################################################################
+# Total Pressure
+#
+#% controldesk Total Pressure readback
+#
+record(sel, "$(device):TOTP")
+{
+    field(DESC, "Total Pressure")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):TOTP")
+    field(INPB, "$(rga2):TOTP")
+    field(INPC, "$(rga3):TOTP")
+    field(INPD, "$(rga4):TOTP")
+    field(INPE, "$(rga5):TOTP")
+    field(INPF, "$(rga6):TOTP")
+    field(INPG, "$(rga7):TOTP")
+    field(INPH, "$(rga8):TOTP")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+record(calc, "$(device):TOTPLOG")
+{
+    field(DESC, "Total Pressure")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):TOTP")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+    field(ADEL, "0.025")
+}
+################################################################################
+# Sum Partial
+#
+#% controldesk Sum of Peaks readback
+#
+record(sel, "$(device):SUMP")
+{
+    field(DESC, "Sum of Peaks")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):SUMP")
+    field(INPB, "$(rga2):SUMP")
+    field(INPC, "$(rga3):SUMP")
+    field(INPD, "$(rga4):SUMP")
+    field(INPE, "$(rga5):SUMP")
+    field(INPF, "$(rga6):SUMP")
+    field(INPG, "$(rga7):SUMP")
+    field(INPH, "$(rga8):SUMP")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+record(calc, "$(device):SUMPLOG")
+{
+    field(DESC, "Sum of Peaks")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):SUMP")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+    field(ADEL, "0.025")
+}
+################################################################################
+# Bar Chart
+#
+record(sel, "$(device):BAR:M1")
+{
+    field(DESC, "Mass 1")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M1")
+    field(INPB, "$(rga2):BAR:M1")
+    field(INPC, "$(rga3):BAR:M1")
+    field(INPD, "$(rga4):BAR:M1")
+    field(INPE, "$(rga5):BAR:M1")
+    field(INPF, "$(rga6):BAR:M1")
+    field(INPG, "$(rga7):BAR:M1")
+    field(INPH, "$(rga8):BAR:M1")
+    field(SDIS, "$(device):DIS50")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk H2 readback
+record(sel, "$(device):BAR:M2")
+{
+    field(DESC, "H2")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M2")
+    field(INPB, "$(rga2):BAR:M2")
+    field(INPC, "$(rga3):BAR:M2")
+    field(INPD, "$(rga4):BAR:M2")
+    field(INPE, "$(rga5):BAR:M2")
+    field(INPF, "$(rga6):BAR:M2")
+    field(INPG, "$(rga7):BAR:M2")
+    field(INPH, "$(rga8):BAR:M2")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+record(sel, "$(device):BAR:M3")
+{
+    field(DESC, "Mass 3")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M3")
+    field(INPB, "$(rga2):BAR:M3")
+    field(INPC, "$(rga3):BAR:M3")
+    field(INPD, "$(rga4):BAR:M3")
+    field(INPE, "$(rga5):BAR:M3")
+    field(INPF, "$(rga6):BAR:M3")
+    field(INPG, "$(rga7):BAR:M3")
+    field(INPH, "$(rga8):BAR:M3")
+    field(SDIS, "$(device):DIS50")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk He readback
+record(sel, "$(device):BAR:M4")
+{
+    field(DESC, "He")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M4")
+    field(INPB, "$(rga2):BAR:M4")
+    field(INPC, "$(rga3):BAR:M4")
+    field(INPD, "$(rga4):BAR:M4")
+    field(INPE, "$(rga5):BAR:M4")
+    field(INPF, "$(rga6):BAR:M4")
+    field(INPG, "$(rga7):BAR:M4")
+    field(INPH, "$(rga8):BAR:M4")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk CH2/N2++ readback
+record(sel, "$(device):BAR:M14")
+{
+    field(DESC, "CH2/N2++")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M14")
+    field(INPB, "$(rga2):BAR:M14")
+    field(INPC, "$(rga3):BAR:M14")
+    field(INPD, "$(rga4):BAR:M14")
+    field(INPE, "$(rga5):BAR:M14")
+    field(INPF, "$(rga6):BAR:M14")
+    field(INPG, "$(rga7):BAR:M14")
+    field(INPH, "$(rga8):BAR:M14")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk CH3 readback
+record(sel, "$(device):BAR:M15")
+{
+    field(DESC, "CH3")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M15")
+    field(INPB, "$(rga2):BAR:M15")
+    field(INPC, "$(rga3):BAR:M15")
+    field(INPD, "$(rga4):BAR:M15")
+    field(INPE, "$(rga5):BAR:M15")
+    field(INPF, "$(rga6):BAR:M15")
+    field(INPG, "$(rga7):BAR:M15")
+    field(INPH, "$(rga8):BAR:M15")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk CH4 readback
+record(sel, "$(device):BAR:M16")
+{
+    field(DESC, "CH4")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M16")
+    field(INPB, "$(rga2):BAR:M16")
+    field(INPC, "$(rga3):BAR:M16")
+    field(INPD, "$(rga4):BAR:M16")
+    field(INPE, "$(rga5):BAR:M16")
+    field(INPF, "$(rga6):BAR:M16")
+    field(INPG, "$(rga7):BAR:M16")
+    field(INPH, "$(rga8):BAR:M16")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk H20 readback
+record(sel, "$(device):BAR:M18")
+{
+    field(DESC, "H20")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M18")
+    field(INPB, "$(rga2):BAR:M18")
+    field(INPC, "$(rga3):BAR:M18")
+    field(INPD, "$(rga4):BAR:M18")
+    field(INPE, "$(rga5):BAR:M18")
+    field(INPF, "$(rga6):BAR:M18")
+    field(INPG, "$(rga7):BAR:M18")
+    field(INPH, "$(rga8):BAR:M18")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk N2/CO readback
+record(sel, "$(device):BAR:M28")
+{
+    field(DESC, "N2/CO")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M28")
+    field(INPB, "$(rga2):BAR:M28")
+    field(INPC, "$(rga3):BAR:M28")
+    field(INPD, "$(rga4):BAR:M28")
+    field(INPE, "$(rga5):BAR:M28")
+    field(INPF, "$(rga6):BAR:M28")
+    field(INPG, "$(rga7):BAR:M28")
+    field(INPH, "$(rga8):BAR:M28")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk O2 readback
+record(sel, "$(device):BAR:M32")
+{
+    field(DESC, "O2")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M32")
+    field(INPB, "$(rga2):BAR:M32")
+    field(INPC, "$(rga3):BAR:M32")
+    field(INPD, "$(rga4):BAR:M32")
+    field(INPE, "$(rga5):BAR:M32")
+    field(INPF, "$(rga6):BAR:M32")
+    field(INPG, "$(rga7):BAR:M32")
+    field(INPH, "$(rga8):BAR:M32")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk Ar readback
+record(sel, "$(device):BAR:M40")
+{
+    field(DESC, "Ar")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M40")
+    field(INPB, "$(rga2):BAR:M40")
+    field(INPC, "$(rga3):BAR:M40")
+    field(INPD, "$(rga4):BAR:M40")
+    field(INPE, "$(rga5):BAR:M40")
+    field(INPF, "$(rga6):BAR:M40")
+    field(INPG, "$(rga7):BAR:M40")
+    field(INPH, "$(rga8):BAR:M40")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk CO2 readback
+record(sel, "$(device):BAR:M44")
+{
+    field(DESC, "CO2")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M44")
+    field(INPB, "$(rga2):BAR:M44")
+    field(INPC, "$(rga3):BAR:M44")
+    field(INPD, "$(rga4):BAR:M44")
+    field(INPE, "$(rga5):BAR:M44")
+    field(INPF, "$(rga6):BAR:M44")
+    field(INPG, "$(rga7):BAR:M44")
+    field(INPH, "$(rga8):BAR:M44")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+#% controldesk CF3/C5H9 readback
+record(sel, "$(device):BAR:M69")
+{
+    field(DESC, "CF3/C5H9")
+    field(SELM, "High Signal")
+    field(INPA, "$(rga1):BAR:M69")
+    field(INPB, "$(rga2):BAR:M69")
+    field(INPC, "$(rga3):BAR:M69")
+    field(INPD, "$(rga4):BAR:M69")
+    field(INPE, "$(rga5):BAR:M69")
+    field(INPF, "$(rga6):BAR:M69")
+    field(INPG, "$(rga7):BAR:M69")
+    field(INPH, "$(rga8):BAR:M69")
+    field(SDIS, "$(device):DIS20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+}
+################################################################################
+# Log of Bar Chart
+#
+record(calc, "$(device):LOG:M1")
+{
+    field(DESC, "Mass 1")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M1 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M2")
+{
+    field(DESC, "H2")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M2 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M3")
+{
+    field(DESC, "Mass 3")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M3 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M4")
+{
+    field(DESC, "He")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M4 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M14")
+{
+    field(DESC, "CH2/N2++")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M14 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M15")
+{
+    field(DESC, "CH3")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M15 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M16")
+{
+    field(DESC, "CH4")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M16 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M18")
+{
+    field(DESC, "H20")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M18 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M28")
+{
+    field(DESC, "N2/CO")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M28 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M32")
+{
+    field(DESC, "O2")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M32 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M40")
+{
+    field(DESC, "Ar")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M40 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M44")
+{
+    field(DESC, "CO2")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M44 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+record(calc, "$(device):LOG:M69")
+{
+    field(DESC, "CF3/C5H9")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M69 PP")
+    field(SCAN, "10 second")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+################################################################################
+

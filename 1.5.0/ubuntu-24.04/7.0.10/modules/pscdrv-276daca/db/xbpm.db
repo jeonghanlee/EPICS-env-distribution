@@ -1,0 +1,79 @@
+record(bi, "$(P)Conn-Sts") {
+  field(DTYP, "PSC Ctrl Connected")
+  field(INP , "@$(DEV)")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(ZSV , "MAJOR")
+}
+
+record(bo, "$(P)Reconn-Cmd") {
+  field(DTYP, "PSC Ctrl Reconnect")
+  field(OUT , "@$(DEV)")
+  field(ZNAM, "Reconnect")
+  field(ONAM, "Reconnect")
+}
+
+record(stringin, "$(P)Msg-I") {
+  field(DTYP, "PSC Ctrl Message")
+  field(INP , "@$(DEV)")
+  field(DESC, "Last message")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)Cnt:Conn-I") {
+  field(DTYP, "PSC Conn Count")
+  field(INP , "@$(DEV)")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)Cnt:Ukn-I") {
+  field(DTYP, "PSC Unknown Msg Count")
+  field(INP , "@$(DEV)")
+  field(SCAN, "1 second")
+}
+
+record(bo, "$(P)Send-Cmd_") {
+  field(DTYP, "PSC Ctrl Send All")
+  field(OUT , "@$(DEV)")
+  field(ZNAM, "Send")
+  field(ONAM, "Send")
+}
+
+# TX Message block 10 (keep alive)
+record(longout, "$(P)Ping-Cmd_") {
+  field(DTYP, "PSC Single I32")
+  field(OUT , "@$(DEV) 10")
+  field(SCAN, "1 second")
+  field(FLNK, "$(P)Send-Cmd_")
+}
+
+# RX Message block 43 (on connnection)
+record(longin, "$(P)Ver:FW-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@$(DEV) 43 0")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+}
+
+# RX Message block 42 (1 Hz internal status)
+record(longin, "$(P)Cnt:Cyc-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@$(DEV) 42 0")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+  field(FLNK, "$(P)Cnt:SockErr-I")
+}
+
+record(longin, "$(P)Cnt:SockErr-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@$(DEV) 42 4")
+  field(TSE , "-2")
+  field(FLNK, "$(P)Cnt:Drop-I")
+}
+
+record(longin, "$(P)Cnt:Drop-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@$(DEV) 42 8")
+  field(TSE , "-2")
+}

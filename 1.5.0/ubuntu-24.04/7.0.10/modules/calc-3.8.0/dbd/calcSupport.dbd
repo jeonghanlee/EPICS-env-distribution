@@ -1,0 +1,50 @@
+# Stuff that we can build without support from any other module
+
+include "transformRecord.dbd"
+include "sCalcoutRecord.dbd"
+include "aCalcoutRecord.dbd"
+include "sseqRecord.dbd"
+
+device(scalcout,CONSTANT,devsCalcoutSoft,"Soft Channel")
+device(acalcout,CONSTANT,devaCalcoutSoft,"Soft Channel")
+
+variable(debugSubAve, int)
+registrar(subAveRegister)
+
+variable(sCalcPostfixDebug, int)
+variable(sCalcPerformDebug, int)
+variable(sCalcoutRecordDebug, int)
+variable(devsCalcoutSoftDebug, int)
+variable(sCalcStackHW, int)
+variable(sCalcStackLW, int)
+variable(sCalcLoopMax, int)
+
+variable(aCalcPostfixDebug, int)
+variable(aCalcPerformDebug, int)
+variable(aCalcoutRecordDebug, int)
+variable(devaCalcoutSoftDebug, int)
+variable(aCalcLoopMax, int)
+variable(aCalcAsyncThreshold, int)
+
+variable(transformRecordDebug, int)
+
+# Only the stuff we build that requires the aSub record
+
+variable(interpDebug, int)
+registrar(interpRegister)
+
+variable(arrayTestDebug, int)
+registrar(arrayTestRegister)
+variable("sseqRecDebug", int)
+
+# allocated memory in acalcout records
+registrar(aCalcMonitorMemRegister)
+variable(aCalcMonitorMem_debug)
+# allocated memory in acalc engine
+registrar(acalcTotalAllocatedMemoryRegister)
+# Only the stuff we build that requires the SSCAN module
+include "swaitRecord.dbd"
+device(swait,CONSTANT,devSWaitIoEvent,"Soft Channel")
+variable(swaitRecordDebug, int)
+# Only the stuff we build that requires the SEQ module
+include "editSseq.dbd"

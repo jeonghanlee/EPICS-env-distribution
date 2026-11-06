@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2022 Argonne National Laboratory
+#
+# SPDX-License-Identifier: EPICS
+
+# Before adding patterns here, please read the gitignore
+# documentation at https://git-scm.com/docs/gitignore
+
+# Install directories
+/bin/
+/cfg/
+/html/
+/include/
+/lib/
+
+# Local configuration files
+/configure/*.local
+
+# iocsh
+.iocsh_history
+
+# Build directories
+O.*/
+
+# Common files created by other tools
+.DS_Store
