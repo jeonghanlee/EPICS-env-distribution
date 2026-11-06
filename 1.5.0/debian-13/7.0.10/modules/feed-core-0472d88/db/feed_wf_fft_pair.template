@@ -1,0 +1,172 @@
+# FFT calculations
+#
+# Macros:
+#  PREF - Prefix of our records
+#  SIZE - Max signal length (eg. 16384)
+#
+
+# FLNK'd from _acquire_stats.template
+record(aSub, "$(PREF)FFT_CALC_") {
+# do not change DESC; string used to look up shared data
+  field(DESC, "$(NAME)$(BIT)")
+  field(INAM, "FFTSENDINIT")
+  field(SNAM, "FFTSEND")
+# Inputs
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+# Inputs M,N used for FFT data send/recv
+  field(FTM , "LONG")
+  field(FTN , "LONG")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(NOC , "1")
+  field(NOM , "1")
+  field(NON , "1")
+  field(INPA, "$(INPA) MSI NPP")
+# Keep both inputs for convienience, but
+# for real FFTs, only INPA (real signal)
+# is used in FFT calculation
+  field(INPB, "$(INPB) MSI NPP")
+  field(INPC, "$(BASE)SAMP_PERIOD MSI NPP")
+  field(INPM, "$(INDEX)") # index into data structure
+  field(INPN, "$(FFTTYPE)") # 0 = C2C, 1 = R2C, see fftmain.h
+  field(FLNK, "$(FLNK=)") # to external logic, eg. WF stats
+  field(TSEL, "$(INPA).TIME")
+}
+
+# Threshold used in determining amplitude FFT
+# maximum value and its corresponding frequency.
+# If desired, this can be increased from 1 to only identify
+# the maximum if it exceeds the FFT amplitude mean by some factor:
+# if (value > thresh * mean(AFFT)), then max found
+record(ao, "$(PREF)AFFTMAX_THRESH") {
+  field(DESC, "Max used if > thresh*mean")
+  field(OMSL, "supervisory")
+  field(DOL,  "1.0")
+  field(VAL,  "1.0")
+  field(DRVL, "1.0")
+  field(DRVH, "1e12")
+  field(PINI, "YES")
+  info(autosaveFields_pass0, "VAL")
+}
+
+# processed by FFT thread
+record(aSub, "$(PREF)FFT_CALC2_") {
+# do not change DESC; string used to look up shared data
+  field(DESC, "$(NAME)$(BIT)")
+  field(INAM, "FFTCALCINIT")
+  field(SNAM, "FFTCALC")
+  field(SCAN, "Event")
+  field(EVNT, "event-fft-$(NAME)$(BIT)-$(INDEX)")
+  field(INPA, "$(PREF)AFFTMAX_THRESH")
+# Inputs M, N used for FFT data send/recv
+  field(FTM , "LONG")
+  field(FTN , "LONG")
+  field(NOM , "1")
+  field(NON , "1")
+  field(INPM, "$(INDEX)") # index into data structure
+  field(INPN, "$(FFTTYPE)") # 0 = C2C, 1 = R2C, see fftmain.h
+# Outputs
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(FTVC ,"DOUBLE")
+  field(FTVD ,"DOUBLE")
+  field(FTVE ,"DOUBLE")
+  field(FTVF ,"DOUBLE")
+  field(FTVG ,"DOUBLE")
+  field(FTVH ,"SHORT")
+  field(FTVI ,"DOUBLE")
+  field(FTVJ ,"DOUBLE")
+  field(NOVA, "$(SIZE)")
+  field(NOVB, "$(SIZE)")
+  field(NOVC, "$(SIZE)")
+  field(NOVD, "$(SIZE)")
+  field(NOVE, "1")
+  field(NOVF, "1")
+  field(NOVG, "1")
+  field(NOVH, "1")
+  field(NOVI, "1")
+  field(NOVJ, "1")
+  field(OUTA, "$(PREF)AFFT MSI PP")  # amplitude FFT waveform 
+  field(OUTB, "$(PREF)FWF MSI PP")   # frequency steps waveform
+  field(OUTC, "$(PREF)IFFT MSI PP")  # I FFT waveform 
+  field(OUTD, "$(PREF)QFFT MSI PP")  # Q FFT waveform 
+  field(OUTE, "$(PREF)AFFTMAX MSI PP")  # max value of amplitude FFT
+  field(OUTF, "$(PREF)AFFTMAXF MSI PP") # frequency of max value of amplitude FFT 
+  field(OUTG, "")                       # mean of amplitude FFT
+  field(OUTH, "")                       # 1 if max amplitude found
+  field(OUTI, "$(PREF)FFT_FNYQ MSI PP") # max measurable frequency (Nyquist) = samplingrate/2
+  field(OUTJ, "$(PREF)FFT_FSTEP MSI PP")# FFT frequency resolution = 1/samplingrate/npoints (actual, not maximum)
+  field(OUTK, "$(PREF)AFFTSUM MSI PP")  # Sum of amplitude FFT bins
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(aai, "$(PREF)AFFT") {
+  field(DESC, "Amplitude FFT")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(INPA).TIME")
+  field(FLNK, "$(PREF)FFTNORD")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)FFTNORD") {
+    field(INP , "$(PREF)AFFT.NORD")
+}
+
+record(aai, "$(PREF)FWF") {
+  field(DESC, "FFT frequencies")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)AFFTSUM") {
+  field(DESC, "Amplitude FFT bins sum")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)FFT_FNYQ") {
+  field(DESC, "FFT Nyquist frequency")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)FFT_FSTEP") {
+  field(DESC, "FFT frequency resolution")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)AFFTMAX") {
+  field(DESC, "Amplitude FFT max")
+  field(TSEL, "$(INPA).TIME")
+  field(DISV, "0")
+  field(SDIS, "$(PREF)FFT_CALC2_.VALH")
+  field(DISS, "INVALID")
+}
+
+record(ai, "$(PREF)AFFTMAXF") {
+  field(DESC, "Freq of FFT max")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
+  field(DISV, "0")
+  field(SDIS, "$(PREF)FFT_CALC2_.VALH")
+  field(DISS, "INVALID")
+}
+
+record(aai, "$(PREF)IFFT") {
+  field(DESC, "I FFT")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(aai, "$(PREF)QFFT") {
+  field(DESC, "Q FFT")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(INPA).TIME")
+}

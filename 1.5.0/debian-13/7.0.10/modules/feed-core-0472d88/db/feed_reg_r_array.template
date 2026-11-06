@@ -1,0 +1,23 @@
+record(aai, "$(PREF)_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=$(REG) signal=$(NAME):$(REG)")
+    field(FTVL, "LONG")
+    field(NELM, "$(SIZE)")
+    field(SCAN, "$(REGSCAN)")
+    field(TSE , "-2")
+    info(feed:info:input, "$(PREF)_RBV")
+}
+
+record(longout, "$(PREF)_OFFSET") {
+    field(DTYP, "FEED Signal Offset")
+    field(OUT , "@signal=$(NAME):$(REG)")
+    field(VAL , "$(OFF=0)")
+    field(PINI, "YES")
+}
+
+record(longout, "$(PREF)_STEP") {
+    field(DTYP, "FEED Signal Step")
+    field(OUT , "@signal=$(NAME):$(REG)")
+    field(VAL , "$(OFF=1)")
+    field(PINI, "YES")
+}

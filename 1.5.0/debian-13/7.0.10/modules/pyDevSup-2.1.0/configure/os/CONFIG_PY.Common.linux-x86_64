@@ -1,0 +1,10 @@
+TARGET_CFLAGS += -fno-strict-overflow -Wsign-compare
+TARGET_CXXFLAGS += -fno-strict-overflow -Wsign-compare
+PY_VER := 3.13
+PY_LD_VER := 3.13
+PY_INCDIRS := /usr/lib/x86_64-linux-gnu/python3-numpy/numpy/_core/include /usr/include/python3.13
+PY_LIBDIRS := /usr/lib/x86_64-linux-gnu
+HAVE_NUMPY := YES
+HAVE_ASYNCIO := YES
+HAVE_COTHREAD := NO
+PY_OK := YES

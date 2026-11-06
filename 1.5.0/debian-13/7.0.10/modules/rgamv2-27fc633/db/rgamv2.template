@@ -1,0 +1,8093 @@
+# % macro, device, Device prefix
+# % macro, PORT, Asyn port name
+# % macro, name, Object and gui association name
+# % gui, $(name=), edm, rga.edl, device=$(device)
+#
+# % gui, $(name=), boycomponent, rgamv2App_opi/rga.opi, device=$(device)
+# % gui, $(name=), boyembed, rgamv2App_opi/rga_embed.opi, device=$(device)
+#
+################################################################################
+#
+# Head Status
+#
+# % gui, $(name=), sevr
+record(calc, "$(device):STA")
+{
+    field(DESC, "Overall status")
+    field(CALC, "((A>4)&&(A<=8)&&(B#1))?0:A")
+    field(INPA, "$(device):HEADSTA MS")
+    field(INPB, "$(device):FILSTA")
+    field(FLNK, "$(device):DIS200")
+}
+#
+record(calc, "$(device):SEV")
+{
+    field(DESC, "Persistent Severity")
+    field(CALC, "(B=3)?((A>999)?1000:(A+1)):0")
+    field(SCAN, "1 second")
+    field(INPA, "$(device):SEV.VAL")
+    field(INPB, "$(device):HEADSTA.SEVR")
+    field(HIGH, "30")
+    field(HIHI, "120")
+    field(HSV,  "MAJOR")
+    field(HHSV, "INVALID")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Head Status smon
+#
+record(mbbi, "$(device):HEADSTA")
+{
+    field(DESC, "Head Status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))HEADSTA")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):STA")
+    field(NOBT, "4")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(SXVL, "6")
+    field(SVVL, "7")
+    field(EIVL, "8")
+    field(NIVL, "9")
+    field(TEVL, "10")
+    field(ZRST, "Idle")
+    field(ONST, "Local Control")
+    field(TWST, "Degas Filament")
+    field(THST, "Cal Faraday")
+    field(FRST, "Cal Multiplier")
+    field(FVST, "Barchart 1-50")
+    field(SXST, "Barchart 1-100")
+    field(SVST, "Barchart 1-200")
+    field(EIST, "Analog 1-200")
+    #field(TEST, "Peak Jump")
+    field(NIST, "No RGA")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "MINOR")
+    field(ONSV, "MINOR")
+    field(TWSV, "MINOR")
+    field(THSV, "MINOR")
+    field(FRSV, "MINOR")
+    field(FVSV, "NO_ALARM")
+    field(SXSV, "NO_ALARM")
+    field(SVSV, "NO_ALARM")
+    field(EISV, "NO_ALARM")
+    field(NISV, "INVALID")
+    #field(TESV, "NO_ALARM")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Head Status scon
+#
+record(mbbo, "$(device):CON")
+{
+    field(DESC, "Head Status")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT))CON")
+    field(NOBT, "4")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(SXVL, "6")
+    field(SVVL, "7")
+    field(EIVL, "8")
+    #field(NIVL, "9")
+    #field(TEVL, "10")
+    field(ZRST, "Stop")
+    field(ONST, "Local Control")
+    field(TWST, "Degas Filament")
+    field(THST, "Cal Faraday")
+    field(FRST, "Cal Multiplier")
+    field(FVST, "Barchart 1-50")
+    field(SXST, "Barchart 1-100")
+    field(SVST, "Barchart 1-200")
+    field(EIST, "Analog 1-200")
+    #field(NIST, "No RGA")
+    #field(NISV, "INVALID")
+    #field(TEST, "Peak Jump")
+}
+################################################################################
+# Disable Barcharts
+#
+#% archiver 10 Monitor
+#
+record(bo, "$(device):SEL")
+{
+    field(DESC, "Select Bars")
+    field(FLNK, "$(device):DIS200")
+    field(VAL,  "1")
+    field(ZNAM, "Selected")
+    field(ONAM, "All")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):DIS200")
+{
+    field(DESC, "Disable 200")
+    field(CALC, "(A>=7)&&(A<=8)&&(B=1)?0:1")
+    field(INPA, "$(device):STA")
+    field(INPB, "$(device):SEL")
+    field(FLNK, "$(device):DIS100")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):DIS100")
+{
+    field(DESC, "Disable 100")
+    field(CALC, "(A>=6)&&(A<=8)&&(B=1)?0:1")
+    field(INPA, "$(device):STA")
+    field(INPB, "$(device):SEL")
+    field(FLNK, "$(device):DIS50")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):DIS50")
+{
+    field(DESC, "Disable 50")
+    field(CALC, "(A>=5)&&(A<=8)&&(B=1)?0:1")
+    field(INPA, "$(device):STA")
+    field(INPB, "$(device):SEL")
+    field(FLNK, "$(device):DIS20")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):DIS20")
+{
+    field(DESC, "Disable Select")
+    field(CALC, "(A>=5)&&(A<=8)?0:1")
+    field(INPA, "$(device):STA")
+    field(FLNK, "$(device):DIS69")
+}
+record(calc, "$(device):DIS69")
+{
+    field(DESC, "Disable Select")
+    field(CALC, "(A>=6)&&(A<=8)?0:1")
+    field(INPA, "$(device):STA")
+    field(FLNK, "$(device):DISANA")
+}
+#
+record(calc, "$(device):DISANA")
+{
+    field(DESC, "Disable Select")
+    field(CALC, "(A=8)?0:1")
+    field(INPA, "$(device):STA")
+}
+################################################################################
+# Current Selected Filament
+#
+#
+#% archiver 10 Monitor
+#% controldesk Filament smon
+#
+record(bi,"$(device):FIL") 
+{
+    field(DESC, "Filament")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))FIL")
+    field(SCAN, "I/O Intr")
+    field(SDIS, "$(device):MODE")
+    field(ZNAM, "Filament 1")
+    field(ONAM, "Filament 2")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Filament scon
+#
+record(bo, "$(device):SETFIL")
+{
+    field(DESC, "Filament")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT))SETFIL")
+    field(ZNAM, "Filament 1")
+    field(ONAM, "Filament 2")
+}
+#
+################################################################################
+# Filament Status
+#
+#% archiver 10 Monitor
+#% controldesk Filament Status smon
+#
+record(mbbi, "$(device):FILSTA")
+{
+    field(DESC, "Filament Status")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))FILSTA")
+    field(SCAN, "I/O Intr")
+field(FLNK, "$(device):STA")
+    field(SDIS, "$(device):MODE")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(ZRST, "Off")
+    field(ONST, "On")
+    field(TWST, "Warming up")
+    field(THST, "Cooling Down")
+    field(FRST, "Failed")
+    field(UNSV, "MAJOR")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "NO_ALARM")
+    field(FRSV, "MAJOR")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Filament Status scon
+#
+record(bo, "$(device):FILCON")
+{
+    field(DESC, "Filament Control")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT))FILCON")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+################################################################################
+# IMG Interlock Status
+#
+#% archiver 10 Monitor
+#% controldesk IMG Interlock smon
+#
+record(bi, "$(device):ILK") 
+{
+    field(DESC, "IMG Interlock")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))ILK")
+    field(SCAN, "I/O Intr")
+    field(SDIS, "$(device):MODE")
+    field(ZNAM, "OK")
+    field(ONAM, "Tripped")
+    field(ZSV,  "NO_ALARM")
+    field(OSV,  "MAJOR")
+}
+################################################################################
+# Multiplier Status
+#
+#% archiver 10 Monitor
+#% controldesk Multiplier smon
+#
+record(mbbi,"$(device):MLTSTA") 
+{
+    field(DESC, "Multiplier")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))MLTSTA")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(ZRST, "Disabled")
+    field(ONST, "M1")
+    field(TWST, "M2")
+    field(THST, "M3")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Multiplier scon
+#
+record(mbbo, "$(device):MLTCON")
+{
+    field(DESC, "Multiplier")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT))MLTCON")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(ZRST, "Disable")
+    field(ONST, "M1")
+    field(TWST, "M2")
+    field(THST, "M3")
+}
+################################################################################
+# Scan Mode Status
+#
+#% archiver 10 Monitor
+#% controldesk Scan Mode smon
+#
+record(bi,"$(device):SCAN") 
+{
+    field(DESC, "Scan Mode")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))SCAN")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Single")
+    field(ONAM, "Continuous")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Scan Mode scon
+#
+record(bo, "$(device):SETSCAN")
+{
+    field(DESC, "Scan Mode")
+    field(DTYP, "asynInt32")
+    field(VAL, "1")
+    field(OUT,  "@asyn($(PORT))SETSCAN")
+    field(ZNAM, "Single")
+    field(ONAM, "Continuous")
+}
+#
+################################################################################
+# Control Mode Status
+#
+#% archiver 10 Monitor
+#
+record(bi,"$(device):MODE") 
+{
+    field(DESC, "Scan Mode")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))MODE")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Remote")
+    field(ONAM, "Local")
+}
+#
+#% archiver 10 Monitor
+#
+record(bo, "$(device):SETMODE")
+{
+    field(DESC, "Scan Mode")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT))SETMODE")
+    field(ZNAM, "Remote")
+    field(ONAM, "Local")
+}
+################################################################################
+# Is there data to read
+#
+#% archiver 10 Monitor
+#% controldesk Data to read smon
+#
+record(mbbi, "$(device):DATA")
+{
+    field(DESC, "Data to read")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))DATA")
+    field(SCAN, "I/O Intr")
+    field(ZRST, "No Data")
+    field(ONST, "Barchart 1-50")
+    field(TWST, "Barchart 1-100")
+    field(THST, "Barchart 1-200")
+    field(FRST, "Analog 1-200")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(UNSV, "NO_ALARM")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
+    field(THSV, "NO_ALARM")
+    field(FRSV, "NO_ALARM")
+}
+#
+################################################################################
+# Detector Setting
+#
+#% archiver 10 Monitor
+#% controldesk Detector Setting smon
+#
+record(mbbi, "$(device):DET")
+{
+    field(DESC, "Detector Setting")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT))DET")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(ZRST, "No Data")
+    field(ONST, "Faraday")
+    field(TWST, "Multiplier1")
+    field(THST, "Multiplier2")
+    field(FRST, "Multiplier3")
+}
+#
+################################################################################
+# Total Pressure
+#
+#% archiver 10 Monitor
+#% controldesk Total Pressure readback
+#
+record(ai, "$(device):TOTP")
+{
+    field(DESC, "Total Pressure")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))TOTP")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):TOTPLOG")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(calcout, "$(device):TOTPADEL")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):TOTP.ADEL")
+    field(INPA, "$(device):TOTP")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):TOTPLOG")
+{
+    field(DESC, "Total Pressure")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):TOTP MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+    field(ADEL, "0.025")
+}
+#
+################################################################################
+#
+# Sum Partial
+#
+#% archiver 10 Monitor
+#% controldesk Sum of Peaks readback
+#
+record(ai, "$(device):SUMP")
+{
+    field(DESC, "Sum of Peaks")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))SUMP")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):SUMPLOG")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(calcout, "$(device):SUMPADEL")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):SUMP.ADEL")
+    field(INPA, "$(device):SUMP")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+#
+#% archiver 10 Monitor
+#
+record(calc, "$(device):SUMPLOG")
+{
+    field(DESC, "Sum of Peaks")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):SUMP MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+    field(ADEL, "0.025")
+}
+################################################################################
+# Bar Chart Deadband
+#
+record(calcout, "$(device):ADEL:M2")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M2.ADEL")
+    field(INPA, "$(device):BAR:M2")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M4")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M4.ADEL")
+    field(INPA, "$(device):BAR:M4")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M14")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M14.ADEL")
+    field(INPA, "$(device):BAR:M14")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M15")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M15.ADEL")
+    field(INPA, "$(device):BAR:M15")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M16")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M16.ADEL")
+    field(INPA, "$(device):BAR:M16")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M18")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M18.ADEL")
+    field(INPA, "$(device):BAR:M18")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M28")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M28.ADEL")
+    field(INPA, "$(device):BAR:M28")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M32")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M32.ADEL")
+    field(INPA, "$(device):BAR:M32")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M40")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M40.ADEL")
+    field(INPA, "$(device):BAR:M40")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M44")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M44.ADEL")
+    field(INPA, "$(device):BAR:M44")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+record(calcout, "$(device):ADEL:M69")
+{
+    field(DESC, "deadband")
+    field(CALC, "A/B")
+    field(OUT,  "$(device):BAR:M69.ADEL")
+    field(INPA, "$(device):BAR:M69")
+    field(INPB, "20")
+    field(SCAN, "10 second")
+}
+#
+################################################################################
+record(ai, "$(device):BAR:M1")
+{
+    field(DESC, "Mass 1")
+    field(INP, "$(device):BAR_RAW:M1 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M1")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk H2 readback
+#
+record(ai, "$(device):BAR:M2")
+{
+    field(DESC, "H2")
+    field(INP, "$(device):BAR_RAW:M2 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M2")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M3")
+{
+    field(DESC, "Mass 3")
+    field(INP, "$(device):BAR_RAW:M3 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M3")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk He readback
+#
+record(ai, "$(device):BAR:M4")
+{
+    field(DESC, "HE")
+    field(INP, "$(device):BAR_RAW:M4 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M4")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M5")
+{
+    field(DESC, "Mass 5")
+    field(INP, "$(device):BAR_RAW:M5 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M5")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M6")
+{
+    field(DESC, "Mass 6")
+    field(INP, "$(device):BAR_RAW:M6 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M6")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M7")
+{
+    field(DESC, "Mass 7")
+    field(INP, "$(device):BAR_RAW:M7 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M7")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M8")
+{
+    field(DESC, "Mass 8")
+    field(INP, "$(device):BAR_RAW:M8 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M8")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M9")
+{
+    field(DESC, "Mass 9")
+    field(INP, "$(device):BAR_RAW:M9 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M9")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M10")
+{
+    field(DESC, "Mass 10")
+    field(INP, "$(device):BAR_RAW:M10 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M10")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M11")
+{
+    field(DESC, "Mass 11")
+    field(INP, "$(device):BAR_RAW:M11 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M11")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M12")
+{
+    field(DESC, "Mass 12")
+    field(INP, "$(device):BAR_RAW:M12 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M12")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M13")
+{
+    field(DESC, "Mass 13")
+    field(INP, "$(device):BAR_RAW:M13 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M13")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk CH2/N2++ readback
+#
+record(ai, "$(device):BAR:M14")
+{
+    field(DESC, "CH2/N2++")
+    field(INP, "$(device):BAR_RAW:M14 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M14")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk CH3 readback
+#
+record(ai, "$(device):BAR:M15")
+{
+    field(DESC, "CH3")
+    field(INP, "$(device):BAR_RAW:M15 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M15")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk CH4 readback
+#
+record(ai, "$(device):BAR:M16")
+{
+    field(DESC, "CH4")
+    field(INP, "$(device):BAR_RAW:M16 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M16")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk OH readback
+#
+record(ai, "$(device):BAR:M17")
+{
+    field(DESC, "OH")
+    field(INP, "$(device):BAR_RAW:M17 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M17")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk H20 readback
+#
+record(ai, "$(device):BAR:M18")
+{
+    field(DESC, "H2O")
+    field(INP, "$(device):BAR_RAW:M18 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M18")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M19")
+{
+    field(DESC, "Mass 19")
+    field(INP, "$(device):BAR_RAW:M19 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M19")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M20")
+{
+    field(DESC, "Neon")
+    field(INP, "$(device):BAR_RAW:M20 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M21")
+{
+    field(DESC, "Mass 21")
+    field(INP, "$(device):BAR_RAW:M21 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M21")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M22")
+{
+    field(DESC, "Mass 22")
+    field(INP, "$(device):BAR_RAW:M22 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M22")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M23")
+{
+    field(DESC, "Mass 23")
+    field(INP, "$(device):BAR_RAW:M23 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M23")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M24")
+{
+    field(DESC, "Mass 24")
+    field(INP, "$(device):BAR_RAW:M24 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M24")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M25")
+{
+    field(DESC, "Mass 25")
+    field(INP, "$(device):BAR_RAW:M25 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M25")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M26")
+{
+    field(DESC, "Mass 26")
+    field(INP, "$(device):BAR_RAW:M26 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M26")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M27")
+{
+    field(DESC, "Mass 27")
+    field(INP, "$(device):BAR_RAW:M27 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M27")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk N2/CO readback
+#
+record(ai, "$(device):BAR:M28")
+{
+    field(DESC, "N2/CO")
+    field(INP, "$(device):BAR_RAW:M28 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M28")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M29")
+{
+    field(DESC, "Mass 29")
+    field(INP, "$(device):BAR_RAW:M29 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M29")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M30")
+{
+    field(DESC, "Mass 30")
+    field(INP, "$(device):BAR_RAW:M30 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M30")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M31")
+{
+    field(DESC, "Mass 31")
+    field(INP, "$(device):BAR_RAW:M31 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M31")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk O2 readback
+#
+record(ai, "$(device):BAR:M32")
+{
+    field(DESC, "O2")
+    field(INP, "$(device):BAR_RAW:M32 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M32")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M33")
+{
+    field(DESC, "Mass 33")
+    field(INP, "$(device):BAR_RAW:M33 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M33")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M34")
+{
+    field(DESC, "Mass 34")
+    field(INP, "$(device):BAR_RAW:M34 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M34")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M35")
+{
+    field(DESC, "Mass 35")
+    field(INP, "$(device):BAR_RAW:M35 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M35")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M36")
+{
+    field(DESC, "Mass 36")
+    field(INP, "$(device):BAR_RAW:M36 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M36")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M37")
+{
+    field(DESC, "Mass 37")
+    field(INP, "$(device):BAR_RAW:M37 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M37")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M38")
+{
+    field(DESC, "Fluorine")
+    field(INP, "$(device):BAR_RAW:M38 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M38")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M39")
+{
+    field(DESC, "Mass 39")
+    field(INP, "$(device):BAR_RAW:M39 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M39")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk Ar readback
+#
+record(ai, "$(device):BAR:M40")
+{
+    field(DESC, "AR")
+    field(INP, "$(device):BAR_RAW:M40 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M40")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M41")
+{
+    field(DESC, "Mass 41")
+    field(INP, "$(device):BAR_RAW:M41 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M41")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M42")
+{
+    field(DESC, "Mass 42")
+    field(INP, "$(device):BAR_RAW:M42 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M42")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M43")
+{
+    field(DESC, "Mass 43")
+    field(INP, "$(device):BAR_RAW:M43 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M43")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk CO2 readback
+#
+record(ai, "$(device):BAR:M44")
+{
+    field(DESC, "CO2")
+    field(INP, "$(device):BAR_RAW:M44 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M44")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M45")
+{
+    field(DESC, "Mass 45")
+    field(INP, "$(device):BAR_RAW:M45 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M45")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M46")
+{
+    field(DESC, "NO2")
+    field(INP, "$(device):BAR_RAW:M46 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M46")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M47")
+{
+    field(DESC, "Mass 47")
+    field(INP, "$(device):BAR_RAW:M47 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M47")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M48")
+{
+    field(DESC, "Ozone")
+    field(INP, "$(device):BAR_RAW:M48 MS)")
+    field(SDIS, "$(device):DIS20")
+    field(FLNK, "$(device):LOG:M48")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M49")
+{
+    field(DESC, "Mass 49")
+    field(INP, "$(device):BAR_RAW:M49 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M49")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M50")
+{
+    field(DESC, "Mass 50")
+    field(INP, "$(device):BAR_RAW:M50 MS)")
+    field(SDIS, "$(device):DIS50")
+    field(FLNK, "$(device):LOG:M50")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M51")
+{
+    field(DESC, "Mass 51")
+    field(INP, "$(device):BAR_RAW:M51 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M51")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M52")
+{
+    field(DESC, "Mass 52")
+    field(INP, "$(device):BAR_RAW:M52 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M52")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M53")
+{
+    field(DESC, "Mass 53")
+    field(INP, "$(device):BAR_RAW:M53 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M53")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M54")
+{
+    field(DESC, "Mass 54")
+    field(INP, "$(device):BAR_RAW:M54 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M54")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M55")
+{
+    field(DESC, "Mass 55")
+    field(INP, "$(device):BAR_RAW:M55 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M55")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M56")
+{
+    field(DESC, "Mass 56")
+    field(INP, "$(device):BAR_RAW:M56 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M56")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M57")
+{
+    field(DESC, "Mass 57")
+    field(INP, "$(device):BAR_RAW:M57 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M57")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M58")
+{
+    field(DESC, "Mass 58")
+    field(INP, "$(device):BAR_RAW:M58 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M58")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M59")
+{
+    field(DESC, "Mass 59")
+    field(INP, "$(device):BAR_RAW:M59 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M59")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M60")
+{
+    field(DESC, "Mass 60")
+    field(INP, "$(device):BAR_RAW:M60 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M60")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M61")
+{
+    field(DESC, "Mass 61")
+    field(INP, "$(device):BAR_RAW:M61 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M61")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M62")
+{
+    field(DESC, "Mass 62")
+    field(INP, "$(device):BAR_RAW:M62 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M62")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M63")
+{
+    field(DESC, "Mass 63")
+    field(INP, "$(device):BAR_RAW:M63 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M63")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M64")
+{
+    field(DESC, "Mass 64")
+    field(INP, "$(device):BAR_RAW:M64 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M64")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M65")
+{
+    field(DESC, "Mass 65")
+    field(INP, "$(device):BAR_RAW:M65 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M65")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M66")
+{
+    field(DESC, "Mass 66")
+    field(INP, "$(device):BAR_RAW:M66 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M66")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M67")
+{
+    field(DESC, "Mass 67")
+    field(INP, "$(device):BAR_RAW:M67 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M67")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M68")
+{
+    field(DESC, "Mass 68")
+    field(INP, "$(device):BAR_RAW:M68 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M68")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+#% archiver 10 Monitor
+#% controldesk CF3/C5H9 readback
+#
+record(ai, "$(device):BAR:M69")
+{
+    field(DESC, "CF3/C5H9")
+    field(INP, "$(device):BAR_RAW:M69 MS)")
+    field(SDIS, "$(device):DIS69")
+    field(FLNK, "$(device):LOG:M69")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M70")
+{
+    field(DESC, "Chlorine")
+    field(INP, "$(device):BAR_RAW:M70 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M70")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M71")
+{
+    field(DESC, "Mass 71")
+    field(INP, "$(device):BAR_RAW:M71 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M71")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M72")
+{
+    field(DESC, "Mass 72")
+    field(INP, "$(device):BAR_RAW:M72 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M72")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M73")
+{
+    field(DESC, "Mass 73")
+    field(INP, "$(device):BAR_RAW:M73 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M73")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M74")
+{
+    field(DESC, "Mass 74")
+    field(INP, "$(device):BAR_RAW:M74 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M74")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M75")
+{
+    field(DESC, "Mass 75")
+    field(INP, "$(device):BAR_RAW:M75 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M75")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M76")
+{
+    field(DESC, "Mass 76")
+    field(INP, "$(device):BAR_RAW:M76 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M76")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M77")
+{
+    field(DESC, "Mass 77")
+    field(INP, "$(device):BAR_RAW:M77 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M77")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M78")
+{
+    field(DESC, "Mass 78")
+    field(INP, "$(device):BAR_RAW:M78 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M78")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M79")
+{
+    field(DESC, "Mass 79")
+    field(INP, "$(device):BAR_RAW:M79 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M79")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M80")
+{
+    field(DESC, "Mass 80")
+    field(INP, "$(device):BAR_RAW:M80 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M80")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M81")
+{
+    field(DESC, "Mass 81")
+    field(INP, "$(device):BAR_RAW:M81 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M81")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M82")
+{
+    field(DESC, "Mass 82")
+    field(INP, "$(device):BAR_RAW:M82 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M82")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M83")
+{
+    field(DESC, "Mass 83")
+    field(INP, "$(device):BAR_RAW:M83 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M83")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M84")
+{
+    field(DESC, "Krypton")
+    field(INP, "$(device):BAR_RAW:M84 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M84")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M85")
+{
+    field(DESC, "Mass 85")
+    field(INP, "$(device):BAR_RAW:M85 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M85")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M86")
+{
+    field(DESC, "Mass 86")
+    field(INP, "$(device):BAR_RAW:M86 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M86")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M87")
+{
+    field(DESC, "Mass 87")
+    field(INP, "$(device):BAR_RAW:M87 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M87")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M88")
+{
+    field(DESC, "Mass 88")
+    field(INP, "$(device):BAR_RAW:M88 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M88")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M89")
+{
+    field(DESC, "Mass 89")
+    field(INP, "$(device):BAR_RAW:M89 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M89")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M90")
+{
+    field(DESC, "Mass 90")
+    field(INP, "$(device):BAR_RAW:M90 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M90")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M91")
+{
+    field(DESC, "Mass 91")
+    field(INP, "$(device):BAR_RAW:M91 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M91")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M92")
+{
+    field(DESC, "Mass 92")
+    field(INP, "$(device):BAR_RAW:M92 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M92")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M93")
+{
+    field(DESC, "Mass 93")
+    field(INP, "$(device):BAR_RAW:M93 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M93")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M94")
+{
+    field(DESC, "Mass 94")
+    field(INP, "$(device):BAR_RAW:M94 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M94")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M95")
+{
+    field(DESC, "Mass 95")
+    field(INP, "$(device):BAR_RAW:M95 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M95")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M96")
+{
+    field(DESC, "Mass 96")
+    field(INP, "$(device):BAR_RAW:M96 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M96")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M97")
+{
+    field(DESC, "Mass 97")
+    field(INP, "$(device):BAR_RAW:M97 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M97")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M98")
+{
+    field(DESC, "Mass 98")
+    field(INP, "$(device):BAR_RAW:M98 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M98")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M99")
+{
+    field(DESC, "Mass 99")
+    field(INP, "$(device):BAR_RAW:M99 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M99")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M100")
+{
+    field(DESC, "Mass 100")
+    field(INP, "$(device):BAR_RAW:M100 MS)")
+    field(SDIS, "$(device):DIS100")
+    field(FLNK, "$(device):LOG:M100")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M101")
+{
+    field(DESC, "Mass 101")
+    field(INP, "$(device):BAR_RAW:M101 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M101")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M102")
+{
+    field(DESC, "Mass 102")
+    field(INP, "$(device):BAR_RAW:M102 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M102")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M103")
+{
+    field(DESC, "Mass 103")
+    field(INP, "$(device):BAR_RAW:M103 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M103")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M104")
+{
+    field(DESC, "Mass 104")
+    field(INP, "$(device):BAR_RAW:M104 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M104")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M105")
+{
+    field(DESC, "Mass 105")
+    field(INP, "$(device):BAR_RAW:M105 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M105")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M106")
+{
+    field(DESC, "Mass 106")
+    field(INP, "$(device):BAR_RAW:M106 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M106")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M107")
+{
+    field(DESC, "Mass 107")
+    field(INP, "$(device):BAR_RAW:M107 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M107")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M108")
+{
+    field(DESC, "Mass 108")
+    field(INP, "$(device):BAR_RAW:M108 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M108")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M109")
+{
+    field(DESC, "Mass 109")
+    field(INP, "$(device):BAR_RAW:M109 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M109")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M110")
+{
+    field(DESC, "Mass 110")
+    field(INP, "$(device):BAR_RAW:M110 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M110")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M111")
+{
+    field(DESC, "Mass 111")
+    field(INP, "$(device):BAR_RAW:M111 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M111")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M112")
+{
+    field(DESC, "Mass 112")
+    field(INP, "$(device):BAR_RAW:M112 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M112")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M113")
+{
+    field(DESC, "Mass 113")
+    field(INP, "$(device):BAR_RAW:M113 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M113")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M114")
+{
+    field(DESC, "Mass 114")
+    field(INP, "$(device):BAR_RAW:M114 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M114")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M115")
+{
+    field(DESC, "Mass 115")
+    field(INP, "$(device):BAR_RAW:M115 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M115")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M116")
+{
+    field(DESC, "Mass 116")
+    field(INP, "$(device):BAR_RAW:M116 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M116")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M117")
+{
+    field(DESC, "Mass 117")
+    field(INP, "$(device):BAR_RAW:M117 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M117")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M118")
+{
+    field(DESC, "Mass 118")
+    field(INP, "$(device):BAR_RAW:M118 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M118")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M119")
+{
+    field(DESC, "Mass 119")
+    field(INP, "$(device):BAR_RAW:M119 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M119")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M120")
+{
+    field(DESC, "Mass 120")
+    field(INP, "$(device):BAR_RAW:M120 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M120")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M121")
+{
+    field(DESC, "Mass 121")
+    field(INP, "$(device):BAR_RAW:M121 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M121")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M122")
+{
+    field(DESC, "Mass 122")
+    field(INP, "$(device):BAR_RAW:M122 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M122")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M123")
+{
+    field(DESC, "Mass 123")
+    field(INP, "$(device):BAR_RAW:M123 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M123")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M124")
+{
+    field(DESC, "Mass 124")
+    field(INP, "$(device):BAR_RAW:M124 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M124")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M125")
+{
+    field(DESC, "Mass 125")
+    field(INP, "$(device):BAR_RAW:M125 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M125")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M126")
+{
+    field(DESC, "Mass 126")
+    field(INP, "$(device):BAR_RAW:M126 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M126")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M127")
+{
+    field(DESC, "Mass 127")
+    field(INP, "$(device):BAR_RAW:M127 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M127")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M128")
+{
+    field(DESC, "Mass 128")
+    field(INP, "$(device):BAR_RAW:M128 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M128")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M129")
+{
+    field(DESC, "Mass 129")
+    field(INP, "$(device):BAR_RAW:M129 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M129")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M130")
+{
+    field(DESC, "Mass 130")
+    field(INP, "$(device):BAR_RAW:M130 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M130")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M131")
+{
+    field(DESC, "Xenon")
+    field(INP, "$(device):BAR_RAW:M131 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M131")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M132")
+{
+    field(DESC, "Mass 132")
+    field(INP, "$(device):BAR_RAW:M132 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M132")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M133")
+{
+    field(DESC, "Mass 133")
+    field(INP, "$(device):BAR_RAW:M133 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M133")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M134")
+{
+    field(DESC, "Mass 134")
+    field(INP, "$(device):BAR_RAW:M134 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M134")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M135")
+{
+    field(DESC, "Mass 135")
+    field(INP, "$(device):BAR_RAW:M135 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M135")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M136")
+{
+    field(DESC, "Mass 136")
+    field(INP, "$(device):BAR_RAW:M136 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M136")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M137")
+{
+    field(DESC, "Mass 137")
+    field(INP, "$(device):BAR_RAW:M137 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M137")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M138")
+{
+    field(DESC, "Mass 138")
+    field(INP, "$(device):BAR_RAW:M138 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M138")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M139")
+{
+    field(DESC, "Mass 139")
+    field(INP, "$(device):BAR_RAW:M139 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M139")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M140")
+{
+    field(DESC, "Mass 140")
+    field(INP, "$(device):BAR_RAW:M140 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M140")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M141")
+{
+    field(DESC, "Mass 141")
+    field(INP, "$(device):BAR_RAW:M141 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M141")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M142")
+{
+    field(DESC, "Mass 142")
+    field(INP, "$(device):BAR_RAW:M142 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M142")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M143")
+{
+    field(DESC, "Mass 143")
+    field(INP, "$(device):BAR_RAW:M143 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M143")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M144")
+{
+    field(DESC, "Mass 144")
+    field(INP, "$(device):BAR_RAW:M144 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M144")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M145")
+{
+    field(DESC, "Mass 145")
+    field(INP, "$(device):BAR_RAW:M145 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M145")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M146")
+{
+    field(DESC, "Mass 146")
+    field(INP, "$(device):BAR_RAW:M146 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M146")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M147")
+{
+    field(DESC, "Mass 147")
+    field(INP, "$(device):BAR_RAW:M147 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M147")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M148")
+{
+    field(DESC, "Mass 148")
+    field(INP, "$(device):BAR_RAW:M148 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M148")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M149")
+{
+    field(DESC, "Mass 149")
+    field(INP, "$(device):BAR_RAW:M149 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M149")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M150")
+{
+    field(DESC, "Mass 150")
+    field(INP, "$(device):BAR_RAW:M150 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M150")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M151")
+{
+    field(DESC, "Mass 151")
+    field(INP, "$(device):BAR_RAW:M151 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M151")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M152")
+{
+    field(DESC, "Mass 152")
+    field(INP, "$(device):BAR_RAW:M152 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M152")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M153")
+{
+    field(DESC, "Mass 153")
+    field(INP, "$(device):BAR_RAW:M153 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M153")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M154")
+{
+    field(DESC, "Mass 154")
+    field(INP, "$(device):BAR_RAW:M154 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M154")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M155")
+{
+    field(DESC, "Mass 155")
+    field(INP, "$(device):BAR_RAW:M155 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M155")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M156")
+{
+    field(DESC, "Mass 156")
+    field(INP, "$(device):BAR_RAW:M156 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M156")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M157")
+{
+    field(DESC, "Mass 157")
+    field(INP, "$(device):BAR_RAW:M157 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M157")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M158")
+{
+    field(DESC, "Mass 158")
+    field(INP, "$(device):BAR_RAW:M158 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M158")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M159")
+{
+    field(DESC, "Mass 159")
+    field(INP, "$(device):BAR_RAW:M159 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M159")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M160")
+{
+    field(DESC, "Bromine")
+    field(INP, "$(device):BAR_RAW:M160 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M160")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M161")
+{
+    field(DESC, "Mass 161")
+    field(INP, "$(device):BAR_RAW:M161 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M161")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M162")
+{
+    field(DESC, "Mass 162")
+    field(INP, "$(device):BAR_RAW:M162 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M162")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M163")
+{
+    field(DESC, "Mass 163")
+    field(INP, "$(device):BAR_RAW:M163 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M163")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M164")
+{
+    field(DESC, "Mass 164")
+    field(INP, "$(device):BAR_RAW:M164 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M164")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M165")
+{
+    field(DESC, "Mass 165")
+    field(INP, "$(device):BAR_RAW:M165 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M165")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M166")
+{
+    field(DESC, "Mass 166")
+    field(INP, "$(device):BAR_RAW:M166 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M166")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M167")
+{
+    field(DESC, "Mass 167")
+    field(INP, "$(device):BAR_RAW:M167 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M167")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M168")
+{
+    field(DESC, "Mass 168")
+    field(INP, "$(device):BAR_RAW:M168 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M168")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M169")
+{
+    field(DESC, "Mass 169")
+    field(INP, "$(device):BAR_RAW:M169 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M169")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M170")
+{
+    field(DESC, "Mass 170")
+    field(INP, "$(device):BAR_RAW:M170 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M170")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M171")
+{
+    field(DESC, "Mass 171")
+    field(INP, "$(device):BAR_RAW:M171 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M171")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M172")
+{
+    field(DESC, "Mass 172")
+    field(INP, "$(device):BAR_RAW:M172 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M172")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M173")
+{
+    field(DESC, "Mass 173")
+    field(INP, "$(device):BAR_RAW:M173 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M173")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M174")
+{
+    field(DESC, "Mass 174")
+    field(INP, "$(device):BAR_RAW:M174 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M174")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M175")
+{
+    field(DESC, "Mass 175")
+    field(INP, "$(device):BAR_RAW:M175 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M175")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M176")
+{
+    field(DESC, "Mass 176")
+    field(INP, "$(device):BAR_RAW:M176 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M176")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M177")
+{
+    field(DESC, "Mass 177")
+    field(INP, "$(device):BAR_RAW:M177 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M177")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M178")
+{
+    field(DESC, "Mass 178")
+    field(INP, "$(device):BAR_RAW:M178 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M178")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M179")
+{
+    field(DESC, "Mass 179")
+    field(INP, "$(device):BAR_RAW:M179 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M179")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M180")
+{
+    field(DESC, "Mass 180")
+    field(INP, "$(device):BAR_RAW:M180 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M180")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M181")
+{
+    field(DESC, "Mass 181")
+    field(INP, "$(device):BAR_RAW:M181 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M181")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M182")
+{
+    field(DESC, "Mass 182")
+    field(INP, "$(device):BAR_RAW:M182 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M182")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M183")
+{
+    field(DESC, "Mass 183")
+    field(INP, "$(device):BAR_RAW:M183 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M183")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M184")
+{
+    field(DESC, "Mass 184")
+    field(INP, "$(device):BAR_RAW:M184 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M184")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M185")
+{
+    field(DESC, "Mass 185")
+    field(INP, "$(device):BAR_RAW:M185 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M185")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M186")
+{
+    field(DESC, "Mass 186")
+    field(INP, "$(device):BAR_RAW:M186 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M186")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M187")
+{
+    field(DESC, "Mass 187")
+    field(INP, "$(device):BAR_RAW:M187 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M187")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M188")
+{
+    field(DESC, "Mass 188")
+    field(INP, "$(device):BAR_RAW:M188 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M188")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M189")
+{
+    field(DESC, "Mass 189")
+    field(INP, "$(device):BAR_RAW:M189 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M189")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M190")
+{
+    field(DESC, "Mass 190")
+    field(INP, "$(device):BAR_RAW:M190 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M190")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M191")
+{
+    field(DESC, "Mass 191")
+    field(INP, "$(device):BAR_RAW:M191 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M191")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M192")
+{
+    field(DESC, "Mass 192")
+    field(INP, "$(device):BAR_RAW:M192 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M192")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M193")
+{
+    field(DESC, "Mass 193")
+    field(INP, "$(device):BAR_RAW:M193 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M193")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M194")
+{
+    field(DESC, "Mass 194")
+    field(INP, "$(device):BAR_RAW:M194 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M194")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M195")
+{
+    field(DESC, "Mass 195")
+    field(INP, "$(device):BAR_RAW:M195 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M195")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M196")
+{
+    field(DESC, "Mass 196")
+    field(INP, "$(device):BAR_RAW:M196 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M196")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M197")
+{
+    field(DESC, "Mass 197")
+    field(INP, "$(device):BAR_RAW:M197 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M197")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M198")
+{
+    field(DESC, "Mass 198")
+    field(INP, "$(device):BAR_RAW:M198 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M198")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M199")
+{
+    field(DESC, "Mass 199")
+    field(INP, "$(device):BAR_RAW:M199 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M199")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR:M200")
+{
+    field(DESC, "Mass 200")
+    field(INP, "$(device):BAR_RAW:M200 MS)")
+    field(SDIS, "$(device):DIS200")
+    field(FLNK, "$(device):LOG:M200")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(calc, "$(device):LOG:M1")
+{
+    field(DESC, "Mass 1")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M1 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M2")
+{
+    field(DESC, "Mass 2")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M2 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M3")
+{
+    field(DESC, "Mass 3")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M3 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M4")
+{
+    field(DESC, "Mass 4")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M4 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M5")
+{
+    field(DESC, "Mass 5")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M5 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M6")
+{
+    field(DESC, "Mass 6")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M6 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M7")
+{
+    field(DESC, "Mass 7")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M7 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M8")
+{
+    field(DESC, "Mass 8")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M8 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M9")
+{
+    field(DESC, "Mass 9")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M9 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M10")
+{
+    field(DESC, "Mass 10")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M10 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M11")
+{
+    field(DESC, "Mass 11")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M11 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M12")
+{
+    field(DESC, "Mass 12")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M12 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M13")
+{
+    field(DESC, "Mass 13")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M13 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M14")
+{
+    field(DESC, "Mass 14")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M14 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M15")
+{
+    field(DESC, "Mass 15")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M15 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M16")
+{
+    field(DESC, "Mass 16")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M16 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M17")
+{
+    field(DESC, "Mass 17")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M17 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M18")
+{
+    field(DESC, "Mass 18")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M18 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M19")
+{
+    field(DESC, "Mass 19")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M19 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M20")
+{
+    field(DESC, "Mass 20")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M20 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M21")
+{
+    field(DESC, "Mass 21")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M21 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M22")
+{
+    field(DESC, "Mass 22")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M22 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M23")
+{
+    field(DESC, "Mass 23")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M23 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M24")
+{
+    field(DESC, "Mass 24")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M24 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M25")
+{
+    field(DESC, "Mass 25")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M25 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M26")
+{
+    field(DESC, "Mass 26")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M26 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M27")
+{
+    field(DESC, "Mass 27")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M27 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M28")
+{
+    field(DESC, "Mass 28")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M28 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M29")
+{
+    field(DESC, "Mass 29")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M29 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M30")
+{
+    field(DESC, "Mass 30")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M30 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M31")
+{
+    field(DESC, "Mass 31")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M31 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M32")
+{
+    field(DESC, "Mass 32")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M32 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M33")
+{
+    field(DESC, "Mass 33")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M33 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M34")
+{
+    field(DESC, "Mass 34")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M34 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M35")
+{
+    field(DESC, "Mass 35")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M35 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M36")
+{
+    field(DESC, "Mass 36")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M36 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M37")
+{
+    field(DESC, "Mass 37")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M37 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M38")
+{
+    field(DESC, "Mass 38")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M38 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M39")
+{
+    field(DESC, "Mass 39")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M39 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M40")
+{
+    field(DESC, "Mass 40")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M40 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M41")
+{
+    field(DESC, "Mass 41")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M41 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M42")
+{
+    field(DESC, "Mass 42")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M42 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M43")
+{
+    field(DESC, "Mass 43")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M43 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M44")
+{
+    field(DESC, "Mass 44")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M44 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M45")
+{
+    field(DESC, "Mass 45")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M45 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M46")
+{
+    field(DESC, "Mass 46")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M46 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M47")
+{
+    field(DESC, "Mass 47")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M47 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M48")
+{
+    field(DESC, "Mass 48")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M48 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M49")
+{
+    field(DESC, "Mass 49")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M49 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M50")
+{
+    field(DESC, "Mass 50")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M50 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M51")
+{
+    field(DESC, "Mass 51")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M51 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M52")
+{
+    field(DESC, "Mass 52")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M52 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M53")
+{
+    field(DESC, "Mass 53")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M53 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M54")
+{
+    field(DESC, "Mass 54")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M54 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M55")
+{
+    field(DESC, "Mass 55")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M55 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M56")
+{
+    field(DESC, "Mass 56")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M56 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M57")
+{
+    field(DESC, "Mass 57")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M57 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M58")
+{
+    field(DESC, "Mass 58")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M58 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M59")
+{
+    field(DESC, "Mass 59")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M59 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M60")
+{
+    field(DESC, "Mass 60")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M60 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M61")
+{
+    field(DESC, "Mass 61")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M61 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M62")
+{
+    field(DESC, "Mass 62")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M62 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M63")
+{
+    field(DESC, "Mass 63")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M63 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M64")
+{
+    field(DESC, "Mass 64")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M64 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M65")
+{
+    field(DESC, "Mass 65")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M65 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M66")
+{
+    field(DESC, "Mass 66")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M66 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M67")
+{
+    field(DESC, "Mass 67")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M67 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M68")
+{
+    field(DESC, "Mass 68")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M68 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M69")
+{
+    field(DESC, "Mass 69")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M69 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M70")
+{
+    field(DESC, "Mass 70")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M70 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M71")
+{
+    field(DESC, "Mass 71")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M71 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M72")
+{
+    field(DESC, "Mass 72")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M72 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M73")
+{
+    field(DESC, "Mass 73")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M73 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M74")
+{
+    field(DESC, "Mass 74")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M74 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M75")
+{
+    field(DESC, "Mass 75")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M75 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M76")
+{
+    field(DESC, "Mass 76")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M76 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M77")
+{
+    field(DESC, "Mass 77")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M77 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M78")
+{
+    field(DESC, "Mass 78")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M78 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M79")
+{
+    field(DESC, "Mass 79")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M79 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M80")
+{
+    field(DESC, "Mass 80")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M80 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M81")
+{
+    field(DESC, "Mass 81")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M81 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M82")
+{
+    field(DESC, "Mass 82")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M82 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M83")
+{
+    field(DESC, "Mass 83")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M83 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M84")
+{
+    field(DESC, "Mass 84")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M84 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M85")
+{
+    field(DESC, "Mass 85")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M85 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M86")
+{
+    field(DESC, "Mass 86")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M86 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M87")
+{
+    field(DESC, "Mass 87")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M87 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M88")
+{
+    field(DESC, "Mass 88")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M88 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M89")
+{
+    field(DESC, "Mass 89")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M89 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M90")
+{
+    field(DESC, "Mass 90")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M90 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M91")
+{
+    field(DESC, "Mass 91")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M91 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M92")
+{
+    field(DESC, "Mass 92")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M92 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M93")
+{
+    field(DESC, "Mass 93")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M93 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M94")
+{
+    field(DESC, "Mass 94")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M94 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M95")
+{
+    field(DESC, "Mass 95")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M95 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M96")
+{
+    field(DESC, "Mass 96")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M96 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M97")
+{
+    field(DESC, "Mass 97")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M97 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M98")
+{
+    field(DESC, "Mass 98")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M98 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M99")
+{
+    field(DESC, "Mass 99")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M99 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M100")
+{
+    field(DESC, "Mass 100")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M100 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M101")
+{
+    field(DESC, "Mass 101")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M101 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M102")
+{
+    field(DESC, "Mass 102")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M102 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M103")
+{
+    field(DESC, "Mass 103")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M103 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M104")
+{
+    field(DESC, "Mass 104")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M104 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M105")
+{
+    field(DESC, "Mass 105")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M105 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M106")
+{
+    field(DESC, "Mass 106")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M106 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M107")
+{
+    field(DESC, "Mass 107")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M107 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M108")
+{
+    field(DESC, "Mass 108")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M108 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M109")
+{
+    field(DESC, "Mass 109")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M109 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M110")
+{
+    field(DESC, "Mass 110")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M110 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M111")
+{
+    field(DESC, "Mass 111")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M111 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M112")
+{
+    field(DESC, "Mass 112")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M112 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M113")
+{
+    field(DESC, "Mass 113")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M113 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M114")
+{
+    field(DESC, "Mass 114")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M114 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M115")
+{
+    field(DESC, "Mass 115")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M115 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M116")
+{
+    field(DESC, "Mass 116")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M116 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M117")
+{
+    field(DESC, "Mass 117")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M117 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M118")
+{
+    field(DESC, "Mass 118")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M118 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M119")
+{
+    field(DESC, "Mass 119")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M119 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M120")
+{
+    field(DESC, "Mass 120")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M120 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M121")
+{
+    field(DESC, "Mass 121")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M121 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M122")
+{
+    field(DESC, "Mass 122")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M122 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M123")
+{
+    field(DESC, "Mass 123")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M123 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M124")
+{
+    field(DESC, "Mass 124")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M124 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M125")
+{
+    field(DESC, "Mass 125")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M125 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M126")
+{
+    field(DESC, "Mass 126")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M126 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M127")
+{
+    field(DESC, "Mass 127")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M127 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M128")
+{
+    field(DESC, "Mass 128")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M128 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M129")
+{
+    field(DESC, "Mass 129")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M129 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M130")
+{
+    field(DESC, "Mass 130")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M130 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M131")
+{
+    field(DESC, "Mass 131")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M131 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M132")
+{
+    field(DESC, "Mass 132")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M132 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M133")
+{
+    field(DESC, "Mass 133")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M133 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M134")
+{
+    field(DESC, "Mass 134")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M134 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M135")
+{
+    field(DESC, "Mass 135")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M135 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M136")
+{
+    field(DESC, "Mass 136")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M136 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M137")
+{
+    field(DESC, "Mass 137")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M137 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M138")
+{
+    field(DESC, "Mass 138")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M138 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M139")
+{
+    field(DESC, "Mass 139")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M139 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M140")
+{
+    field(DESC, "Mass 140")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M140 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M141")
+{
+    field(DESC, "Mass 141")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M141 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M142")
+{
+    field(DESC, "Mass 142")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M142 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M143")
+{
+    field(DESC, "Mass 143")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M143 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M144")
+{
+    field(DESC, "Mass 144")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M144 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M145")
+{
+    field(DESC, "Mass 145")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M145 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M146")
+{
+    field(DESC, "Mass 146")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M146 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M147")
+{
+    field(DESC, "Mass 147")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M147 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M148")
+{
+    field(DESC, "Mass 148")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M148 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M149")
+{
+    field(DESC, "Mass 149")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M149 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M150")
+{
+    field(DESC, "Mass 150")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M150 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M151")
+{
+    field(DESC, "Mass 151")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M151 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M152")
+{
+    field(DESC, "Mass 152")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M152 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M153")
+{
+    field(DESC, "Mass 153")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M153 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M154")
+{
+    field(DESC, "Mass 154")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M154 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M155")
+{
+    field(DESC, "Mass 155")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M155 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M156")
+{
+    field(DESC, "Mass 156")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M156 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M157")
+{
+    field(DESC, "Mass 157")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M157 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M158")
+{
+    field(DESC, "Mass 158")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M158 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M159")
+{
+    field(DESC, "Mass 159")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M159 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M160")
+{
+    field(DESC, "Mass 160")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M160 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M161")
+{
+    field(DESC, "Mass 161")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M161 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M162")
+{
+    field(DESC, "Mass 162")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M162 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M163")
+{
+    field(DESC, "Mass 163")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M163 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M164")
+{
+    field(DESC, "Mass 164")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M164 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M165")
+{
+    field(DESC, "Mass 165")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M165 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M166")
+{
+    field(DESC, "Mass 166")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M166 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M167")
+{
+    field(DESC, "Mass 167")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M167 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M168")
+{
+    field(DESC, "Mass 168")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M168 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M169")
+{
+    field(DESC, "Mass 169")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M169 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M170")
+{
+    field(DESC, "Mass 170")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M170 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M171")
+{
+    field(DESC, "Mass 171")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M171 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M172")
+{
+    field(DESC, "Mass 172")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M172 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M173")
+{
+    field(DESC, "Mass 173")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M173 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M174")
+{
+    field(DESC, "Mass 174")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M174 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M175")
+{
+    field(DESC, "Mass 175")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M175 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M176")
+{
+    field(DESC, "Mass 176")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M176 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M177")
+{
+    field(DESC, "Mass 177")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M177 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M178")
+{
+    field(DESC, "Mass 178")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M178 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M179")
+{
+    field(DESC, "Mass 179")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M179 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M180")
+{
+    field(DESC, "Mass 180")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M180 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M181")
+{
+    field(DESC, "Mass 181")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M181 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M182")
+{
+    field(DESC, "Mass 182")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M182 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M183")
+{
+    field(DESC, "Mass 183")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M183 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M184")
+{
+    field(DESC, "Mass 184")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M184 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M185")
+{
+    field(DESC, "Mass 185")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M185 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M186")
+{
+    field(DESC, "Mass 186")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M186 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M187")
+{
+    field(DESC, "Mass 187")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M187 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M188")
+{
+    field(DESC, "Mass 188")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M188 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M189")
+{
+    field(DESC, "Mass 189")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M189 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M190")
+{
+    field(DESC, "Mass 190")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M190 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M191")
+{
+    field(DESC, "Mass 191")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M191 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M192")
+{
+    field(DESC, "Mass 192")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M192 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M193")
+{
+    field(DESC, "Mass 193")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M193 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M194")
+{
+    field(DESC, "Mass 194")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M194 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M195")
+{
+    field(DESC, "Mass 195")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M195 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M196")
+{
+    field(DESC, "Mass 196")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M196 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M197")
+{
+    field(DESC, "Mass 197")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M197 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M198")
+{
+    field(DESC, "Mass 198")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M198 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M199")
+{
+    field(DESC, "Mass 199")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M199 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(calc, "$(device):LOG:M200")
+{
+    field(DESC, "Mass 200")
+    field(EGU,  "log")
+    field(CALC, "LOG(A)")
+    field(INPA, "$(device):BAR:M200 MS")
+    field(HOPR, "-2")
+    field(LOPR, "-11")
+}
+#
+record(ai, "$(device):BAR_RAW:M1")
+{
+    field(DESC, "Mass 1")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM1")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M1")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M2")
+{
+    field(DESC, "H2")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM2")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M2")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M3")
+{
+    field(DESC, "Mass 3")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM3")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M3")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M4")
+{
+    field(DESC, "HE")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM4")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M4")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M5")
+{
+    field(DESC, "Mass 5")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM5")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M5")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M6")
+{
+    field(DESC, "Mass 6")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM6")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M6")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M7")
+{
+    field(DESC, "Mass 7")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM7")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M7")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M8")
+{
+    field(DESC, "Mass 8")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM8")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M8")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M9")
+{
+    field(DESC, "Mass 9")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM9")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M9")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M10")
+{
+    field(DESC, "Mass 10")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM10")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M10")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M11")
+{
+    field(DESC, "Mass 11")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM11")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M11")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M12")
+{
+    field(DESC, "Mass 12")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM12")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M12")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M13")
+{
+    field(DESC, "Mass 13")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM13")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M13")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M14")
+{
+    field(DESC, "CH2/N2++")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM14")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M14")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M15")
+{
+    field(DESC, "CH3")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM15")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M15")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M16")
+{
+    field(DESC, "CH4")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM16")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M16")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M17")
+{
+    field(DESC, "OH")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM17")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M17")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M18")
+{
+    field(DESC, "H2O")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM18")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M18")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M19")
+{
+    field(DESC, "Mass 19")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM19")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M19")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M20")
+{
+    field(DESC, "Neon")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM20")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M20")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M21")
+{
+    field(DESC, "Mass 21")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM21")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M21")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M22")
+{
+    field(DESC, "Mass 22")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM22")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M22")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M23")
+{
+    field(DESC, "Mass 23")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM23")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M23")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M24")
+{
+    field(DESC, "Mass 24")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM24")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M24")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M25")
+{
+    field(DESC, "Mass 25")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM25")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M25")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M26")
+{
+    field(DESC, "Mass 26")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM26")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M26")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M27")
+{
+    field(DESC, "Mass 27")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM27")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M27")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M28")
+{
+    field(DESC, "N2/CO")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM28")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M28")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M29")
+{
+    field(DESC, "Mass 29")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM29")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M29")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M30")
+{
+    field(DESC, "Mass 30")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM30")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M30")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M31")
+{
+    field(DESC, "Mass 31")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM31")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M31")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M32")
+{
+    field(DESC, "O2")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM32")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M32")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M33")
+{
+    field(DESC, "Mass 33")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM33")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M33")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M34")
+{
+    field(DESC, "Mass 34")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM34")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M34")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M35")
+{
+    field(DESC, "Mass 35")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM35")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M35")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M36")
+{
+    field(DESC, "Mass 36")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM36")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M36")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M37")
+{
+    field(DESC, "Mass 37")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM37")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M37")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M38")
+{
+    field(DESC, "Fluorine")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM38")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M38")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M39")
+{
+    field(DESC, "Mass 39")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM39")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M39")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M40")
+{
+    field(DESC, "AR")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM40")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M40")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M41")
+{
+    field(DESC, "Mass 41")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM41")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M41")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M42")
+{
+    field(DESC, "Mass 42")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM42")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M42")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M43")
+{
+    field(DESC, "Mass 43")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM43")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M43")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M44")
+{
+    field(DESC, "CO2")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM44")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M44")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M45")
+{
+    field(DESC, "Mass 45")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM45")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M45")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M46")
+{
+    field(DESC, "NO2")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM46")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M46")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M47")
+{
+    field(DESC, "Mass 47")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM47")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M47")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M48")
+{
+    field(DESC, "Ozone")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM48")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M48")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M49")
+{
+    field(DESC, "Mass 49")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM49")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M49")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M50")
+{
+    field(DESC, "Mass 50")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM50")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M50")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M51")
+{
+    field(DESC, "Mass 51")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM51")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M51")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M52")
+{
+    field(DESC, "Mass 52")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM52")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M52")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M53")
+{
+    field(DESC, "Mass 53")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM53")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M53")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M54")
+{
+    field(DESC, "Mass 54")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM54")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M54")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M55")
+{
+    field(DESC, "Mass 55")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM55")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M55")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M56")
+{
+    field(DESC, "Mass 56")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM56")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M56")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M57")
+{
+    field(DESC, "Mass 57")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM57")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M57")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M58")
+{
+    field(DESC, "Mass 58")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM58")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M58")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M59")
+{
+    field(DESC, "Mass 59")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM59")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M59")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M60")
+{
+    field(DESC, "Mass 60")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM60")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M60")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M61")
+{
+    field(DESC, "Mass 61")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM61")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M61")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M62")
+{
+    field(DESC, "Mass 62")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM62")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M62")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M63")
+{
+    field(DESC, "Mass 63")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM63")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M63")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M64")
+{
+    field(DESC, "Mass 64")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM64")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M64")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M65")
+{
+    field(DESC, "Mass 65")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM65")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M65")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M66")
+{
+    field(DESC, "Mass 66")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM66")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M66")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M67")
+{
+    field(DESC, "Mass 67")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM67")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M67")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M68")
+{
+    field(DESC, "Mass 68")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM68")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M68")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M69")
+{
+    field(DESC, "CF3/C5H9")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM69")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M69")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M70")
+{
+    field(DESC, "Chlorine")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM70")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M70")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M71")
+{
+    field(DESC, "Mass 71")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM71")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M71")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M72")
+{
+    field(DESC, "Mass 72")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM72")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M72")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M73")
+{
+    field(DESC, "Mass 73")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM73")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M73")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M74")
+{
+    field(DESC, "Mass 74")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM74")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M74")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M75")
+{
+    field(DESC, "Mass 75")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM75")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M75")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M76")
+{
+    field(DESC, "Mass 76")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM76")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M76")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M77")
+{
+    field(DESC, "Mass 77")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM77")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M77")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M78")
+{
+    field(DESC, "Mass 78")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM78")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M78")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M79")
+{
+    field(DESC, "Mass 79")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM79")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M79")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M80")
+{
+    field(DESC, "Mass 80")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM80")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M80")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M81")
+{
+    field(DESC, "Mass 81")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM81")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M81")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M82")
+{
+    field(DESC, "Mass 82")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM82")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M82")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M83")
+{
+    field(DESC, "Mass 83")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM83")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M83")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M84")
+{
+    field(DESC, "Krypton")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM84")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M84")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M85")
+{
+    field(DESC, "Mass 85")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM85")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M85")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M86")
+{
+    field(DESC, "Mass 86")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM86")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M86")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M87")
+{
+    field(DESC, "Mass 87")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM87")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M87")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M88")
+{
+    field(DESC, "Mass 88")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM88")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M88")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M89")
+{
+    field(DESC, "Mass 89")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM89")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M89")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M90")
+{
+    field(DESC, "Mass 90")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM90")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M90")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M91")
+{
+    field(DESC, "Mass 91")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM91")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M91")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M92")
+{
+    field(DESC, "Mass 92")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM92")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M92")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M93")
+{
+    field(DESC, "Mass 93")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM93")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M93")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M94")
+{
+    field(DESC, "Mass 94")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM94")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M94")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M95")
+{
+    field(DESC, "Mass 95")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM95")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M95")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M96")
+{
+    field(DESC, "Mass 96")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM96")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M96")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M97")
+{
+    field(DESC, "Mass 97")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM97")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M97")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M98")
+{
+    field(DESC, "Mass 98")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM98")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M98")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M99")
+{
+    field(DESC, "Mass 99")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM99")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M99")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M100")
+{
+    field(DESC, "Mass 100")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM100")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M100")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M101")
+{
+    field(DESC, "Mass 101")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM101")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M101")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M102")
+{
+    field(DESC, "Mass 102")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM102")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M102")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M103")
+{
+    field(DESC, "Mass 103")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM103")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M103")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M104")
+{
+    field(DESC, "Mass 104")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM104")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M104")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M105")
+{
+    field(DESC, "Mass 105")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM105")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M105")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M106")
+{
+    field(DESC, "Mass 106")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM106")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M106")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M107")
+{
+    field(DESC, "Mass 107")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM107")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M107")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M108")
+{
+    field(DESC, "Mass 108")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM108")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M108")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M109")
+{
+    field(DESC, "Mass 109")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM109")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M109")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M110")
+{
+    field(DESC, "Mass 110")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM110")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M110")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M111")
+{
+    field(DESC, "Mass 111")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM111")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M111")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M112")
+{
+    field(DESC, "Mass 112")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM112")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M112")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M113")
+{
+    field(DESC, "Mass 113")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM113")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M113")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M114")
+{
+    field(DESC, "Mass 114")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM114")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M114")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M115")
+{
+    field(DESC, "Mass 115")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM115")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M115")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M116")
+{
+    field(DESC, "Mass 116")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM116")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M116")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M117")
+{
+    field(DESC, "Mass 117")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM117")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M117")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M118")
+{
+    field(DESC, "Mass 118")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM118")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M118")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M119")
+{
+    field(DESC, "Mass 119")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM119")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M119")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M120")
+{
+    field(DESC, "Mass 120")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM120")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M120")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M121")
+{
+    field(DESC, "Mass 121")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM121")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M121")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M122")
+{
+    field(DESC, "Mass 122")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM122")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M122")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M123")
+{
+    field(DESC, "Mass 123")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM123")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M123")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M124")
+{
+    field(DESC, "Mass 124")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM124")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M124")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M125")
+{
+    field(DESC, "Mass 125")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM125")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M125")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M126")
+{
+    field(DESC, "Mass 126")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM126")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M126")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M127")
+{
+    field(DESC, "Mass 127")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM127")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M127")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M128")
+{
+    field(DESC, "Mass 128")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM128")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M128")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M129")
+{
+    field(DESC, "Mass 129")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM129")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M129")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M130")
+{
+    field(DESC, "Mass 130")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM130")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M130")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M131")
+{
+    field(DESC, "Xenon")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM131")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M131")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M132")
+{
+    field(DESC, "Mass 132")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM132")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M132")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M133")
+{
+    field(DESC, "Mass 133")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM133")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M133")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M134")
+{
+    field(DESC, "Mass 134")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM134")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M134")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M135")
+{
+    field(DESC, "Mass 135")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM135")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M135")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M136")
+{
+    field(DESC, "Mass 136")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM136")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M136")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M137")
+{
+    field(DESC, "Mass 137")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM137")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M137")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M138")
+{
+    field(DESC, "Mass 138")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM138")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M138")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M139")
+{
+    field(DESC, "Mass 139")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM139")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M139")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M140")
+{
+    field(DESC, "Mass 140")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM140")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M140")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M141")
+{
+    field(DESC, "Mass 141")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM141")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M141")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M142")
+{
+    field(DESC, "Mass 142")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM142")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M142")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M143")
+{
+    field(DESC, "Mass 143")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM143")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M143")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M144")
+{
+    field(DESC, "Mass 144")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM144")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M144")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M145")
+{
+    field(DESC, "Mass 145")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM145")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M145")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M146")
+{
+    field(DESC, "Mass 146")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM146")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M146")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M147")
+{
+    field(DESC, "Mass 147")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM147")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M147")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M148")
+{
+    field(DESC, "Mass 148")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM148")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M148")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M149")
+{
+    field(DESC, "Mass 149")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM149")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M149")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M150")
+{
+    field(DESC, "Mass 150")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM150")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M150")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M151")
+{
+    field(DESC, "Mass 151")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM151")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M151")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M152")
+{
+    field(DESC, "Mass 152")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM152")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M152")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M153")
+{
+    field(DESC, "Mass 153")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM153")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M153")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M154")
+{
+    field(DESC, "Mass 154")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM154")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M154")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M155")
+{
+    field(DESC, "Mass 155")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM155")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M155")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M156")
+{
+    field(DESC, "Mass 156")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM156")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M156")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M157")
+{
+    field(DESC, "Mass 157")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM157")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M157")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M158")
+{
+    field(DESC, "Mass 158")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM158")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M158")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M159")
+{
+    field(DESC, "Mass 159")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM159")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M159")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M160")
+{
+    field(DESC, "Bromine")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM160")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M160")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M161")
+{
+    field(DESC, "Mass 161")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM161")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M161")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M162")
+{
+    field(DESC, "Mass 162")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM162")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M162")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M163")
+{
+    field(DESC, "Mass 163")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM163")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M163")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M164")
+{
+    field(DESC, "Mass 164")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM164")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M164")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M165")
+{
+    field(DESC, "Mass 165")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM165")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M165")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M166")
+{
+    field(DESC, "Mass 166")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM166")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M166")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M167")
+{
+    field(DESC, "Mass 167")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM167")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M167")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M168")
+{
+    field(DESC, "Mass 168")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM168")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M168")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M169")
+{
+    field(DESC, "Mass 169")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM169")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M169")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M170")
+{
+    field(DESC, "Mass 170")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM170")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M170")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M171")
+{
+    field(DESC, "Mass 171")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM171")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M171")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M172")
+{
+    field(DESC, "Mass 172")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM172")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M172")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M173")
+{
+    field(DESC, "Mass 173")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM173")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M173")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M174")
+{
+    field(DESC, "Mass 174")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM174")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M174")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M175")
+{
+    field(DESC, "Mass 175")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM175")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M175")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M176")
+{
+    field(DESC, "Mass 176")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM176")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M176")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M177")
+{
+    field(DESC, "Mass 177")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM177")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M177")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M178")
+{
+    field(DESC, "Mass 178")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM178")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M178")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M179")
+{
+    field(DESC, "Mass 179")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM179")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M179")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M180")
+{
+    field(DESC, "Mass 180")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM180")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M180")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M181")
+{
+    field(DESC, "Mass 181")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM181")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M181")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M182")
+{
+    field(DESC, "Mass 182")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM182")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M182")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M183")
+{
+    field(DESC, "Mass 183")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM183")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M183")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M184")
+{
+    field(DESC, "Mass 184")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM184")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M184")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M185")
+{
+    field(DESC, "Mass 185")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM185")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M185")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M186")
+{
+    field(DESC, "Mass 186")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM186")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M186")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M187")
+{
+    field(DESC, "Mass 187")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM187")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M187")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M188")
+{
+    field(DESC, "Mass 188")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM188")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M188")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M189")
+{
+    field(DESC, "Mass 189")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM189")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M189")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M190")
+{
+    field(DESC, "Mass 190")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM190")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M190")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M191")
+{
+    field(DESC, "Mass 191")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM191")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M191")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M192")
+{
+    field(DESC, "Mass 192")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM192")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M192")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M193")
+{
+    field(DESC, "Mass 193")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM193")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M193")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M194")
+{
+    field(DESC, "Mass 194")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM194")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M194")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M195")
+{
+    field(DESC, "Mass 195")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM195")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M195")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M196")
+{
+    field(DESC, "Mass 196")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM196")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M196")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M197")
+{
+    field(DESC, "Mass 197")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM197")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M197")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M198")
+{
+    field(DESC, "Mass 198")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM198")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M198")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M199")
+{
+    field(DESC, "Mass 199")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM199")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M199")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(ai, "$(device):BAR_RAW:M200")
+{
+    field(DESC, "Mass 200")
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT))BARM200")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR:M200")
+    field(EGU,  "mbar")
+    field(PREC, "3")
+    field(HOPR, "0.01")
+    field(LOPR, "0")
+    field(PINI, "YES")
+}
+#
+record(waveform, "$(device):BAR_RAW")
+{
+    field(DESC, "Barchart readings")
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT))BAR")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):BAR")
+    field(FTVL, "DOUBLE")
+    field(NELM, "200")
+    field(PINI, "YES")
+}
+#
+record(waveform, "$(device):ANA_RAW")
+{
+    field(DESC, "Analog readings")
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT))ANA")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(device):ANA")
+    field(FTVL, "DOUBLE")
+    field(NELM, "6415")
+    field(PINI, "YES")
+}
+#
+record(waveform, "$(device):BAR")
+{
+    field(DESC, "Barchart readings")
+    field(INP,  "$(device):BAR_RAW MS")
+    field(SDIS, "$(device):DIS50")
+    field(FTVL, "DOUBLE")
+    field(NELM, "200")
+    field(PINI, "YES")
+}
+#
+record(waveform, "$(device):ANA")
+{
+    field(DESC, "Analog readings")
+    field(INP,  "$(device):ANA_RAW MS")
+    field(SDIS, "$(device):DISANA")
+    field(FTVL, "DOUBLE")
+    field(NELM, "6415")
+    field(PINI, "YES")
+}

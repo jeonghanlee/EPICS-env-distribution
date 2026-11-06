@@ -1,0 +1,430 @@
+# waveform buffer handling
+#
+# Write channel select mask to shell_#_dsp_chan_keep
+#
+# Write one to bit N in circle_buf_flip to enable acquisition of channel N
+#
+# Wait for bit N in llrf_circle_ready to be set
+#
+# Macros
+#  BASE - Record name prefix
+#  NAME - FEED Device name
+#  BIT  - Channel bit number (0 is first channel)
+#  MASK - Channel bit mask (1 is first channel)
+#  SIZE - Max signal length (eg. 16384)
+
+# local (re)initialization
+
+record(longin, "$(BASE)INIT1_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(FLNK, "$(BASE)INIT2_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# push out channel mask and decimation factor
+record(fanout, "$(BASE)INIT2_") {
+    field(LNK1, "$(BASE)DECIM")
+    field(LNK2, "$(BASE)MASK")
+    field(LNK3, "$(BASE)TAG_RBV")
+    field(LNK4, "")
+    field(LNK5, "")
+    field(LNK6, "$(BASE)MODE")
+    field(FLNK, "$(BASE)INIT3_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# wait for write completion before triggering first acquisition
+record(longin, "$(BASE)INIT3_") {
+    field(DTYP, "FEED Sync")
+    field(INP , "@name=$(NAME)")
+    field(FLNK, "$(BASE)MODE")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# timebase logic
+
+record(longout, "$(BASE)DECIM") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_samp_per wait=false")
+    field(VAL , "1")
+    field(DRVH, "0xff")
+    field(DRVL, "1")
+    field(HOPR, "0xff")
+    field(LOPR, "1")
+    field(FLNK, "$(BASE)SAMP_PERIOD")
+    field(TPRO, "$(TPRO=0)")
+    info(autosaveFields_pass0, "VAL")
+    info(feed:info:setting, "$(BASE)DECIM")
+}
+
+record(calc, "$(BASE)SAMP_PERIOD") {
+    field(INPA, "$(BASE)DECIM")
+    field(INPB, "33") # cic_base_period
+    field(INPC, "94.2857142857e6") # samp/sec
+    field(CALC, "B*2*A/C")
+    field(FLNK, "$(BASE)AMPCALC")
+    field(TSEL, "$(BASE)DECIM.TIME")
+}
+
+# amplitude
+
+record(aSub, "$(BASE)AMPCALC") {
+    field(SNAM, "asub_yscale")
+    field(FTA , "ULONG") # wave_samp_per register
+    field(INPA, "$(BASE)DECIM MSI NPP")
+    field(FTB , "ULONG") # cic_period
+    field(INPB, "33") # cic_base_period
+    field(FTVA, "ULONG") # wave_shift
+    field(OUTA, "$(BASE)WAVESHIFT MSI PP")
+    field(FTVB, "DOUBLE") # yscale  (referenced in feed_wf_acquire_signal.template)
+    field(EFLG, "ALWAYS")
+}
+
+record(longout, "$(BASE)WAVESHIFT") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_shift wait=false")
+    field(DRVL, "0")
+    field(DRVH, "255")
+}
+
+# channel mask logic
+
+record(mbboDirect, "$(BASE)MASK") {
+    field(DESC, "Channel selection bitmask")
+    field(OUT , "$(BASE)MASK2_ PP")
+    field(TPRO, "$(TPRO=0)")
+    info(autosaveFields_pass0, "VAL B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB")
+}
+
+record(longout, "$(BASE)MASK2_") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_chan_keep wait=false")
+    field(FLNK, "$(BASE)MASK3_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aSub, "$(BASE)MASK3_") {
+    field(SNAM, "asub_split_bits")
+    field(FTA , "LONG")
+    field(INPA, "$(BASE)MASK2_ NPP")
+    field(FTVA, "LONG")
+    field(FTVB, "LONG")
+    field(FTVC, "LONG")
+    field(FTVD, "LONG")
+    field(FTVE, "LONG")
+    field(FTVF, "LONG")
+    field(FTVG, "LONG")
+    field(FTVH, "LONG")
+    field(FTVI, "LONG")
+    field(FTVJ, "LONG")
+    field(FTVK, "LONG")
+    field(FTVL, "LONG")
+    field(FTVM, "LONG")
+    # individual signals monitor one of VALB -> VALM
+    # to detect config changes
+    field(EFLG, "ALWAYS")
+}
+
+# tag handling
+# we manage the tag.  Clients may increment on request
+# as part of acquisition update sequencing
+
+record(busy, "$(BASE)TAGINC_CMD") {
+    field(OUT , "$(BASE)TAGINC_CALC_.PROC PP")
+}
+
+record(calcout, "$(BASE)TAGINC_CALC_") {
+    # prevent inc on cancel/complete
+    field(SDIS, "$(BASE)TAGINC_CMD")
+    field(DISV, "0")
+
+    field(INPA, "$(BASE)TAGINC_CALC_")
+    field(INPB, "255")
+    field(CALC, "(A+1)&0xff") # 8 bit counter
+    field(OUT , "$(BASE)TAG_RBVX_ PP")
+}
+
+record(longout, "$(BASE)TAG_RBVX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(OUT , "$(BASE)TAG_RBV PP")
+}
+
+record(longout, "$(BASE)TAG_RBV") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_tag")
+    field(VAL , "0")
+    field(FLNK, "$(BASE)TAGDONE_CMD_")
+    info(feed:info:readback, "$(BASE)TAG_RBV")
+    info(feed:info:increment, "$(BASE)TAGINC_CMD")
+}
+
+# Complete TagInc
+record(longout, "$(BASE)TAGDONE_CMD_") {
+    field(VAL, "0")
+    field(OUT, "$(BASE)TAGINC_CMD PP")
+}
+
+# acquisition trigger logic
+
+record(bo, "$(BASE)MODE") {
+    field(ZNAM, "Single")
+    field(ONAM, "Normal")
+    field(VAL , "0")
+    field(FLNK, "$(BASE)CMD")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(BASE)HLDOFF") {
+    field(DESC, "re-arm holdoff time")
+    field(OUT , "$(BASE)DLY_.ODLY NPP")
+    field(PINI, "YES")
+    field(DRVH, "5.0")
+    field(DRVL, "0.1")
+    field(VAL , "1.0")
+    field(EGU , "s")
+    field(PREC, "2")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(bo, "$(BASE)CMD") {
+    field(DESC, "Start aquisition")
+    field(ZNAM, "Acquire")
+    field(ONAM, "Acquire")
+    field(FLNK, "$(BASE)CMDX_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)CMDX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK, "$(BASE)CMD_ PP")
+}
+
+# write $(MASK) to reg circle_buf_flip
+record(longout, "$(BASE)CMD_") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=circle_buf_flip")
+    field(VAL , "$(MASK)")
+    field(FLNK, "$(BASE)RDY_RBVX_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)RDY_RBVX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK , "$(BASE)RDY_RBV_")
+}
+
+# wait for value & $(MASK) == $(MASK) for reg llrf_circle_ready
+record(bo, "$(BASE)RDY_RBV_") {
+    field(DTYP, "FEED Register Watch")
+    field(OUT , "@name=$(NAME) retry=$(RETRY=0.1) reg=llrf_circle_ready mask=$(MASK) value=$(MASK)")
+    field(FLNK, "$(BASE)CIRCRAWX_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)CIRCRAWX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK , "$(BASE)CIRCRAW_")
+}
+
+# actual readback of sample buffer
+# only first element is used, but all are read in
+record(ai, "$(BASE)CIRCRAW_") {
+    field(SDIS, "$(BASE)RDY_RBV_ MSI")
+    field(DISV, "-42") # alarm propagation only, should never disable scan
+
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data")
+    field(TSE , "-2")
+    field(FLNK, "$(BASE)TAG1_RBVX_")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:acqcnt, "$(BASE)CNT")
+    info(feed:info:acqmode, "$(BASE)MODE")
+}
+
+record(longout, "$(BASE)TAG1_RBVX_") {
+    field(DTYP, "FEED Hack lp:1745039")
+    field(FLNK , "$(BASE)TAG1_RBV")
+}
+
+# actual readback of slow buffer
+record(longin, "$(BASE)TAG1_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "Tag at start of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=34")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(FLNK, "$(BASE)TAG2_RBV")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:tag1, "$(BASE)TAG1_RBV")
+}
+
+record(longin, "$(BASE)TAG2_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "Tag at end of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=33 wait=false")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+# Original FLNK to FOUT
+#    field(FLNK, "$(BASE)NEXT_FOUT_")
+    field(FLNK, "$(BASE)_STATUS_CALC_")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:tag2, "$(BASE)TAG2_RBV")
+}
+
+# Slow data status bytes
+# Store in PVs here, sooner than
+# other slow data, because it contains 
+# information needed in waveform handling
+record(aai, "$(BASE)STATUS_RAW_") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=19 wait=false")
+    field(FTVL, "UCHAR")
+    field(NELM, "2")
+}
+
+record(aSub, "$(BASE)_STATUS_CALC_") {
+    field(SNAM, "asub_feed_bcat")
+    field(FTA , "UCHAR")
+    field(FTVA, "ULONG")
+    field(INPA, "$(BASE)STATUS_RAW_ PP MSI")
+    field(NOA , "2")
+    field(FLNK, "$(BASE)STATUS_")
+}
+
+record(longin, "$(BASE)STATUS_") {
+    field(INP, "$(BASE)_STATUS_CALC_.VALA MSI")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+	field(FLNK, "$(BASE)STATUS")
+}
+
+# From L. Doolittle 8/2019
+# The 16-bit circle buffer status register read out in the slow chain
+# should have 14 lsb for address (padded if needed, but we're now at
+# the maximum actual address width), followed to the left by circle_wrap
+# and circle_fault.  In Verilog,
+#   circle_stat = {circle_fault, circle_wrap, circle_addr}
+#
+# .B0 - .BD = fault data offset
+# .BE = 1 if data spread across current buffer and previous
+#     = 0 if all data in current 
+# .BF = 1 if not fault
+#     = 0 if fault
+record(mbbiDirect, "$(BASE)STATUS") {
+	field(INP,  "$(BASE)STATUS_")
+	field(TSEL, "$(BASE)CIRCRAW_.TIME")
+	field(FLNK, "$(BASE)CIRC_START_")
+}
+
+# Calculate read offset for fault data
+record(calcout, "$(BASE)CIRC_START_") {
+    field(INPA, "$(BASE)STATUS")
+    field(INPB, "0x3FFF") # least significant 14 bits contain address
+    field(INPC, "$(BASE)MASK3_.VALA")
+    field(CALC, "(A & B) / C")
+    field(OUT, "$(BASE)CIRC_START.PROC PP")
+	field(TSEL, "$(BASE)CIRCRAW_.TIME")
+	field(FLNK, "$(BASE)NEXT_FOUT_")
+}
+
+record(longin, "$(BASE)CIRC_START") {
+    field(SDIS, "$(BASE)STATUS.BF")
+    field(DISV, "1")
+    field(DESC, "Fault buffer start address")
+    field(DTYP, "Soft Channel")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(INP,  "$(BASE)CIRC_START_")
+    field(FLNK, "$(BASE)FLT_TS")
+}
+
+record(stringin, "$(BASE)FLT_TS") {
+    field(DESC, "Timestamp of last fault")
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(INP, "@%b %d %Y %H:%M:%S")
+}
+
+# does downstream processing
+# of signals, I/Q pairs, and stats
+record(fanout, "$(BASE)NEXT_FOUT_") {
+    field(LNK0, "$(LNK0=)")
+    field(LNK1, "$(LNK1=)")
+    field(LNK2, "$(LNK2=)")
+    field(LNK3, "$(LNK3=)")
+    field(LNK4, "$(LNK4=)")
+    field(LNK5, "$(LNK5=)")
+    field(LNK6, "$(LNK6=)")
+    field(LNK7, "$(LNK7=)")
+    field(LNK8, "$(LNK8=)")
+    field(LNK9, "$(LNK9=)")
+    field(LNKA, "$(LNKA=)")
+    field(LNKB, "$(LNKB=)")
+    field(LNKC, "$(LNKC=)")
+    field(LNKD, "$(LNKD=)")
+    field(LNKE, "$(LNKE=)")
+    field(LNKF, "$(LNKF=)")
+    field(FLNK, "$(BASE)CNT")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# at this point all signal/pair/stats records are updated.
+# So external clients can monitor CNT or SLOWRAW to detect new data
+# and be confident that any get() issued after a subscription update
+# will not fetch data from a previous acquisition.
+
+record(calc, "$(BASE)CNT") {
+    field(SDIS, "$(BASE)RDY_RBV_ MSI")
+    field(DISV, "-42")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "A+1")
+    field(FLNK, "$(BASE)SLOWRAW")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# used by wait_for_acq() in ca.py
+record(aai, "$(BASE)SLOWRAW") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "Tag at start of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data wait=false")
+    field(FTVL, "UCHAR") # slow_data width=8
+    field(NELM, "128")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(FLNK, "$(BASE)DLY_")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:rawinput, "$(BASE)SLOWRAW")
+}
+
+record(calc, "$(BASE)RATE") {
+    field(SCAN, "10 second")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "C:=A-B;B:=A;C/10")
+    field(EGU , "Hz")
+    field(PREC, "2")
+}
+
+record(calcout, "$(BASE)DLY_") {
+    field(SDIS, "$(BASE)MODE")
+    field(DISV, "0") # disable when Single
+    field(CALC, "0")
+    field(ODLY, "1.0") # overwritten by $(BASE)HLDOFF
+    field(OUT , "$(BASE)CMD PP")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# common window for all waveform stats
+
+record(ao, "$(BASE)STAT_START") {
+    field(PREC, "6")
+    field(PINI, "YES")
+    field(EGU,  "s")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(BASE)STAT_WIDTH") {
+    field(PREC, "6")
+    field(VAL , "1") # default to a large value to include entire period
+    field(PINI, "YES")
+    field(EGU,  "s")
+    info(autosaveFields_pass0, "VAL")
+}

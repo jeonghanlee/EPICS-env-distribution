@@ -1,0 +1,100 @@
+record(bi, "$(P)conn") {
+  field(DTYP, "PSC Ctrl Connected")
+  field(INP , "@test")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "Disconnected")
+  field(ONAM, "Connected")
+  field(ZSV , "MAJOR")
+}
+
+record(bo, "$(P)reconn") {
+  field(DTYP, "PSC Ctrl Reconnect")
+  field(OUT , "@test")
+  field(ZNAM, "Reconnect")
+  field(ONAM, "Reconnect")
+}
+
+record(stringin, "$(P)msg") {
+  field(DTYP, "PSC Ctrl Message")
+  field(INP , "@test")
+  field(DESC, "Last message")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)cnt:conn") {
+  field(DTYP, "PSC Conn Count")
+  field(INP , "@test")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)cnt:ukn") {
+  field(DTYP, "PSC Unknown Msg Count")
+  field(INP , "@test")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)cnt:cnt") {
+  field(DTYP, "PSC Block Msg Count")
+  field(INP , "@test 42 rx")
+  field(SCAN, "1 second")
+}
+
+record(longin, "$(P)cnt-I") {
+  field(DTYP, "PSC Reg")
+  field(INP , "@test 42 0")
+  field(SCAN, "I/O Intr")
+}
+
+# write into scratch buffer
+record(longout, "$(P)cnt-SP") {
+  field(DTYP, "PSC Reg")
+  field(OUT , "@test 32 0")
+  field(FLNK, "$(P)send32")
+}
+
+# queue scratch to be sent
+record(longout, "$(P)send32") {
+  field(DTYP, "PSC Ctrl Send")
+  field(OUT , "@test")
+  field(VAL , "32")
+  field(FLNK, "$(P)send")
+}
+
+# flush send to socket
+record(bo, "$(P)send") {
+  field(DTYP, "PSC Ctrl Send All")
+  field(OUT , "@test")
+  field(ZNAM, "Send")
+  field(ONAM, "Send")
+}
+
+
+record(stringout, "$(P)speak") {
+  field(DTYP, "PSC Block")
+  field(OUT , "@test 1015")
+  field(FLNK, "$(P)send")
+}
+
+record(stringin, "$(P)hear") {
+  field(DTYP, "PSC Block")
+  field(INP , "@test 1025 8")
+  field(SCAN, "I/O Intr")
+  field(TSE , "-2")
+  info("TimeFromBlock", "0")
+}
+
+# Test single register writes
+
+record(longout, "$(P)write0-SP") {
+  field(DTYP, "PSC Single I32")
+  field(OUT , "@test 100 4660")
+  field(FLNK, "$(P)send")
+  info(SYNC, "SAME")
+}
+
+record(ao, "$(P)write1-SP") {
+  field(DTYP, "PSC Single I32")
+  field(OUT , "@test 100 4670")
+  field(FLNK, "$(P)send")
+  info(SYNC, "SAME")
+}

@@ -1,0 +1,12 @@
+format=1
+name=busy
+version=a4a272d
+tag=a4a272d
+source=a4a272d94d1f4351e7d9553e6dc35782eb96ce75
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+dep=autosave 6.0.0
+artifact=dbd/busyRecord.dbd 8581658e37785904bf8822536f89eda831c5d750f3ef7c8f1ebdf70186c68e15
+artifact=dbd/busySupport.dbd 9d9d5962c9a935110bc3c9adc2bf00abe6f981cd5a7da4c77512eafa912148cc
+artifact=lib/linux-x86_64/libbusy.so 2fff7cc7dff94bc56ab206df25f0a2adfdddc9833ce131178079e2234aba2986
