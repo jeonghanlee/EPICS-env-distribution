@@ -1,0 +1,13 @@
+format=1
+name=pvxs
+version=1.5.3
+tag=tags/1.5.3
+source=25ca43df4db909c0b1a445fb705fc81582617625
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/pvxsIoc.dbd 22ae266a073078632b325e388006ded19aed19d6fdfdf51448565e869e83f098
+artifact=dbd/softIocPVX.dbd 874797d8c27209f9793d0d87ab78bf9ea643afdcb43b1f14358885cfbc9db169
+artifact=lib/linux-x86_64/libpvxs.so 382bd0422f6efeac8d4fe6dcef343298d060d5dbaaf87b193df75522b29e4faa
+artifact=lib/linux-x86_64/libpvxs.so.1.5 382bd0422f6efeac8d4fe6dcef343298d060d5dbaaf87b193df75522b29e4faa
+artifact=lib/linux-x86_64/libpvxsIoc.so 1c8859689c122c10bb3511b2ded3fa33f6dc91c4b12e96999747bb057e26788d
+artifact=lib/linux-x86_64/libpvxsIoc.so.1.5 1c8859689c122c10bb3511b2ded3fa33f6dc91c4b12e96999747bb057e26788d

@@ -1,0 +1,11 @@
+format=1
+name=pyDevSup
+version=2.1.0
+tag=tags/2.1.0
+source=b5cef38a6d9f74f9c59f967185ba6d1940637c03
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/pyDevSup.dbd 6f058f390ae1c7ab9ecdda2deec61c15aefb2f47b6fb53b2ec6556ac71a2caf7
+artifact=dbd/softIocPy.dbd 0359766366fbf38296c6d35a2293943a81c1e9b96446d5d7b4be39a5210f06c4
+artifact=lib/linux-x86_64/libpyDevSup3.6m.so bc084f40fda7d3d6379bb643504c7ce2e43ef09fe4c07809d1e4a6ea9b41635e
+artifact=lib/linux-x86_64/libpyDevSup3.6m.so.0 bc084f40fda7d3d6379bb643504c7ce2e43ef09fe4c07809d1e4a6ea9b41635e

@@ -1,0 +1,11 @@
+format=1
+name=rgamv2
+version=27fc633
+tag=27fc633
+source=27fc633c13506f23c107c7f631a87a5fdd80ce3b
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+artifact=dbd/rgaInclude.dbd 9e4099a9ce231a84ed7776f437fb64d63c0c9d68598d88f58ef9d64979b31d88
+artifact=dbd/rgamv2Include.dbd d523ff2c1d6aae5c364d4215c987aa2bccbd30e6fc71429e5d1dfce730c82bab
+artifact=lib/linux-x86_64/librgamv2.so 4f611c5b19f72ec9cc888652dd863cc5671591c98ea997d63b5034e06bc22a27

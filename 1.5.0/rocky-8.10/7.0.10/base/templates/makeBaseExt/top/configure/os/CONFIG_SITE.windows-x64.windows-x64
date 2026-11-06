@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2010 Argonne National Laboratory
+#
+# SPDX-License-Identifier: EPICS
+
+#
+# Site Specific Configuration Information
+# Only the local epics system manager should modify this file
+
+-include $(TOP)/configure/os/CONFIG_SITE.win32-x86.win32-x86
+

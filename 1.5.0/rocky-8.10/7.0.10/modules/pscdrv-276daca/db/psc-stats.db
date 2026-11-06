@@ -1,0 +1,58 @@
+#Basic statistics (mean, std. dev., minimum, and maximum)
+#
+# P - Name prefix (required)
+# DATAY - Input data (required)
+# DATAX - Input time base
+# TSEL - Output time source (ie $(DATAY).TIME)
+# NELM - Max input array size (required)
+# START - Input link to determine stats window start
+# WIDTH - Input link to determine stats window size (defaults to NELM)
+# FLNK
+#
+
+record(aSub, "$(P)Stats-Calc_") {
+  field(SCAN, "$(SCAN=)")
+  field(SNAM, "wf_stats")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(FTVC ,"DOUBLE")
+  field(FTVD ,"DOUBLE")
+  field(FTVE ,"ULONG")
+  field(NOA , "$(NELM)")
+  field(NOB , "$(NELM)")
+  field(INPA, "$(DATAY)")
+  field(INPB, "$(DATAX=)")
+  field(INPC, "$(START=)") # window start
+  field(INPD, "$(WIDTH=$(NELM))") # window width
+  field(OUTA, "$(P)Mean-I PP MS")
+  field(OUTB, "$(P)Std-I PP MS")
+  field(OUTC, "$(P)Min-I PP MS")
+  field(OUTD, "$(P)Max-I PP MS")
+  field(OUTE, "$(P)Cnt-I PP MS")
+  field(TSEL, "$(TSEL=)")
+  field(FLNK, "$(FLNK=)")
+}
+
+record(ai, "$(P)Mean-I") {
+  field(PREC, "$(PREC=2)")
+  field(TSEL, "$(P)Stats-Calc_.TIME")
+}
+record(ai, "$(P)Std-I") {
+  field(PREC, "$(PREC=2)")
+  field(TSEL, "$(P)Stats-Calc_.TIME")
+}
+record(ai, "$(P)Min-I") {
+  field(PREC, "$(PREC=2)")
+  field(TSEL, "$(P)Stats-Calc_.TIME")
+}
+record(ai, "$(P)Max-I") {
+  field(PREC, "$(PREC=2)")
+  field(TSEL, "$(P)Stats-Calc_.TIME")
+}
+record(longin, "$(P)Cnt-I") {
+  field(TSEL, "$(P)Stats-Calc_.TIME")
+}

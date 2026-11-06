@@ -1,0 +1,18 @@
+record(aao, "$(PREF)") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=$(REG) offset=$(OFF=0)")
+    field(FTVL, "LONG")
+    field(NELM, "$(SIZE)")
+    field(PINI, "YES")
+    info(autosaveFields_pass1, "VAL")
+    info(feed:info:output, "$(PREF)")
+}
+record(aai, "$(PREF)_RBV") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=$(REG)")
+    field(FTVL, "LONG")
+    field(NELM, "$(SIZE)")
+    field(SCAN, "$(REGSCAN)")
+    field(TSE , "-2")
+    info(feed:info:input, "$(PREF)_RBV")
+}

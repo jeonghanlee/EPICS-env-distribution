@@ -1,0 +1,14 @@
+format=1
+name=pscdrv
+version=276daca
+tag=276daca
+source=276dacaee3fdfba954ec7d5d3cbd01852cbcf306
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/pscCore.dbd 7ee86b57100cf23aa63054ea4a28670af2354966ad1e51e10344796fde92927c
+artifact=dbd/pscSig.dbd ee884869dc2b87558b6c4c40a800ac8c43e58c3aabbf3eaa69f0b8f15e786912
+artifact=dbd/pscUDPFast.dbd 78dedc77b7d4f3360cd00c15afd0b93a35ba5f49e93e54a4228ffa5ce86ed6d2
+artifact=dbd/pscdemo.dbd 4cb1ad04c2d7e39848731166489659ec6a8f3d954564b5e6dadbeae67be8acdc
+artifact=lib/linux-x86_64/libpscCore.so 04b9d2fe46ddad06709844e67ba1c6ccc9ba27fbf1afd85667374bb35247be21
+artifact=lib/linux-x86_64/libpscSig.so 472066ba19af57afe6262baa65a3ecbc4865c4260dd6df415f2fba130fcdf5ef
+artifact=lib/linux-x86_64/libpscUDPFast.so ed3b7494c9939857516dcee01c1009e8adcf0e7e784b24fd3f81fdb15d9c0269

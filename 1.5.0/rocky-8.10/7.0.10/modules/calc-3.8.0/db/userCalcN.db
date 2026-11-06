@@ -1,0 +1,21 @@
+record(bo, "$(P)userCalc$(N)Enable") {
+  field(DESC, "userCalc $(N) Enable")
+  field(ZNAM, "D")
+  field(ONAM, "E")
+  field(UDF, "0")
+  field(STAT, "NO_ALARM")
+  field(SEVR, "NO_ALARM")
+  field(DOL, "1")
+}
+record(calc, "$(P)userCalc$(N)EnableCalc") {
+	field(INPA, "$(P)userCalc$(N)Enable CP")
+	field(INPB, "$(P)userCalcEnable CP")
+	field(INPC, "$(P)userCalcGlobalEnable CP")
+	field(CALC, "a+b+c==3")
+}
+record(swait, "$(P)userCalc$(N)") {
+  field(DESC, "userCalc $(N)")
+  field(DISV, "0")
+  field(SDIS, "$(P)userCalcEnable.VAL")
+  field(PREC, "5")
+}

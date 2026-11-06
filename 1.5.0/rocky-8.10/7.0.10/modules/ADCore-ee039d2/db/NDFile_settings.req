@@ -1,0 +1,13 @@
+$(P)$(R)FilePath
+$(P)$(R)FileName
+$(P)$(R)FileNumber
+$(P)$(R)AutoIncrement
+$(P)$(R)FileTemplate
+$(P)$(R)AutoSave
+$(P)$(R)FileFormat
+$(P)$(R)FileWriteMode
+$(P)$(R)NumCapture
+$(P)$(R)DeleteDriverFile
+$(P)$(R)CreateDirectory
+$(P)$(R)LazyOpen
+$(P)$(R)TempSuffix
