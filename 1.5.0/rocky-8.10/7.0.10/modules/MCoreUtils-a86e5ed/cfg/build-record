@@ -1,0 +1,10 @@
+format=1
+name=MCoreUtils
+version=a86e5ed
+tag=a86e5ed
+source=a86e5ed193abaae5744f9a5545fc883a9348258d
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/mcoreutils.dbd 5c1e05f1fd7ed9d9d2bf8a3d8e4cca4423d4209217caa302a3299ac50621df35
+artifact=dbd/mcutest.dbd 62bbef6041891a8f9b5341647fc26cb1d65bbf7dcc276ba10937a35b2a5e2524
+artifact=lib/linux-x86_64/libmcoreutils.so e0cb7fe1d06eb21b3419d2efe2e3e61dee08969c02f005a85584a0b13afc3de5

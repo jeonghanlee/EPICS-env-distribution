@@ -1,0 +1,14 @@
+format=1
+name=StreamDevice
+version=2.8.26
+tag=tags/2.8.26
+source=668d1d525509604ab4ccd7382022dfb469c99841
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+dep=calc 3.8.0
+artifact=dbd/stream-base.dbd 8c79c980c0f0ca3cc2946151bcfe15445b380571ad26888cde3fcccae16fd5ff
+artifact=dbd/stream-scalcout.dbd b947cf0aa2a312ac7150156f8861200bcbc0311fe8f2350188831148dc50c495
+artifact=dbd/stream.dbd 59a26c010a0a4f5bad6a1b97d1e919ca33b3f8c6ab9b6e17025d38d3e20239db
+artifact=dbd/streamApp.dbd 3d264443068c7f4ca7630dc815a5b10acaf04120b450c85a6170ae80526c2a9b
+artifact=lib/linux-x86_64/libstream.so b4f89bcb9efe22969ab3f5b9ec7d39e5a3d824afd345d4bd9414b97376df58a1

@@ -1,0 +1,17 @@
+format=1
+name=motor
+version=4b22ac9
+tag=4b22ac9
+source=4b22ac950de98c2dca324c2ef8ef221e124f6651
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+dep=busy a4a272d
+dep=lua 01aa7a1
+dep=modbus 3.4.0
+dep=seq 2.2.9
+artifact=dbd/devSoftMotor.dbd da16b4505095fc51b695974b43c76a69e23cce45ae729d56a3f032445ab37ad9
+artifact=dbd/motorRecord.dbd b7e622d025b770e84a74b006cddbc41203c4421396ef243e5875b53bd8e39f5e
+artifact=dbd/motorSupport.dbd f5831d5734b9e9daad105b09241b5c80346f5b9fb5d0baade7e2c59466133e4d
+artifact=lib/linux-x86_64/libmotor.so 4f7ea21a568b17785b70278d9810f4eaa662df1e8f64ce8a47e24c6b0a9b1e4e
+artifact=lib/linux-x86_64/libsoftMotor.so 40b793ab54687c393e8fa8c3c667d0a1d71c9fb648d0ab0adbf24f9e663d2f54

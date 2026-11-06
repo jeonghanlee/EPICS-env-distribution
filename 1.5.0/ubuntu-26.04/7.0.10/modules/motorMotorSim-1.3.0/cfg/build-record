@@ -1,0 +1,12 @@
+format=1
+name=motorMotorSim
+version=1.3.0
+tag=tags/R1-3
+source=39a66815a386b9fc8b948e369ac325df3848436e
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+dep=motor 4b22ac9
+artifact=dbd/motorSim.dbd b7d2b8f2e8f20a832789b251c5b052de83027e74921a85dc7636191bcea8e838
+artifact=dbd/motorSimSupport.dbd aa89e66786d7ac6dfa4c4c2fc42c21d5a29c111658a87504186301ffaf8cdc63
+artifact=lib/linux-x86_64/libmotorSimSupport.so 73d0210717b4f1fe0799c3cb82bf031a1cfc813844f1aacfcc66f521c76954b7

@@ -1,0 +1,10 @@
+format=1
+name=caPutLog
+version=4.2.0
+tag=tags/R4.2
+source=6f9eb3f6c75e49201d114f8e194d53cef493a522
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/caPutJsonLog.dbd 7aec6c5ee687963f17466057efce0c519cfbece64a5a1d84f248290fb0756d83
+artifact=dbd/caPutLog.dbd b09617af6595b8a92a5f11a7eb9ca8e4bb1f4ed2b0243179b8d3cb3eec5673c2
+artifact=lib/linux-x86_64/libcaPutLog.so a238b22596d11e5687c4ceec3852a65f22cc8fe08fd8d05c3750bfc6b8f86a61

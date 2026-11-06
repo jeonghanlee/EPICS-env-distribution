@@ -1,0 +1,11 @@
+format=1
+name=ADSimDetector
+version=0ef1305
+tag=0ef1305
+source=0ef1305351ce79baedb34ab82d63d4b030f0bffd
+base=7.0.10
+arch=linux-x86_64
+dep=ADCore ee039d2
+dep=asyn 4.46.0
+artifact=dbd/simDetectorSupport.dbd efc23a8c18b8939f4ee6c0c382d2b001fd4411d003e4fc8b1e0f65c51fd7b40d
+artifact=lib/linux-x86_64/libsimDetector.so 3e26ef22c30bb5b94cc1a8051030c4a71b57848f04b7aadc923a1d619c718ea0

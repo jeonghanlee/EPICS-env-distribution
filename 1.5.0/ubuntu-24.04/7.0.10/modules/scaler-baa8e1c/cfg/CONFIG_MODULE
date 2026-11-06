@@ -1,0 +1,21 @@
+ifeq (,$(_SCALER_INCLUDED))
+_SCALER_INCLUDED = YES
+
+_SCALER_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+ifdef T_A
+
+_SCALER_DEPS := $(shell $(CONVERTRELEASE) -T $(_SCALER_DIR)/.. releaseTops)
+_SCALER_DEPS := $(filter-out EPICS_BASE SUPPORT, $(_SCALER_DEPS))
+
+$(foreach dep, $(_SCALER_DEPS), $(eval -include $($(dep))/cfg/CONFIG_MODULE))
+
+-include $(_SCALER_DIR)/SCALER_DEPS
+-include $(_SCALER_DIR)/SCALER_DEPS.local
+
+ALL_IOC_DBDS += $(SCALER_IOC_DBDS)
+ALL_IOC_LIBS := $(SCALER_IOC_LIBS) $(ALL_IOC_LIBS)
+ALL_IOC_SYS_LIBS := $(SCALER_IOC_SYS_LIBS) $(ALL_IOC_SYS_LIBS)
+
+endif # T_A
+endif # included

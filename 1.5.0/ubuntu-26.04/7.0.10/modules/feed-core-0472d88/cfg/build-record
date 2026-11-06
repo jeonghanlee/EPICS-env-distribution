@@ -1,0 +1,9 @@
+format=1
+name=feed-core
+version=0472d88
+tag=0472d88
+source=0472d88f3a42ad8adde5b32d7e348efe43d84199
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/feed.dbd c8a93475476708401abdfa065fb479e3220e958806bf0125f2f6811b533bb7fa
+artifact=lib/linux-x86_64/libfeed.so 71f52d1b35c46593e1ba6373fbc29e0a26e13ddcad0689ab9b596b78add9c473

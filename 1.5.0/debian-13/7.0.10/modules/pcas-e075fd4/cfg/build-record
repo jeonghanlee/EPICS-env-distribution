@@ -1,0 +1,11 @@
+format=1
+name=pcas
+version=e075fd4
+tag=e075fd4
+source=e075fd450ab9a66bbc044eaa4c2035d3d26d9651
+base=7.0.10
+arch=linux-x86_64
+artifact=lib/linux-x86_64/libcas.so 21420e37729e39c54c9bdc2b4a032610f7112199d7037e717bd0acd3a67fd0b7
+artifact=lib/linux-x86_64/libcas.so.4.13.0 21420e37729e39c54c9bdc2b4a032610f7112199d7037e717bd0acd3a67fd0b7
+artifact=lib/linux-x86_64/libgdd.so d2283c90e21876df3394e68c7895226be91eace61423bf98c62f7c969cc721b7
+artifact=lib/linux-x86_64/libgdd.so.4.13.0 d2283c90e21876df3394e68c7895226be91eace61423bf98c62f7c969cc721b7

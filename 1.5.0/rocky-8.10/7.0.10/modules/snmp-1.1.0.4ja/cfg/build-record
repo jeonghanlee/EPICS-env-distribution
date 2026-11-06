@@ -1,0 +1,10 @@
+format=1
+name=snmp
+version=1.1.0.4ja
+tag=tags/v1.1.0.4ja
+source=db9ebf51bc81d6f63d9395513d94d60b3b7eda83
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/devSnmp.dbd 52f53038580d4c528b1353b2223a41e674d81f42b28fde68518a92b439b9a0b5
+artifact=dbd/snmp.dbd 1f8d51fe1fd4811e451390205fcbbcab902d0424bc21ac2b301fd9d4e2eaf1b9
+artifact=lib/linux-x86_64/libdevSnmp.so dad3c4ada92e2f221a23ed1b51434fdf5cf29b1ad99273f71c60aa8d6e6dddde

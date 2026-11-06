@@ -1,0 +1,15 @@
+format=1
+name=ADVimba
+version=1.5.0
+tag=tags/R1-5
+source=e2b9e4fc3d7df04c1b5ad8c50dc0d2d64e2a386e
+base=7.0.10
+arch=linux-x86_64
+dep=ADCore ee039d2
+dep=ADGenICam ba5b9b8
+dep=asyn 4.46.0
+artifact=dbd/ADVimbaSupport.dbd 38fe87f6102c2cf6be22497fde2f55d1e8b76a4ccb64d33397d0ac49fefa661e
+artifact=lib/linux-x86_64/libADVimba.so 5692702c22e4801c0982cc830fc35c76d59c1950841cd0030c0859abfe1b01f2
+artifact=lib/linux-x86_64/libVimbaC.so 3612e6be27e8608697cbb16bbb57cec6bd0cfe26a21b5cd58c42f6c669f7971c
+artifact=lib/linux-x86_64/libVimbaCPP.so da4ebb656c14f1e8adfa48b254d4e7d4d6ec72b67ccc44686e908d43e277c037
+artifact=lib/linux-x86_64/libVimbaImageTransform.so 2cf44a2828b2c26ff3e6908ce8833650323421daedc07aca1055864b62cb9d76

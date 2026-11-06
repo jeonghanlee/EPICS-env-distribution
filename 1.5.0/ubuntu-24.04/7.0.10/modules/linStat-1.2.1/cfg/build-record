@@ -1,0 +1,9 @@
+format=1
+name=linStat
+version=1.2.1
+tag=tags/1.2.1
+source=b4729e43c8ee9791975abbc7e06b870f46fb9661
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/linStat.dbd eeef8cf6831ceb117611f53c884be22a42d416cd36ff062f354b08df6e1e3bef
+artifact=lib/linux-x86_64/liblinStat.so 0e7094097b8399a848eaf70aa5396dcc2c3557fb0617edc677cd027abdf56696

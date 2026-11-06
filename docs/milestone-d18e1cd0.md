@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: none
 
-Next session entry point: `docs/milestone-d18e1cd0.md` M4 - run T1: with `HOME` set to an empty directory, run each README command verbatim against the published repository.
+Next session entry point: `docs/milestone-d18e1cd0.md` M6 - commit the prepared 1.3.0 directory removal and publication record, then continue master integration, tag publication, and published-checkout readback under their approved operation scopes.
 
 ## Milestone
 
@@ -19,6 +19,7 @@ Next session entry point: `docs/milestone-d18e1cd0.md` M4 - run T1: with `HOME` 
 | Agent skill | M2 | Environment usage skill | Milestone | In progress | No | D6 | An agent told only to read this repository finds `epics-env-usage/SKILL.md`, activates the tree matching the host, and answers environment questions from it; [detail](#m2---environment-usage-skill) |
 | Repository | M4 | Human-followable README | Milestone | In progress | No | D3 | README commands run verbatim in an empty `$HOME` match the README under the M4 matching rule; [detail](#m4---human-followable-readme) |
 | Repository | M5 | Remove install.bash | Milestone | Complete | No | D4 | `install.bash` absent from the tree with no remaining reference; [detail](#m5---remove-installbash) |
+| Distribution | M6 | Prepare 1.5.0 public candidates | Milestone | In progress | No | D7, D8 | Six verified OS trees, accepted baselines, and matching usage documentation; [detail](#m6---prepare-150-public-candidates) |
 
 ### Decisions
 
@@ -30,6 +31,8 @@ Next session entry point: `docs/milestone-d18e1cd0.md` M4 - run T1: with `HOME` 
 | D4 | `install.bash` is removed; distribution trees are produced by the VM build pipeline in `https://github.com/jeonghanlee/cloud-provision` and `https://github.com/jeonghanlee/ansible-provision`. | 2026-09-23 |
 | D5 | M1 confirms discovery by documentation and by an isolated probe run of each CLI against a scratch project outside this repository. | 2026-09-23 |
 | D6 | `epics-env-usage` is one self-contained user skill file at `epics-env-usage/SKILL.md`, not a development skill: an agent told to read this repository uses it to set up the environment and answer questions about it, with no dependence on other files or agent configuration. It supersedes D1, D2, and D5, retires M1, and defers M3. | 2026-09-23 |
+| D7 | The public 1.5.0 distribution uses build.gz, site disabled, and Debian 12/13, Rocky 8.10/10.2, Ubuntu 24.04/26.04. Earlier release directories follow replace retention during publication, with their history preserved. | 2026-11-06 |
+| D8 | Accept the observed Debian 12, Rocky 10.2, Ubuntu 24.04, and Ubuntu 26.04 counts and outputs as their OS baselines, tied to each executed suite revision. Debian 13 and Rocky 8.10 retain their recorded baselines. | 2026-11-06 |
 
 ### Assignment History
 
@@ -182,7 +185,7 @@ Request, sent verbatim to each agent session started in the repository root:
 | Label | Layer | Method | Environment | Expected Result |
 | --- | --- | --- | --- | --- |
 | T1 | Procedure | Run every command in the skill file in order in a clean shell | Debian 13 host | Every command succeeds; `caget` reads the probe PV value |
-| T2 | End-to-end | Claude Code session without user-level skills or instructions sent the request | Debian 13 host | Transcript shows the skill file read; activation of `1.3.0/debian-13/7.0.10`; a PV read; answers `7.0.10` and `4.46.0` |
+| T2 | End-to-end | Claude Code session without user-level skills or instructions sent the request | Debian 13 host | Transcript shows the skill file read; activation of `1.5.0/debian-13/7.0.10`; a PV read; answers `7.0.10` and `4.46.0` |
 | T3 | End-to-end | Codex CLI session under the same condition sent the request | Debian 13 host | Same as T2 |
 | T4 | End-to-end | opencode session under the same condition sent the request | Debian 13 host | Same as T2 |
 | T5 | End-to-end, partial | Claude sub-agent spawned from the authoring session, sent the request and told to use no skill tool and only files in the repository; it still sees the user-level skill list, so it does not replace T2 | Debian 13 host | Same as T2 |
@@ -323,6 +326,103 @@ Superseded Plan Artifacts: none
 
 - Commit `7bcc1803` observed on `origin/master` at 2026-09-23 by `git fetch origin`
   followed by `git merge-base --is-ancestor 7bcc1803 origin/master` exiting 0.
+
+#### M6 - Prepare 1.5.0 public candidates
+
+Origin: d18e1cd0 / M6
+Identity History: none
+GitHub Issue: none
+Status: In progress
+
+##### Summary
+
+Prepare six verified EPICS-env 1.5.0 binary trees and the documentation needed
+to use the public distribution.
+
+##### Scope
+
+Release source `0752183b2723016441a1f8f0f2cff5e749e83ac2`, build.gz,
+site disabled, and the six OS directories under `1.5.0/`. Each tree includes
+Base 7.0.10, 36 declared modules, commonIocsh scripts, uldaq 1.2.2,
+and open62541 1.3.15. Update README and the self-contained usage skill.
+
+Out of scope: publishing commits or tags, removing earlier release directories,
+and published-checkout readback. Those require the publication plan and their
+operation-specific authorization. M2 and M4 retain their separate completion criteria.
+
+##### Completion Criteria
+
+- All six trees pass installation, runtime, preservation, relocation, and final-path checks.
+- Expected results are accepted for each OS and remain tied to the executed suite.
+- README and the usage skill describe the actual candidate paths and behavior.
+- A fresh agent executes the changed usage skill against the real matching candidate.
+
+##### Dependencies And Decisions
+
+- D7 and D8 define release scope and accepted verification results.
+- Independent OS builds may run two at a time when provider capacity permits.
+- Public clone/readback verification follows publication; local candidate checks do not replace it.
+
+##### Implementation Plan
+
+Plan Status: accepted
+Plan Acceptance: 2026-11-06, accepted direction to confirm OS baselines and prepare distribution documentation
+Implementation Authorization: 2026-11-06, proceed with baseline records and publication preparation
+Superseded Plan Artifacts: none
+
+1. Retain the actual per-OS logs and complete manifests; record accepted baselines.
+2. Align README and the usage skill with the six candidate trees and loader.
+3. Run local candidate documentation checks and a fresh usage-skill execution.
+4. Prepare the per-OS commit and publication sequence; keep execution separate.
+
+##### Test Plan
+
+| Label | Layer | Method | Environment | Expected Result |
+| --- | --- | --- | --- | --- |
+| T1 | Build and runtime | Released installer, full loader suite, installed/isolated commonIocsh, caPutLog, and preserved-path IOC | Each of the six target OS guests | Actual successful exits, complete expected counts, real CA/PVA values, restored source/configuration |
+| T2 | Artifact integrity | Compare full manifests and checksum copies; run final dependency and debug scans | Preserved guest trees and final repository candidates | Copies identical, earlier candidates unchanged, 86 executables and 79 libraries without path findings |
+| T3 | Candidate documentation | Execute usage skill with a fresh agent and exercise README activation/loader commands against the real matching candidate | Debian 13 controller, clean shells, external IOC workspace | Correct tree selected; CA/PVA values read; loader starts; candidate unchanged |
+| T4 | Document structure | Validate skill metadata, milestone schema, local links and command formatting | Candidate checkout | All applicable checks pass |
+| T5 | Publication contents | Compare complete publication manifests with the retrieved candidates; run Git add dry-run for every selected file | Six OS trees and three documentation files | Only the recorded Git metadata path is absent per OS; all remaining entries match; every selected path is reported by Git |
+| T6 | Retention | Compare the 1.3.0 tree object in the published annotated tag and release branch; inspect the staged removal | Release branch and published 1.3.0 tag | Identical complete tree objects; only 1.3.0 paths selected for removal; 1.5.0 unchanged |
+
+##### Verification Results
+
+| Label | Observed At | Environment | Result | Evidence |
+| --- | --- | --- | --- | --- |
+| T1 | 2026-11-05 to 2026-11-06 | Six target OS guests | Pass | Per-OS results below; 322 minimal IOC records and CA/PVA reads passed for every OS |
+| T2 | 2026-11-05 to 2026-11-06 | Preserved and retrieved candidates | Pass | Preserved/staging/retrieved manifests equal; zero dependency findings; existing candidate trees unchanged at retrieval. T5 records the later publication-only metadata exclusion. |
+| T3 | 2026-11-06 | Debian 13 candidate | Pass | Fresh Codex agent followed only the usage skill, selected the matching tree, read CA/PVA value 42, confirmed Base 7.0.10 and asyn 4.46.0, and ran loader preview/start/exit. README commands were extracted and executed against the real candidate in a clean shell: iocInit, dbl, CA/PVA value 42, and exit 0. All six candidate manifests matched their recorded values after these runs. Public clone/readback remains pending. |
+| T4 | 2026-11-06 | Candidate documents | Pass | Skill validator, milestone checker, local links, shell command line lengths, and git diff whitespace check pass |
+| T5 | 2026-11-06 | Publication candidates | Pass | Removed only vendor/share/open62541/tools/ua-nodeset/.git from each OS publication tree and retained the files outside the distribution. Complete manifest comparisons confirm every other entry is unchanged. Git add dry-run selects all 3,186 paths per OS and all three documentation files. |
+| T6 | 2026-11-06 | Published tag and release branch | Pass | Tag 1.3.0 resolves to d18e1cd0da2b62580d7d48d6e496bcb7e5757c38. Its 1.3.0 tree and the tree at eb2a16ac559c514a6129d055724aec695dd39fc4 are both ef045b22f87d5fe6dbb88a8537756c21375fb6b3. The staged removal contains exactly 18,126 paths under 1.3.0 and no 1.5.0 change. Removal publication remains pending. |
+
+Per-OS observations for source release 1.5.0:
+
+| OS directory | Loader scripts / checks | commonIocsh installed / isolated | caPutLog | Truncated-library statuses |
+| --- | --- | --- | --- | --- |
+| debian-12 | 17 / 274 | 8 / 8 scripts | 6 pass | 135, 0, 0 |
+| debian-13 | 17 / 274 | 8 / 8 scripts | 6 pass | 135, 0, 0 |
+| rocky-8.10 | 17 / 272 | 8 / 8 scripts | 6 pass | 0, 0, 0 |
+| rocky-10.2 | 17 / 272 | 8 / 8 scripts, 37 assertions each | 6 pass | 135, 0, 0 |
+| ubuntu-24.04 | 17 / 272 | 8 / 8 scripts, 37 assertions each | 6 pass | 135, 0, 0 |
+| ubuntu-26.04 | 17 / 272 | 8 / 8 scripts, 37 assertions each | 6 pass | 135, 0, 0 |
+
+Counts describe the executed suites, not a count inferred from the OS.
+The last three rows use tools revision `49d466ad43a7ac9a42c02f41335e08de96a1c9d1`.
+Earlier executions retain their own suite identities in private execution evidence.
+No per-OS mdBook rerun is required. Debug sections remain only in the
+vendor open62541 library, which uses its recorded vendor build target.
+
+Publication manifests contain 3,127 regular files and 59 symlinks per OS.
+They exclude the source submodule `.git` pointer; original execution manifests
+remain preserved, and published-checkout readback uses the publication manifests.
+
+##### Closure Evidence
+
+- T1 through T6 pass; OS baseline acceptance is D8. Master integration remains pending, so M6 stays In progress.
+- Six OS commits and the documentation commit are published on `origin/release-1.5.0`, ending at `eb2a16ac559c514a6129d055724aec695dd39fc4`; remote readback confirmed the same commit on 2026-11-06.
+- Published-checkout verification and M2/M4 historical completion criteria remain separate. The 1.5.0 tag, GitHub release, earlier-directory removal publication, and published-product readback remain pending.
 
 ## Backlog
 

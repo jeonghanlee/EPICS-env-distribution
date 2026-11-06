@@ -1,0 +1,11 @@
+format=1
+name=iocStats
+version=4.0.1
+tag=tags/4.0.1
+source=b0a51778f50b97cd9c50d0aa0e03a7b7ee2f3a84
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/devIocStats.dbd fca9ccbfa98957157bb5e6b047b99e35bbe3e651c094e95f30a3f66dcb8b2227
+artifact=dbd/devVxStats.dbd a7e7b82c0d2ebdc1ad84d1970c3d1dd8ef0bf63d9060afa30d7c99d5825973cc
+artifact=dbd/iocAdmin.dbd c6a534240bcd562cde6a0f49a706d352d1c0dcac3bd480933cd43cde40e3ccf8
+artifact=lib/linux-x86_64/libdevIocStats.so 4a6fa73a08bf7946ec901588446c641d6113e1723a0c26471460eff4a31ef121

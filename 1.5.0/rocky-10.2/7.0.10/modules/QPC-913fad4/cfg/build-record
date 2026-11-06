@@ -1,0 +1,8 @@
+format=1
+name=QPC
+version=913fad4
+tag=913fad4
+source=913fad41df170063d910d0b4fdb083de696fac36
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0

@@ -1,0 +1,14 @@
+format=1
+name=opcua
+version=0.11.2
+tag=tags/v0.11.2
+source=f9b0c92faabf466e389782b7747d2162456a2b20
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/devOpcua.dbd cf218396a1d08d5563c5d606f71caee94293e48fd80fcc57d0bd8dff4b9c739d
+artifact=dbd/menuDefAction.dbd d54f5a18519a170a5a6840372656673eb1edfd1395b3bdb3aa54b3accfea818c
+artifact=dbd/opcua.dbd 93752186272f1bab8107bd56dbd41d514a489f47104e975e5abd6ee3a215a4bd
+artifact=dbd/opcuaIoc.dbd 92d61a3d7dbaacda128b6ffd79c4c17d78f80de20c5aae6d23efcd70c1cca3a3
+artifact=dbd/opcuaItemRecord.dbd b273ceb70e4b170c8bcb8ab0a9aa03cbbd5c3d10d2b4f10ce40ae470ad699dc9
+artifact=lib/linux-x86_64/libopcua.so d7550e707c830d70a46ddb48746b11325e8425c9d88aa7d9f676227d6bdd43ab
+artifact=lib/linux-x86_64/libopcua.so.0.11 d7550e707c830d70a46ddb48746b11325e8425c9d88aa7d9f676227d6bdd43ab

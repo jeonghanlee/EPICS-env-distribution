@@ -1,0 +1,10 @@
+format=1
+name=autosave
+version=6.0.0
+tag=tags/R6-0
+source=03b94f803be4e1844699a9c56562c96406242591
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/asSupport.dbd 4d6b1f76ccaa7999846290085b1d0273fb8c2e0fdf167558d9b9c57d99f0cb3b
+artifact=dbd/asSupportNfs.dbd 59c714742b17f686cc731f429df65a4ccf098b362a55fe5b101739b0df53beb9
+artifact=lib/linux-x86_64/libautosave.so 850a6630545aa9946323a3492331145dc040bdc7bae3e5ce7fb15b993ddd0a72

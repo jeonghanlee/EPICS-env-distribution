@@ -1,0 +1,11 @@
+format=1
+name=recsync
+version=9834b94
+tag=9834b94
+source=9834b94edc63eece42712b8355a4703d4286dd8f
+base=7.0.10
+arch=linux-x86_64
+artifact=dbd/demo.dbd 19821745d2ff8bc6f8b2db243dfd3bfcd5bed48ad19d5867ed2f4e5bb55ae1e1
+artifact=dbd/reccaster.dbd 21f488093671f372d691e26a5b14536e0ee7602cc431f9a88ced39ac581c6fa7
+artifact=lib/linux-x86_64/libreccaster.so d8c36a4758a1a31c7421ff21c2d5bd15b3ff78b44582a8bbdc3e142dda704b65
+artifact=lib/linux-x86_64/libreccaster.so.0 d8c36a4758a1a31c7421ff21c2d5bd15b3ff78b44582a8bbdc3e142dda704b65

@@ -1,0 +1,3 @@
+EPICS_BASE:=/home/vmadmin/distribution-public-1.5.0/install/1.5.0/rocky-10.2/7.0.10/base
+ASYN:=/home/vmadmin/distribution-public-1.5.0/install/1.5.0/rocky-10.2/7.0.10/modules/asyn-4.46.0
+PVXS:=/home/vmadmin/distribution-public-1.5.0/install/1.5.0/rocky-10.2/7.0.10/modules/pvxs-1.5.3

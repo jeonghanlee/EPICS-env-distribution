@@ -15,9 +15,10 @@ contains the `epics-env-usage/` directory holding this file. Set it from the
 path of this file:
 
 ```bash
-REPO="$(cd "$(dirname "<path of this file>")/.." && pwd)"
+REPO="$(cd "$(dirname "<skill_file>")/.." && pwd)"
 ```
 
+Replace `<skill_file>` with the absolute path of this file.
 For example, when this file is `/home/user/epics/epics-env-usage/SKILL.md`,
 `REPO` is `/home/user/epics`.
 
@@ -32,8 +33,10 @@ For example, when this file is `/home/user/epics/epics-env-usage/SKILL.md`,
     vendor/            third-party libraries used by modules
 ```
 
-Example: `1.3.0/debian-13/7.0.10/setEpicsEnv.bash`. Binaries target Linux
-`x86_64` only.
+Example: `1.5.0/debian-13/7.0.10/setEpicsEnv.bash`. Binaries target Linux
+`x86_64` only. Release 1.5.0 contains Base 7.0.10, 36 declared modules,
+commonIocsh scripts, and the uldaq/open62541 vendor libraries; site modules
+are disabled.
 
 ## Select The Tree
 
@@ -55,7 +58,7 @@ Example: `1.3.0/debian-13/7.0.10/setEpicsEnv.bash`. Binaries target Linux
 5. When no entry matches, stop. Report the host identity and the shipped
    entries. Do not substitute a tree built for another system.
 6. Set `TREE` to the directory that holds the chosen `setEpicsEnv.bash`, for
-   example `TREE="${REPO:?set REPO to the repository root first}/1.3.0/debian-13/7.0.10"`.
+   example `TREE="${REPO:?set REPO to the repository root first}/1.5.0/debian-13/7.0.10"`.
    The steps below use it.
 
 ## Activate
@@ -76,7 +79,7 @@ line as the EPICS command:
 
 ```bash
 REPO="/home/user/epics"; ls -d "${REPO:?set REPO to the repository root first}"/*/*/*/setEpicsEnv.bash
-TREE="/home/user/epics/1.3.0/debian-13/7.0.10"; source "$TREE/setEpicsEnv.bash" >/dev/null && caget -h
+TREE="/home/user/epics/1.5.0/debian-13/7.0.10"; source "$TREE/setEpicsEnv.bash" >/dev/null && caget -h
 ```
 
 A command that uses `REPO` stops with an error message when `REPO` is empty.
@@ -101,16 +104,19 @@ stops with an error message when `TREE` is empty.
    WORK="$(mktemp -d)" && cd "$WORK"
    printf 'record(ai, "probe:value") { field(VAL, "42") }\n' > probe.db
    softIoc -S -d probe.db > probe.log 2>&1 &
+   IOC_PID=$!
    export EPICS_CA_ADDR_LIST=127.0.0.1 EPICS_CA_AUTO_ADDR_LIST=NO
    for i in 1 2 3 4 5; do caget -w 1 probe:value && break; [ "$i" -lt 5 ] && sleep 1; done
-   rc=$?; kill %1; wait; cd / && rm -rf "$WORK"; echo "read rc=$rc"
+   rc=$?; kill "$IOC_PID"; wait "$IOC_PID" || true
+   printf 'read rc=%s; evidence=%s\n' "$rc" "$WORK"
+   test "$rc" -eq 0
    ```
 
    The loop retries while the IOC starts and exits non-zero when all five
    reads fail. The read prints one line with `probe:value` and `42`. Lines
    such as `Channel connect timed out: 'probe:value' not found.` before it
    come from tries made while the IOC was still starting; they are not a
-   failure when a later try prints the value and the last line is `read rc=0`.
+   failure when a later try prints the value and the reported read status is `read rc=0`.
 
 4. For pvAccess, serve the same record with `softIocPVX`, the pvxs IOC.
    `softIoc` serves Channel Access only.
@@ -121,18 +127,39 @@ stops with an error message when `TREE` is empty.
    WORK="$(mktemp -d)" && cd "$WORK"
    printf 'record(ai, "probe:value") { field(VAL, "42") }\n' > probe.db
    softIocPVX -S -d probe.db > probe.log 2>&1 &
+   IOC_PID=$!
    export EPICS_PVA_ADDR_LIST=127.0.0.1 EPICS_PVA_AUTO_ADDR_LIST=NO
    for i in 1 2 3 4 5; do pvxget -w 1 probe:value && break; [ "$i" -lt 5 ] && sleep 1; done
-   rc=$?; kill %1; wait; cd / && rm -rf "$WORK"; echo "read rc=$rc"
+   rc=$?; kill "$IOC_PID"; wait "$IOC_PID" || true
+   printf 'read rc=%s; evidence=%s\n' "$rc" "$WORK"
+   test "$rc" -eq 0
    ```
 
    The read prints `probe:value` followed by `value double = 42`. Lines such
    as `Timeout with 1 outstanding` before it come from earlier tries, as in
-   step 3; they are not a failure when the last line is `read rc=0`.
+   step 3; they are not a failure when the reported read status is `read rc=0`.
 
 When a tool fails with a missing shared library, report the `ldd` output of
 that tool. Do not install packages or edit the tree without the user's
 approval.
+
+## Use The Loader
+
+Run a startup file from a workspace outside the distribution. In that file,
+`module asyn` selects the installed default version; `module asyn 4.46.0`
+selects that exact installed version. The loader resolves dependencies and
+registers support before running the remaining IOC commands.
+
+With `TREE` set and activated, replace `<startup_file>` with the startup path:
+
+```bash
+iocsh.bash -n <startup_file>
+iocsh.bash <startup_file>
+```
+
+The first command prints the generated startup without starting an IOC.
+The second opens the IOC shell; enter `exit` to stop. Use `-S` for a
+noninteractive service and retain its PID and log outside the distribution.
 
 ## Answer Questions
 

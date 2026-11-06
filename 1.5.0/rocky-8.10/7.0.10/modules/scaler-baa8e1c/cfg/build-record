@@ -1,0 +1,12 @@
+format=1
+name=scaler
+version=baa8e1c
+tag=baa8e1c
+source=baa8e1c5e5a9a5deceef8cc39207a0da446092a6
+base=7.0.10
+arch=linux-x86_64
+dep=asyn 4.46.0
+dep=autosave 6.0.0
+artifact=dbd/scalerRecord.dbd f21dfa0f40b561082763b2fcceb7ce03da5db7daa7d6a37e332e95dc6980edd5
+artifact=dbd/scalerSupport.dbd b938cbdf7ba35b5e0b18f8b3003ea4b6884ed55995dc9b1249a4480b46e1de7d
+artifact=lib/linux-x86_64/libscaler.so 1fcc36a0f16f8b16ee296d112ddef8635ba763d8e63387bbc4086e60fcf32f3c
