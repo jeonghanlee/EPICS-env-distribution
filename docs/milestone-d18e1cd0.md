@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: none
 
-Next session entry point: `docs/milestone-d18e1cd0.md` M6 - commit the prepared 1.3.0 directory removal and publication record, then continue master integration, tag publication, and published-checkout readback under their approved operation scopes.
+Next session entry point: `docs/milestone-d18e1cd0.md` M6 - prepare the completed publication/readback record for commit. M2 and M4 retain their separate historical verification conditions.
 
 ## Milestone
 
@@ -19,7 +19,7 @@ Next session entry point: `docs/milestone-d18e1cd0.md` M6 - commit the prepared 
 | Agent skill | M2 | Environment usage skill | Milestone | In progress | No | D6 | An agent told only to read this repository finds `epics-env-usage/SKILL.md`, activates the tree matching the host, and answers environment questions from it; [detail](#m2---environment-usage-skill) |
 | Repository | M4 | Human-followable README | Milestone | In progress | No | D3 | README commands run verbatim in an empty `$HOME` match the README under the M4 matching rule; [detail](#m4---human-followable-readme) |
 | Repository | M5 | Remove install.bash | Milestone | Complete | No | D4 | `install.bash` absent from the tree with no remaining reference; [detail](#m5---remove-installbash) |
-| Distribution | M6 | Prepare 1.5.0 public candidates | Milestone | In progress | No | D7, D8 | Six verified OS trees, accepted baselines, and matching usage documentation; [detail](#m6---prepare-150-public-candidates) |
+| Distribution | M6 | Prepare 1.5.0 public candidates | Milestone | Complete | No | D7, D8 | Six verified OS trees, accepted baselines, and matching usage documentation; published as 1.5.0 with six-OS readback; [detail](#m6---prepare-150-public-candidates) |
 
 ### Decisions
 
@@ -332,7 +332,7 @@ Superseded Plan Artifacts: none
 Origin: d18e1cd0 / M6
 Identity History: none
 GitHub Issue: none
-Status: In progress
+Status: Complete
 
 ##### Summary
 
@@ -392,10 +392,10 @@ Superseded Plan Artifacts: none
 | --- | --- | --- | --- | --- |
 | T1 | 2026-11-05 to 2026-11-06 | Six target OS guests | Pass | Per-OS results below; 322 minimal IOC records and CA/PVA reads passed for every OS |
 | T2 | 2026-11-05 to 2026-11-06 | Preserved and retrieved candidates | Pass | Preserved/staging/retrieved manifests equal; zero dependency findings; existing candidate trees unchanged at retrieval. T5 records the later publication-only metadata exclusion. |
-| T3 | 2026-11-06 | Debian 13 candidate | Pass | Fresh Codex agent followed only the usage skill, selected the matching tree, read CA/PVA value 42, confirmed Base 7.0.10 and asyn 4.46.0, and ran loader preview/start/exit. README commands were extracted and executed against the real candidate in a clean shell: iocInit, dbl, CA/PVA value 42, and exit 0. All six candidate manifests matched their recorded values after these runs. Public clone/readback remains pending. |
+| T3 | 2026-11-06 | Debian 13 candidate | Pass | Fresh Codex agent followed only the usage skill, selected the matching tree, read CA/PVA value 42, confirmed Base 7.0.10 and asyn 4.46.0, and ran loader preview/start/exit. README commands were extracted and executed against the real candidate in a clean shell: iocInit, dbl, CA/PVA value 42, and exit 0. All six candidate manifests matched their recorded values after these runs. Published-product verification is recorded separately below. |
 | T4 | 2026-11-06 | Candidate documents | Pass | Skill validator, milestone checker, local links, shell command line lengths, and git diff whitespace check pass |
 | T5 | 2026-11-06 | Publication candidates | Pass | Removed only vendor/share/open62541/tools/ua-nodeset/.git from each OS publication tree and retained the files outside the distribution. Complete manifest comparisons confirm every other entry is unchanged. Git add dry-run selects all 3,186 paths per OS and all three documentation files. |
-| T6 | 2026-11-06 | Published tag and release branch | Pass | Tag 1.3.0 resolves to d18e1cd0da2b62580d7d48d6e496bcb7e5757c38. Its 1.3.0 tree and the tree at eb2a16ac559c514a6129d055724aec695dd39fc4 are both ef045b22f87d5fe6dbb88a8537756c21375fb6b3. The staged removal contains exactly 18,126 paths under 1.3.0 and no 1.5.0 change. Removal publication remains pending. |
+| T6 | 2026-11-06 | Published tag and release branch | Pass | Tag 1.3.0 resolves to d18e1cd0da2b62580d7d48d6e496bcb7e5757c38. Its 1.3.0 tree and the tree at eb2a16ac559c514a6129d055724aec695dd39fc4 are both ef045b22f87d5fe6dbb88a8537756c21375fb6b3. Commit 9badb437395330eb368fd90a6e3a6294f6c41bba removes exactly 18,126 paths under 1.3.0 with no 1.5.0 change; it is included in published master. |
 
 Per-OS observations for source release 1.5.0:
 
@@ -418,11 +418,44 @@ Publication manifests contain 3,127 regular files and 59 symlinks per OS.
 They exclude the source submodule `.git` pointer; original execution manifests
 remain preserved, and published-checkout readback uses the publication manifests.
 
+##### Published Product Verification
+
+The separately authorized publication plan completed on 2026-11-06.
+Each matching OS used a fresh public clone and checked out tag `1.5.0` at
+`fc2e04ef1681bb282b65700e73e2e6446a2eef93`. README commands and the usage skill's
+CA/PVA blocks ran from clean shells with output outside the checkout.
+The actual loader initialized, listed `dist:probe`, and exited successfully;
+CA and PVA read 42. Base 7.0.10, asyn 4.46.0, source identity, and executable
+paths matched the selected tree.
+
+| OS directory | Runtime command groups | Publication manifest | Tree after runtime |
+| --- | --- | --- | --- |
+| debian-12 | 6 pass | Match with Git modes | Unchanged |
+| debian-13 | 6 pass | Match with Git modes | Unchanged |
+| rocky-8.10 | 6 pass | Match with Git modes | Unchanged |
+| rocky-10.2 | 6 pass | Match with Git modes | Unchanged |
+| ubuntu-24.04 | 6 pass | Match with Git modes | Unchanged |
+| ubuntu-26.04 | 6 pass | Match with Git modes | Unchanged |
+
+Each complete checkout manifest has 3,127 regular files, 59 symlinks, and
+529 directories. File contents, executable bits, and symlink targets match
+the publication candidate. With umask 022, Git checkout uses modes 0644/0755
+and omits the empty `vendor/share/open62541/tools/nodeset_compiler/__pycache__`
+directory. These recorded differences do not relax the exact preservation
+and retrieval comparisons. Before/after runtime manifests are byte-identical.
+All six OS directories and both user documents are present; `1.3.0` is absent
+from the checkout and remains preserved by its published tag.
+
+These are published-use checks, not another full build-suite run or an
+isolated agent-discovery test. Existing home directories were preserved;
+M2's isolated-agent conditions and M4's empty-home condition remain separate.
+
 ##### Closure Evidence
 
-- T1 through T6 pass; OS baseline acceptance is D8. Master integration remains pending, so M6 stays In progress.
-- Six OS commits and the documentation commit are published on `origin/release-1.5.0`, ending at `eb2a16ac559c514a6129d055724aec695dd39fc4`; remote readback confirmed the same commit on 2026-11-06.
-- Published-checkout verification and M2/M4 historical completion criteria remain separate. The 1.5.0 tag, GitHub release, earlier-directory removal publication, and published-product readback remain pending.
+- T1 through T6 pass; OS baseline acceptance is D8. All candidate deliverables are included in `origin/master` at `fc2e04ef1681bb282b65700e73e2e6446a2eef93`, verified by fetch and remote readback on 2026-11-06. M6 is Complete.
+- The retained `release-1.5.0` branch is at `1c1bdfc7b6a37de4fac0a6fa9cf4899db00cb36a`. The master merge has exactly its accepted tree.
+- Annotated tag `1.5.0` object `ee6e9882c4738115dc446d8ce43bdbca331410ff` resolves to that master commit. The [1.5.0 release](https://github.com/jeonghanlee/EPICS-env-distribution/releases/tag/1.5.0) is published as stable and latest; its body matches the prepared notes.
+- Fresh published-checkout verification passed on all six OSes. Raw commands, exits, runtime logs, manifests, and provider lifecycle records remain in private execution evidence. M2 and M4 are not closed by this result.
 
 ## Backlog
 
