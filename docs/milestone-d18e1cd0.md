@@ -7,7 +7,7 @@ Canonical branch or ref: master
 Git upstream: origin/master
 Remote tracker: none
 
-Next session entry point: `docs/milestone-d18e1cd0.md` M6 - execute the prepared six OS commits and documentation commit under their approved operation scopes, then continue publication.
+Next session entry point: `docs/milestone-d18e1cd0.md` M6 - commit the prepared 1.3.0 directory removal and publication record, then continue master integration, tag publication, and published-checkout readback under their approved operation scopes.
 
 ## Milestone
 
@@ -384,6 +384,7 @@ Superseded Plan Artifacts: none
 | T3 | Candidate documentation | Execute usage skill with a fresh agent and exercise README activation/loader commands against the real matching candidate | Debian 13 controller, clean shells, external IOC workspace | Correct tree selected; CA/PVA values read; loader starts; candidate unchanged |
 | T4 | Document structure | Validate skill metadata, milestone schema, local links and command formatting | Candidate checkout | All applicable checks pass |
 | T5 | Publication contents | Compare complete publication manifests with the retrieved candidates; run Git add dry-run for every selected file | Six OS trees and three documentation files | Only the recorded Git metadata path is absent per OS; all remaining entries match; every selected path is reported by Git |
+| T6 | Retention | Compare the 1.3.0 tree object in the published annotated tag and release branch; inspect the staged removal | Release branch and published 1.3.0 tag | Identical complete tree objects; only 1.3.0 paths selected for removal; 1.5.0 unchanged |
 
 ##### Verification Results
 
@@ -394,6 +395,7 @@ Superseded Plan Artifacts: none
 | T3 | 2026-11-06 | Debian 13 candidate | Pass | Fresh Codex agent followed only the usage skill, selected the matching tree, read CA/PVA value 42, confirmed Base 7.0.10 and asyn 4.46.0, and ran loader preview/start/exit. README commands were extracted and executed against the real candidate in a clean shell: iocInit, dbl, CA/PVA value 42, and exit 0. All six candidate manifests matched their recorded values after these runs. Public clone/readback remains pending. |
 | T4 | 2026-11-06 | Candidate documents | Pass | Skill validator, milestone checker, local links, shell command line lengths, and git diff whitespace check pass |
 | T5 | 2026-11-06 | Publication candidates | Pass | Removed only vendor/share/open62541/tools/ua-nodeset/.git from each OS publication tree and retained the files outside the distribution. Complete manifest comparisons confirm every other entry is unchanged. Git add dry-run selects all 3,186 paths per OS and all three documentation files. |
+| T6 | 2026-11-06 | Published tag and release branch | Pass | Tag 1.3.0 resolves to d18e1cd0da2b62580d7d48d6e496bcb7e5757c38. Its 1.3.0 tree and the tree at eb2a16ac559c514a6129d055724aec695dd39fc4 are both ef045b22f87d5fe6dbb88a8537756c21375fb6b3. The staged removal contains exactly 18,126 paths under 1.3.0 and no 1.5.0 change. Removal publication remains pending. |
 
 Per-OS observations for source release 1.5.0:
 
@@ -418,8 +420,9 @@ remain preserved, and published-checkout readback uses the publication manifests
 
 ##### Closure Evidence
 
-- T1 through T5 pass; OS baseline acceptance is D8. Repository landing remains pending, so M6 stays In progress.
-- Published-checkout verification and M2/M4 historical completion criteria remain separate. No distribution commit, tag, push, or published-product readback is claimed.
+- T1 through T6 pass; OS baseline acceptance is D8. Master integration remains pending, so M6 stays In progress.
+- Six OS commits and the documentation commit are published on `origin/release-1.5.0`, ending at `eb2a16ac559c514a6129d055724aec695dd39fc4`; remote readback confirmed the same commit on 2026-11-06.
+- Published-checkout verification and M2/M4 historical completion criteria remain separate. The 1.5.0 tag, GitHub release, earlier-directory removal publication, and published-product readback remain pending.
 
 ## Backlog
 
