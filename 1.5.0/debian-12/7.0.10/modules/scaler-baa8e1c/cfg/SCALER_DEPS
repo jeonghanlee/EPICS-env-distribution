@@ -1,0 +1,2 @@
+SCALER_IOC_DBDS = scalerSupport.dbd
+SCALER_IOC_LIBS = scaler

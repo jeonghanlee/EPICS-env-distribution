@@ -1,0 +1,3 @@
+LIBEVENT_PREFIX_linux-x86_64 = 
+LIBEVENT_BUNDLE_LIBS_linux-x86_64 = event_core event_pthreads
+LIBEVENT_SYS_LIBS_linux-x86_64 = 

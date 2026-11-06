@@ -1,0 +1,83 @@
+# feed_logic_pair.template
+# BASE="$(BASE)", SIZE="$(SIZE)",
+# IBASE="$(IBASE)", "QBASE="$(QBASE)",
+# FLNK="$(FLNK)"
+
+# use I time base as our own
+alias("$(IBASE)TWF", "$(BASE)TWF")
+
+alias("$(IBASE)WF", "$(BASE)IWF")
+alias("$(QBASE)WF", "$(BASE)QWF")
+alias("$(IBASE)SCALE", "$(BASE)ISCALE")
+alias("$(QBASE)SCALE", "$(BASE)QSCALE")
+
+# start processing with FLNK from $(QBASE)
+
+# Arbitrary offset added to phase (zero angle)
+record(ao, "$(BASE)ZRANGLE") {
+    field(VAL , "0.0")
+    field(PREC, "2")
+    field(EGU , "deg")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+# FLNK'd from _signal.template
+record(aSub, "$(BASE)AP_CALC_") {
+  field(SNAM, "IQ2AP")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(FTVC ,"CHAR") # disable
+  field(FTVD ,"CHAR") # disable
+  field(FTVE ,"CHAR") # disable
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(NOVB, "$(SIZE)")
+  field(INPA, "$(IBASE)WF MSI NPP")
+  field(INPB, "$(QBASE)WF MSI NPP")
+  field(INPD, "$(BASE)ZRANGLE MSI NPP")
+  field(OUTA, "$(BASE)AWF MSI PP")
+  field(OUTB, "$(BASE)PWF MSI PP")
+  field(FLNK, "$(FLNK=)") # to external logic, eg. waveform stats
+  field(TSEL, "$(IBASE)WF.TIME")
+  alias("$(BASE)E_")
+}
+
+record(aai, "$(BASE)AWF") {
+  field(DESC, "Amplitude")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)PWF") {
+  field(DESC, "Phase")
+  field(EGU , "deg.")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(FLNK, "$(BASE)PWF_CALC_")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aSub, "$(BASE)PWF_CALC_") {
+  field(SNAM, "Phase Unwrap")
+  field(FTA , "DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(INPA, "$(BASE)PWF MS NPP")
+  field(INPB, "160")
+  field(OUTA, "$(BASE)UPWF MS PP")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}
+
+record(aai, "$(BASE)UPWF") {
+  field(DESC, "Unwrapped Phase")
+  field(EGU , "deg.")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(BASE)AP_CALC_.TIME")
+}

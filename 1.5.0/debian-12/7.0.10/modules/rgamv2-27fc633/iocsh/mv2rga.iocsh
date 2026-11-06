@@ -1,0 +1,16 @@
+# iocsh startup script for MKS MV2 RGA
+#
+# Macros to pass:
+# IP_ADDR - IP address
+# PORT - asyn port name
+# RGA_PORT - RGA_PORT port name
+
+drvAsynIPPortConfigure("$(PORT)", "$(IP_ADDR):10014", 0, 0, 0)
+
+mv2init("$(RGA_PORT)", "$(PORT)")
+
+#asynSetTraceMask("$(RGA_PORT)",0,0x3f)
+#asynSetTraceIOMask("$(RGA_PORT)",0,2)
+
+#asynSetTraceMask("$(PORT)",0,0xf)
+#asynSetTraceIOMask("$(PORT)",0,2)

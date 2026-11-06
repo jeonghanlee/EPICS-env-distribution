@@ -1,0 +1,14 @@
+
+record(longin, "$(BASE)MASKI_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(BASE)MASK")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longout, "$(BASE)MASK") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=$(REG) wait=false")
+    info(autosaveFields_pass0, "VAL")
+}
