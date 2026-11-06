@@ -1,3 +1,0 @@
-grecord(sscan,"$(P)$(S)") {
-  field(MPTS, "$(MAXPTS=100)")
-}

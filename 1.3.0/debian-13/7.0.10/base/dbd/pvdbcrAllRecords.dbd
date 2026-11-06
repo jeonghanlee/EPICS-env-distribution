@@ -1,6 +1,0 @@
-include "pvdbcrAddRecord.dbd"
-include "pvdbcrRemoveRecord.dbd"
-include "pvdbcrProcessRecord.dbd"
-include "pvdbcrTraceRecord.dbd"
-include "pvdbcrScalarRecord.dbd"
-include "pvdbcrScalarArrayRecord.dbd"

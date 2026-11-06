@@ -1,7 +1,0 @@
-SSCAN_IOC_DBDS = sscanSupport.dbd
-SSCAN_IOC_LIBS = sscan
-
-ifdef SNCSEQ
-SSCAN_IOC_DBDS += sscanProgressSupport.dbd
-SSCAN_IOC_LIBS += scanProgress
-endif
